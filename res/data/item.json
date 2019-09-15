@@ -1,0 +1,159 @@
+[	
+	
+	{
+		"category":"item",
+		"trueName":"Empty Potion Bottle",
+		"texture":"empty_bottle",
+		"desc":"An empty potion bottle, used to contain potion.",
+		"unidentified_desc":null,
+		"stack":"1",
+		"properties":[3,4],
+		"consumed":[],
+		"baseValue":5,
+        "effects":[]
+	},
+	{
+		"category":"potion",
+		"trueName":"Healing Potion",
+		"texture":null,
+		"desc":"Restores health and mend wounds when drank.",
+		"unidentified_desc":"A <color> potion, further examination is needed to identify the potion.",
+		"stack":"1",
+		"properties":[1,2,4],
+		"consumed":[{"name":"Empty Potion Bottle"}],
+		"baseValue":20,
+        "effects":[{"type":"heal","duration":"1","value":"20"}]
+	},
+	{
+		"category":"potion",
+        "trueName":"Poison",
+		"texture":null,
+		"desc":"Gradually decrease the health of the consumer, can be nullified with Antidote.",
+		"unidentified_desc":"A <color> potion, further examination is needed to identify the potion.",
+		"stack":"1",
+		"properties":[1,2,4],
+		"consumed":[{"name":"Empty Potion Bottle"}],
+		"baseValue":75,
+        "effects":[{"type":"poison","duration":"999","value":"10"},{"type":"weak","duration":"10","value":"1"}]
+	},
+	{
+		"category":"potion",
+        "trueName":"Antidote",
+		"texture":null,
+		"desc":"Cures poison effects when drank.",
+		"unidentified_desc":"A <color> potion, further examination is needed to identify the potion.",
+		"stack":"1",
+		"properties":[1,2,4],
+		"consumed":[{"name":"Empty Potion Bottle"}],
+		"baseValue":75,
+        "effects":[{"type":"cure_poison","duration":"1","value":"1"}]
+	},
+	{
+		"category":"equipment",
+        "trueName":"Wooden Sword",
+		"texture":"wooden_sword",
+		"desc":"A piece of woodcraft used for sword practice.",
+		"unidentified_desc":null,
+		"stack":"1",
+		"properties":[20,24],
+		"consumed":null,
+		"baseValue":75,
+        "effects":[{"type":"blunt_damage","duration":"1","value":"5"}]
+	},
+	{
+		"category":"equipment",
+        "trueName":"Iron Sword",
+		"texture":"iron_sword",
+		"desc":"A plain iron sword, made for slashing and stabbing.",
+		"unidentified_desc":null,
+		"stack":"1",
+		"properties":[20,24,51],
+		"consumed":null,
+		"baseValue":75,
+        "effects":[{"type":"slash_damage","duration":"1","value":"10"}]
+	},
+	{
+		"category":"equipment",
+		"trueName":"Zweihander",
+		"texture":"zweihander",
+		"desc":"A huge long sword, requires 2 hand to use.",
+		"unidentified_desc":null,
+		"stack":"1",
+		"properties":[20,33,51],
+		"consumed":null,
+		"baseValue":75,
+        "effects":[{"type":"slash_damage","duration":"1","value":"30"}]
+	},
+	{
+		"category":"equipment",
+		"trueName":"Wooden Shield",
+		"texture":"wooden_shield",
+		"desc":"A shield made of sturdy oak.",
+		"unidentified_desc":null,
+		"stack":"1",
+		"properties":[20,26],
+		"consumed":null,
+		"baseValue":75,
+        "effects":[{"type":"blunt_defense","duration":"1","value":"15"}]
+	},
+	{
+		"category":"equipment",
+		"trueName":"Reinforced Wooden Shield",
+		"texture":"wooden_shield",
+		"desc":"An reinforced shield made of sturdy oak.",
+		"unidentified_desc":null,
+		"stack":"1",
+		"properties":[20,26],
+		"consumed":null,
+		"baseValue":75,
+        "effects":[{"type":"blunt_defense","duration":"1","value":"30"}]
+	},
+	{
+		"category":"item",
+		"trueName":"Wood",
+		"texture":"wood",
+		"desc":"A log of wood from a tree.",
+		"unidentified_desc":null,
+		"stack":"1",
+		"properties":[],
+		"consumed":null,
+		"baseValue":75,
+        "effects":[]
+	},
+	{
+		"category":"item",
+		"trueName":"Tree Leaves",
+		"texture":"leaves",
+		"desc":"A handful of leaves, can be use as tinder.",
+		"unidentified_desc":null,
+		"stack":"1",
+		"properties":[],
+		"consumed":null,
+		"baseValue":75,
+        "effects":[]
+	},
+	{
+		"category":"item",
+		"trueName":"Wood Shavings",
+		"texture":"wood_shavings",
+		"desc":"Thin shavings from a wood log, can be use as a tinder.",
+		"unidentified_desc":null,
+		"stack":"1",
+		"properties":[4],
+		"consumed":null,
+		"baseValue":75,
+        "effects":[]
+	},
+	{
+		"category":"item",
+		"trueName":"Wooden Shaft",
+		"texture":"wooden_shaft",
+		"desc":"A shaft shaped from a wood log."
+		"unidentified_desc":null,
+		"stack":"1",
+		"properties":[],
+		"consumed":null,
+		"baseValue":75,
+        "effects":[]
+	}
+]

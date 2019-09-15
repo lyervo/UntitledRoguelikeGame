@@ -1,0 +1,10 @@
+[
+	{
+		"name":"Tree",
+		"AI":"nature",
+		"properties":"0",
+		"drop":[{"name":"Wood"},{"name":"Leaves"}],
+		"meter":[{"name":"hp","value":"50"}]
+	}
+	
+]

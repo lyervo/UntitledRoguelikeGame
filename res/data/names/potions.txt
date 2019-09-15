@@ -1,0 +1,17 @@
+Red
+Pink
+Orange
+Yellow
+Green
+Olive
+Cyan
+Blue
+Cobalt
+White
+Lava
+Grass
+Gray
+Cloudy
+Black
+Brown
+Glowing

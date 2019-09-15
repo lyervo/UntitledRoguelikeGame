@@ -1,0 +1,47 @@
+[
+	{
+		"name":"Wood Shavings",
+		"amount":"10",
+		"ingredients":[{"name":"<Sharp Object>","consumed":"0"},{"name":"Wood","consumed":"1"}],
+		"station":[],
+		"skill":[]
+	},
+	{
+		"name":"Wooden Shaft",
+		"amount":"1",
+		"ingredients":[{"name":"Wood","consumed":"1"},{"name":"<Sharp Object>","consumed":"0"}],
+		"station":[],
+		"skill":[]
+	},
+	{
+		"name":"Reinforced Wooden Shield",
+		"amount":"1",
+		"ingredients":[{"name":"Wood","consumed":"1"},{"name":"Wood","consumed":"1"},{"name":"Wooden Shield","consumed":"1"}],
+		"station":[],
+		"skill":[]
+	},
+	{
+		"name":"Wood Shavings",
+		"amount":"10",
+		"ingredients":[{"name":"<Sharp Object>","consumed":"0"},{"name":"Wood","consumed":"1"}],
+		"station":[],
+		"skill":[]
+	},
+	{
+		"name":"Wooden Shaft",
+		"amount":"1",
+		"ingredients":[{"name":"Wood","consumed":"1"},{"name":"<Sharp Object>","consumed":"0"}],
+		"station":[],
+		"skill":[]
+	},
+	{
+		"name":"Reinforced Wooden Shield",
+		"amount":"1",
+		"ingredients":[{"name":"Wood","consumed":"1"},{"name":"Wood","consumed":"1"},{"name":"Wooden Shield","consumed":"1"}],
+		"station":[],
+		"skill":[]
+	}
+	
+	
+	
+]

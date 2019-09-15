@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Item/ItemType.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/World/LocalMap.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Item/Item.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Camera/Camera.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Item/Crafting.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Entity/Task.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Item/ItemPile.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/InventoryUI/RecipeRequirementUI.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/InventoryUI/XItemTextFieldConfirmButton.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/World/World.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Entity/EntityLibrary.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/InventoryUI/RecipeUI.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/InventoryUI/RecipeScrollDownButton.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Entity/Pawn.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Item/ItemLibrary.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/InventoryUI/InventoryUI.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/InventoryUI/InventoryButton.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Entity/Creature.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/InventoryUI/ItemUI.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/InventoryUI/ItemOptionTab.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/InventoryUI/RecipeScrollUpButton.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/InventoryUI/CraftingButton.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/InventoryUI/CraftingClearAllButton.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Item/Slot.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/InventoryUI/InventorySecondaryScrollUpButton.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/UI/OptionTab.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Entity/Entity.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Item/Inventory.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Entity/Furniture.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/World/Tile.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Item/Recipe.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Game/Game.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/InventoryUI/CraftingCraftButton.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/World/WorldMap.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Item/Effect.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/InventoryUI/NumericTextField.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Res/Res.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/World/Wall.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/InventoryUI/EquipmentUI.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Item/Equipment.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/InventoryUI/CraftingUI.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/InventoryUI/XItemTextField.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/MapUI/TileOptionTab.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/InventoryUI/QuickItemBarUI.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/GameStates/InGame.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Entity/Status.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/InventoryUI/XItemTextFieldExitButton.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Entity/Meter.java</file>
+        </group>
+    </open-files>
+</project-private>
