@@ -5,8 +5,11 @@
  */
 package Item;
 
+import Entity.Furniture;
 import Res.Res;
+import World.LocalMap;
 import java.util.ArrayList;
+import javafx.util.Pair;
 
 /**
  *
@@ -22,12 +25,16 @@ public class Crafting
     
     private int selectIndex;
     
+    //key == id of the furniture on the localmap, value == type of the station
+    private ArrayList<Furniture> stations;
+    
     public Crafting(Inventory inventory,ItemLibrary itemLibrary)
     {
         this.inventory = inventory;
         this.itemLibrary = itemLibrary;
         this.items = new ArrayList<Item>();
         this.selectIndex = -1;
+        this.stations = new ArrayList<Furniture>();
        
     }
     
@@ -55,6 +62,25 @@ public class Crafting
         {
             items.add(new Item(inventory.getItems().get(index)));
             inventory.removeItem(inventory.getItems().get(index));
+        }
+        
+    }
+    
+    public void getNearbyStations(LocalMap lm)
+    {
+        if(lm != null)
+        {
+            
+        
+        stations.clear();
+        ArrayList<Furniture> f = new ArrayList<Furniture>(lm.furnituresAround(lm.getPlayer().getX(), lm.getPlayer().getY()));
+        for(int i=0;i<f.size();i++)
+        {
+            if(f.get(i).getStationType()!=-1)
+            {
+                stations.add(f.get(i));
+            }
+        }
         }
         
     }
@@ -194,6 +220,14 @@ public class Crafting
 
     public void setSelectIndex(int selectIndex) {
         this.selectIndex = selectIndex;
+    }
+
+    public ArrayList<Furniture> getStations() {
+        return stations;
+    }
+
+    public void setStations(ArrayList<Furniture> stations) {
+        this.stations = stations;
     }
 
     

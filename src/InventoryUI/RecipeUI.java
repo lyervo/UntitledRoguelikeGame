@@ -22,7 +22,7 @@ import org.newdawn.slick.TrueTypeFont;
  *
  * @author Timot
  */
-public class RecipeUI
+public class RecipeUI extends DescBox
 {
     private Recipe recipe;
     
@@ -46,6 +46,7 @@ public class RecipeUI
     
     public RecipeUI(Recipe recipe,ItemLibrary itemLibrary,int index,TrueTypeFont font)
     {
+        super(recipe.getName(),itemLibrary.getItemByTrueName(recipe.getName()).getDescTrue(),font);
         this.recipe = recipe;
         this.font = font;
         this.texture = recipe.getTexture();
@@ -90,53 +91,10 @@ public class RecipeUI
                 hover = false;
             }
 
-            if(hover&&textureBounds.contains(new Point(input.getMouseX(),input.getMouseY()+(scroll*71))))
-            {
-                if(descHover<500)
-                {
-                    if(lastDescHover==0)
-                    {
-                        lastDescHover = System.currentTimeMillis();
-                    }else
-                    {
-                        descHover += System.currentTimeMillis()-lastDescHover;
-                        lastDescHover = System.currentTimeMillis();
-                    }
-                }else
-                {
-                    renderDesc = true;
-                    if(desc_lines.isEmpty())
-                    {
-                        if(font.getWidth(desc)>300)
-                        {
-                            String[] desc_arr = desc.split(" ");
-                            String placeholder = "";
-                            for(int i=0;i<desc_arr.length;i++)
-                            {
-                                if(font.getWidth(placeholder+" "+desc_arr[i])<300)
-                                {
-                                    placeholder += " "+desc_arr[i];
-                                }else
-                                {
-                                    desc_lines.add(placeholder);
-                                    placeholder = desc_arr[i];
-
-                                }
-                            }
-                            desc_lines.add(placeholder);
-
-                        }else
-                        {
-                            desc_lines.add(desc);
-                        }
-                    }
-                }
-            }else
-            {
-                renderDesc = false;
-                descHover = 0;
-                lastDescHover = 0;
-            }
+            tickDesc((hover&&textureBounds.contains(new Point(input.getMouseX(),input.getMouseY()+(scroll*71)))));
+            
+                
+                
 
             if(hover&&m[0])
             {
@@ -179,26 +137,6 @@ public class RecipeUI
         
     }
     
-    public void renderDesc(Graphics g,Input input)
-    {
-        g.setColor(Color.decode("#60a3bc"));
-        g.fillRect(input.getMouseX(), input.getMouseY(), 320, 29+(desc_lines.size()*29)+5);
-        font.drawString(input.getMouseX()+20, input.getMouseY(), recipe.getName());
-        
-        for(int i=0;i<desc_lines.size();i++)
-        {
-            if(i==0)
-            {
-                font.drawString(input.getMouseX(), input.getMouseY()+29+(i*29), desc_lines.get(i));
-            }else
-            {
-                font.drawString(input.getMouseX()+10, input.getMouseY()+29+(i*29), desc_lines.get(i));
-            }
-        }
-        
-        g.setColor(Color.black);
-        g.drawRect(input.getMouseX(), input.getMouseY(), 320, 29+(desc_lines.size()*29)+5);
-    }
 
     public Recipe getRecipe() {
         return recipe;

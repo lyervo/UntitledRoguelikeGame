@@ -193,7 +193,6 @@ public class Pawn extends Entity
             if(status.get(i).getEffect().getDuration()>0)
             {
                 status.get(i).tick(world, world.getWm().getCurrentLocalMap(),this);
-                System.out.println(status.get(i).getEffect().getType());
             }
             if(status.get(i).getEffect().getDuration()==0)
             {

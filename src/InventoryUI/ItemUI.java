@@ -23,7 +23,7 @@ import org.newdawn.slick.TrueTypeFont;
  *
  * @author Timot
  */
-public class ItemUI
+public class ItemUI extends DescBox
 {
     private Item item;
 
@@ -50,6 +50,7 @@ public class ItemUI
     
     public ItemUI(Item item,int index,int state,Res res)
     {
+        super(item.getName(),item.getDesc(),res.disposableDroidBB);
         this.drag = false;
         this.item = item;
         this.index = index;
@@ -308,27 +309,7 @@ public class ItemUI
         
     }
     
-    public void displayDesc(Graphics g,Input input)
-    {
-        g.setColor(Color.decode("#60a3bc"));
-        g.fillRect(input.getMouseX(), input.getMouseY(), 320, 29+(desc_lines.size()*29)+5);
-        font.drawString(input.getMouseX()+20, input.getMouseY(), item.getName());
-        
-        for(int i=0;i<desc_lines.size();i++)
-        {
-            if(i==0)
-            {
-                font.drawString(input.getMouseX(), input.getMouseY()+29+(i*29), desc_lines.get(i));
-            }else
-            {
-                font.drawString(input.getMouseX()+10, input.getMouseY()+29+(i*29), desc_lines.get(i));
-            }
-        }
-        
-        g.setColor(Color.black);
-        g.drawRect(input.getMouseX(), input.getMouseY(), 320, 29+(desc_lines.size()*29)+5);
-
-    }
+    
     
     
     public void dragRender(Graphics g,Input input)
@@ -460,48 +441,12 @@ public class ItemUI
             
         }else if(hover&&ui.getItemOptionTab()==null)
         {
-            if(last_desc_hover == 0)
-            {
-                last_desc_hover = System.currentTimeMillis();
-            }else if(!desc_display)
-            {
-                desc_hover += System.currentTimeMillis()-last_desc_hover;
-                last_desc_hover = System.currentTimeMillis();
-                if(desc_hover>=500)
-                {
-                    desc_display = true;
-                    String desc_unparse = item.getDesc();
-                    if(font.getWidth(desc_unparse)>300)
-                    {
-                        String[] desc_arr = desc_unparse.split(" ");
-                        String placeholder = "";
-                        for(int i=0;i<desc_arr.length;i++)
-                        {
-                           if(font.getWidth(placeholder+" "+desc_arr[i])<300)
-                           {
-                               placeholder += " "+desc_arr[i];
-                           }else
-                           {
-                               desc_lines.add(placeholder);
-                               placeholder = desc_arr[i];
-                               
-                           }
-                        }
-                        desc_lines.add(placeholder);
-                        
-                    }else
-                    {
-                        desc_lines.add(desc_unparse);
-                    }
-                }
-            }
+            tickDesc(true);
+            
             
         }else
         {
-            desc_lines.clear();
-            last_desc_hover = 0;
-            desc_hover = 0;
-            desc_display = false;
+            tickDesc(false);
         }
             
             
@@ -603,7 +548,7 @@ public class ItemUI
                     {
                         
                         ui.getCraftingUI().getCrafting().addIngridient(index);
-                        ui.getCraftingUI().refreshUI();
+                        ui.getCraftingUI().refreshUI(lm);
                         ui.refreshInventoryUI(lm);
                         return;
                     }
@@ -643,7 +588,7 @@ public class ItemUI
                 if(dropRect.intersects(ui.getPrimaryBounds()))
                 {
                     ui.getCraftingUI().getCrafting().removeIngridient(index);
-                    ui.getCraftingUI().refreshUI();
+                    ui.getCraftingUI().refreshUI(lm);
                     ui.refreshInventoryUI(lm);
                 }
             }

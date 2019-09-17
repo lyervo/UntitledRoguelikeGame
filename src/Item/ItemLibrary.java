@@ -112,7 +112,6 @@ public class ItemLibrary
             
             for(int i=0;i<jsonArr.size();i++)
             {
-                System.out.println("int "+i);
                 JSONObject jsonObj = (JSONObject)jsonArr.get(i);
                 recipes.add(new Recipe(jsonObj,this,i));
             }

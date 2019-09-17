@@ -29,7 +29,7 @@ public class Status
             switch(effect.getType())
             {
                 case "heal":
-                    System.out.println("heal");
+                  
                     pawn.getHp().addValue(effect.getValue());
                     effect.depleteDuration();
                     break;

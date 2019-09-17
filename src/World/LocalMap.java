@@ -79,6 +79,10 @@ public class LocalMap implements TileBasedMap, ILosBoard
         cam = new Camera(world.getContainer().getWidth(),world.getContainer().getHeight(),width,height,world.getScale());
         this.itemLibrary = itemLibrary;
         
+        furnitures = new ArrayList<Furniture>();
+        
+        furnitures.add(new Furniture(0,2,2,world.getEntityLibrary().getFurnitureTemplateByName("Workbench")));
+        
         generateTiles();
         hoveringTab = false;
         fov = new PrecisePermissive();
@@ -151,7 +155,11 @@ public class LocalMap implements TileBasedMap, ILosBoard
         {
             e.tick(k, m,input, world);
         }
-
+        
+        for(Furniture f:furnitures)
+        {
+            f.tick(k, m, input, world);
+        }
 
         cam.tick();
         for (ItemPile ip : itemPiles)
@@ -204,6 +212,12 @@ public class LocalMap implements TileBasedMap, ILosBoard
         {
             ip.render(cam, this);
         }
+        
+        for(Furniture f:furnitures)
+        {
+            f.render(cam, this);
+        }
+        
         for(Entity e:pawns)
         {
             e.render(cam,this);
@@ -380,6 +394,7 @@ public class LocalMap implements TileBasedMap, ILosBoard
         {
             if(((fu.getX()-x)>=-1&&(fu.getX()-x)<=1)&&((fu.getY()-y)>=-1&&(fu.getY()-y)<=1))
             {
+                System.out.println("add");
                 f.add(fu);
             }
         }

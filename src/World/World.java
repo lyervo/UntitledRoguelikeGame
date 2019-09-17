@@ -6,6 +6,7 @@
 package World;
 
 import Camera.Camera;
+import Entity.EntityLibrary;
 import InventoryUI.CraftingButton;
 import Item.ItemLibrary;
 import Narrator.Narrator;
@@ -55,6 +56,8 @@ public class World
     private int mouse_z;
     
     private ItemLibrary itemLibrary;
+    private EntityLibrary entityLibrary;
+    
     
     private QuickItemBarUI quickItemBarUI;
     private boolean quickItemBarUIDisplay;
@@ -68,6 +71,8 @@ public class World
     {
         
         itemLibrary = new ItemLibrary("test",res);
+        entityLibrary = new EntityLibrary(res);
+        
         mouse_z = 0;
         this.res = res;
         wm = new WorldMap(res,this,container);
@@ -406,6 +411,22 @@ public class World
 
     public void setxItemTextFieldActive(boolean xItemTextFieldActive) {
         this.xItemTextFieldActive = xItemTextFieldActive;
+    }
+
+    public CraftingButton getCraftingButton() {
+        return craftingButton;
+    }
+
+    public void setCraftingButton(CraftingButton craftingButton) {
+        this.craftingButton = craftingButton;
+    }
+
+    public EntityLibrary getEntityLibrary() {
+        return entityLibrary;
+    }
+
+    public void setEntityLibrary(EntityLibrary entityLibrary) {
+        this.entityLibrary = entityLibrary;
     }
     
     

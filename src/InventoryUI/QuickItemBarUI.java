@@ -96,9 +96,9 @@ public class QuickItemBarUI
         
         for(ItemUI i:itemUI)
         {
-            if(i.isDesc_display())
+            if(i.isDisplay())
             {
-                i.displayDesc(g, input);
+                i.renderDesc(g, input);
             }
         }
         if(itemOptionTab!=null)

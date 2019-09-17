@@ -10,6 +10,7 @@ import World.LocalMap;
 import World.World;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
+import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.util.pathfinding.AStarPathFinder;
 
 /**
@@ -20,6 +21,8 @@ public abstract class Entity
 {
     protected int x,y;
     protected Image texture;
+    protected SpriteSheet sprites;
+    protected boolean autoAnimate;
     protected int id;
     
     
@@ -29,6 +32,16 @@ public abstract class Entity
         this.y = y;
         this.id = id;
         this.texture = texture;
+    }
+    
+    public Entity(int id,int x,int y,SpriteSheet sprites,boolean autoAnimate)
+    {
+        System.out.println("i RUN");
+        this.x = x;
+        this.y = y;
+        this.id = id;
+        this.sprites = sprites;
+        this.autoAnimate = autoAnimate;
     }
     
     public abstract void tick(boolean[] k,boolean[] m,Input input,World world);

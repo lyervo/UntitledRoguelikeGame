@@ -5,6 +5,7 @@
  */
 package MapUI;
 
+import Entity.Furniture;
 import Entity.Pawn;
 import UI.OptionTab;
 import Item.Item;
@@ -30,13 +31,14 @@ public class TileOptionTab extends OptionTab
     
     private ItemPile ip;
     
-    
+    private Furniture furniture;
     
     public TileOptionTab(int x, int y, Tile t, LocalMap lm, TrueTypeFont font,Res res) {
         super(x, y, lm, font,res);
         this.t = t;
         p = lm.getPawnAt(t.getX(),t.getY());
         ip = lm.getItemPileAt(t.getX(), t.getY());
+        furniture = lm.furnitureAt(t.getX(), t.getY());
         initOptions();
         initOptionTab();
     }

@@ -59,17 +59,21 @@ public class Res
     public Image wooden_sword,iron_sword,zweihander,wooden_shield;
     
     
+    public Image table;
+    
     public Image tree_1;
     
     
     private ArrayList<Pair<String,Image>> images;
+    private ArrayList<Pair<String,SpriteSheet>> sprites;
+    
     
     public Sound potion_pop;
     
     
     public Res(GameContainer container) throws IOException, SlickException
     {
-        
+        sprites = new ArrayList<Pair<String,SpriteSheet>>();
         
         potion_pop = new Sound("res/audio/potion_pop.ogg");
         
@@ -124,6 +128,8 @@ public class Res
         
         sharp_object = new Image("res/texture/items/sharp_object.png");
         
+        table = new Image("res/texture/furniture/table.png");
+        
         
         images.add(new Pair("empty_bottle",empty_potion));
         images.add(new Pair("wooden_sword",wooden_sword));
@@ -136,6 +142,7 @@ public class Res
         images.add(new Pair("sharp_object",sharp_object));
         images.add(new Pair("wooden_shaft",wooden_shaft));
         images.add(new Pair("wood_shavings",wood_shavings));
+        images.add(new Pair("table",table));
         
         Graphics g = basicItem.getGraphics();
         g.setColor(Color.green);
@@ -152,6 +159,19 @@ public class Res
 		e.printStackTrace();
 	}	
         
+    }
+    
+    public SpriteSheet getSpriteByName(String name)
+    {
+        for(Pair<String,SpriteSheet> p:sprites)
+        {
+            if(p.getKey().equals(name))
+            {
+                return p.getValue();
+            }
+        }
+        
+        return null;
     }
     
     public Image getTextureByName(String name)

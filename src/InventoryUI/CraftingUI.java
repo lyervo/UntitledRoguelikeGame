@@ -5,10 +5,12 @@
  */
 package InventoryUI;
 
+import Entity.Furniture;
 import Item.Crafting;
 import Item.ItemLibrary;
 import Item.Recipe;
 import Res.Res;
+import World.LocalMap;
 import World.World;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -38,11 +40,11 @@ public class CraftingUI
     
     private int scroll;
     
-    ArrayList<RecipeUI> recipes;
+    private ArrayList<RecipeUI> recipes;
+    private ArrayList<StationUI> stations;
     
     
-    
-    public CraftingUI(Crafting crafting,Res res,InventoryUI inventoryUI,ItemLibrary itemLibrary)
+    public CraftingUI(Crafting crafting,Res res,InventoryUI inventoryUI,ItemLibrary itemLibrary,World world)
     {
         
         this.crafting = crafting;
@@ -66,7 +68,12 @@ public class CraftingUI
             recipes.add(new RecipeUI(itemLibrary.getRecipes().get(i),itemLibrary,i,res.disposableDroidBB));
         }
         
-        
+        stations = new ArrayList<StationUI>();
+        crafting.getNearbyStations(world.getWm().getCurrentLocalMap());
+        for(int i=0;i<crafting.getStations().size();i++)
+        {
+            stations.add(new StationUI(crafting.getStations().get(i),i,res));
+        }
         
     }
     
@@ -94,24 +101,29 @@ public class CraftingUI
             }
         }
         
-        for(RecipeUI r:recipes)
+        
+        
+        for(StationUI s:stations)
         {
-            if(r.isRenderDesc())
-            {
-                r.renderDesc(g, input);
-            }
+            s.render(g, input);
         }
         
         for(int i=0;i<recipes.size();i++)
         {
+            if(recipes.get(i).isDisplay())
+            {
+                recipes.get(i).renderDesc(g, input);
+            }
             for(RecipeRequirementUI r:recipes.get(i).getReq())
             {
-                if(r.isRenderDesc())
+                if(r.isDisplay())
                 {
                     r.renderDesc(g, input);
                 }
             }
         }
+        
+        
         
     }
     
@@ -141,6 +153,10 @@ public class CraftingUI
         {
             recipes.get(i).tick(k,m, input,world, i,scroll, crafting);
         }
+        for(StationUI s:stations)
+        {
+            s.tick(k, m, input, world);
+        }
     }
     
     public void scrollUp()
@@ -167,8 +183,17 @@ public class CraftingUI
     }
     
     
-    public void refreshUI()
+    public void refreshUI(LocalMap lm)
     {
+        
+        crafting.getNearbyStations(lm);
+        stations.clear();
+        for(int i=0;i<crafting.getStations().size();i++)
+        {
+            stations.add(new StationUI(crafting.getStations().get(i),i,res));
+        }
+        
+        
         itemUI.clear();
         
         for(int i=0;i<crafting.getItems().size();i++)

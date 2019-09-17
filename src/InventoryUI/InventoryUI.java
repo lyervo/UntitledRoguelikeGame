@@ -110,7 +110,7 @@ public class InventoryUI
         crafting_bg1 = res.crafting_bg_1;
         crafting_bg2 = res.crafting_bg_2;
         
-        craftingUI = new CraftingUI(player_inventory.getCrafting(),res,this,world.getItemLibrary());
+        craftingUI = new CraftingUI(player_inventory.getCrafting(),res,this,world.getItemLibrary(),world);
         
     }
     
@@ -174,17 +174,17 @@ public class InventoryUI
         {
             for(ItemUI i:primaryItemUI)
             {
-                if(i.isDesc_display())
+                if(i.isDisplay())
                 {
-                    i.displayDesc(g, input);
+                    i.renderDesc(g, input);
                 }
             }
             
             for(ItemUI i:secondaryItemUI)
             {
-                if(i.isDesc_display())
+                if(i.isDisplay())
                 {
-                    i.displayDesc(g, input);
+                    i.renderDesc(g, input);
                 }
             }
             
@@ -355,7 +355,7 @@ public class InventoryUI
         refreshSecondaryInventoryUI(lm);
         refreshPrimaryInventoryUI();
         playerEquipment.refreshUI();
-        craftingUI.refreshUI();
+        craftingUI.refreshUI(lm);
         if(interactingEquipment!=null)
         {
             interactingEquipment.refreshUI();

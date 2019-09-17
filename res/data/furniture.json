@@ -1,0 +1,11 @@
+[
+	
+	{
+		"name":"Workbench",
+		"use_spritesheet":"0",
+		"description":"A basic workbench for simple crafting.",
+		"texture":"table",
+		"auto_animate":"0",
+		"properties":["3","22"]
+	}
+]

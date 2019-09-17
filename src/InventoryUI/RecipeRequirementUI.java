@@ -21,7 +21,7 @@ import org.newdawn.slick.TrueTypeFont;
  *
  * @author Timot
  */
-public class RecipeRequirementUI
+public class RecipeRequirementUI extends DescBox
 {
  
     private String name;
@@ -40,6 +40,7 @@ public class RecipeRequirementUI
     
     public RecipeRequirementUI(Item item, TrueTypeFont font,int index,int reqIndex)
     {
+        super(item.getTrueName(),item.getDesc(),font);
         this.name = item.getTrueName();
         this.texture = item.getTexture();
         this.description = item.getDesc();
@@ -51,6 +52,7 @@ public class RecipeRequirementUI
     
     public RecipeRequirementUI(ItemType itemType, TrueTypeFont font,int index,int reqIndex)
     {
+        super(itemType.getName(),itemType.getDesc(),font);
         this.name = itemType.getName();
         this.description = itemType.getDesc();
         this.texture = itemType.getTexture();
@@ -63,76 +65,8 @@ public class RecipeRequirementUI
     
     public void tick(boolean[] k,boolean[] m,Input input,World world,int scroll)
     {
-        if(bounds.contains(new Point(input.getMouseX(),input.getMouseY()+(scroll*71))))
-        {
-         
-            if(descHover<500)
-            {
-                if(lastDescHover==0)
-                {
-                    lastDescHover = System.currentTimeMillis();
-                }else
-                {
-                    descHover += System.currentTimeMillis()-lastDescHover;
-                    lastDescHover = System.currentTimeMillis();
-                }
-            }else
-            {
-                renderDesc = true;
-                if(desc_lines.isEmpty())
-                {
-                    if(font.getWidth(description)>300)
-                    {
-                        String[] desc_arr = description.split(" ");
-                        String placeholder = "";
-                        for(int i=0;i<desc_arr.length;i++)
-                        {
-                            if(font.getWidth(placeholder+" "+desc_arr[i])<300)
-                            {
-                                placeholder += " "+desc_arr[i];
-                            }else
-                            {
-                                desc_lines.add(placeholder);
-                                placeholder = desc_arr[i];
-
-                            }
-                        }
-                        desc_lines.add(placeholder);
-
-                    }else
-                    {
-                        desc_lines.add(description);
-                    }
-                }
-            }
-        }else
-        {
-            renderDesc = false;
-            descHover = 0;
-            lastDescHover = 0;
-        }
+        tickDesc(bounds.contains(new Point(input.getMouseX(),input.getMouseY()+(scroll*71))));
         
-    }
-
-    public void renderDesc(Graphics g,Input input)
-    {
-        g.setColor(Color.decode("#60a3bc"));
-        g.fillRect(input.getMouseX(), input.getMouseY(), 320, 29+(desc_lines.size()*29)+5);
-        font.drawString(input.getMouseX()+20, input.getMouseY(), name);
-        
-        for(int i=0;i<desc_lines.size();i++)
-        {
-            if(i==0)
-            {
-                font.drawString(input.getMouseX(), input.getMouseY()+29+(i*29), desc_lines.get(i));
-            }else
-            {
-                font.drawString(input.getMouseX()+10, input.getMouseY()+29+(i*29), desc_lines.get(i));
-            }
-        }
-        
-        g.setColor(Color.black);
-        g.drawRect(input.getMouseX(), input.getMouseY(), 320, 29+(desc_lines.size()*29)+5);
     }
     
     public void render(Graphics g, Input input, int index, int reqIndex , int scroll)
