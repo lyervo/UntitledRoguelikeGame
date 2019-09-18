@@ -40,7 +40,7 @@ public class Res
     public Image inventory_scroll_up,inventory_scroll_down;
     public Image quick_item_bg;
     //crafting UI
-    public Image crafting_icon,crafting_clear_all,crafting_craft;
+    public Image crafting_icon,crafting_clear_all,crafting_craft,crafting_filter_by_learnt,crafting_filter_by_learnt_and_craftable;
     
     
     
@@ -53,10 +53,12 @@ public class Res
     public Image sharp_object;
     
     
-    public Image empty_potion,wood,leaves,wooden_shaft,wood_shavings;
+    public Image empty_potion,wood,leaves,wooden_shaft,wood_shavings,book_1;
     
     
     public Image wooden_sword,iron_sword,zweihander,wooden_shield;
+    
+    public Image metal_bar;
     
     
     public Image table;
@@ -95,6 +97,9 @@ public class Res
         crafting_bg_2 = new Image("res/texture/ui/background/crafting_bg_2.png");
         crafting_clear_all = new Image("res/texture/ui/icon/crafting_clear_all.png");
         crafting_craft = new Image("res/texture/ui/icon/crafting_craft.png");
+        crafting_filter_by_learnt = new Image("res/texture/ui/icon/crafting_filter_by_learnt.png");
+        crafting_filter_by_learnt_and_craftable = new Image("res/texture/ui/icon/crafting_filter_by_learnt_and_craftable.png");
+        
         
         quick_item_bg = new Image("res/texture/ui/inventory/quick_item_bar.png");
         
@@ -115,7 +120,7 @@ public class Res
         leaves = new Image("res/texture/items/leaves.png");
         wooden_shaft = new Image("res/texture/items/wooden_shaft.png");
         
-        
+        metal_bar = new Image("res/texture/items/metal_bar.png");
         
         wooden_sword = new Image("res/texture/items/wooden_sword.png");
         iron_sword = new Image("res/texture/items/iron_sword.png");
@@ -130,7 +135,11 @@ public class Res
         
         table = new Image("res/texture/furniture/table.png");
         
+        SpriteSheet books = new SpriteSheet("res/texture/items/Book.png",32,32);
         
+        book_1 = new Image("res/texture/items/book_1.png");
+        
+        images.add(new Pair("book_1",book_1));
         images.add(new Pair("empty_bottle",empty_potion));
         images.add(new Pair("wooden_sword",wooden_sword));
         images.add(new Pair("iron_sword",iron_sword));
@@ -143,6 +152,7 @@ public class Res
         images.add(new Pair("wooden_shaft",wooden_shaft));
         images.add(new Pair("wood_shavings",wood_shavings));
         images.add(new Pair("table",table));
+        images.add(new Pair("metal_bar",metal_bar));
         
         Graphics g = basicItem.getGraphics();
         g.setColor(Color.green);
@@ -195,5 +205,7 @@ public class Res
         TrueTypeFont font = new TrueTypeFont(awtFont2, false);
         return font;
     }
+    
+    
     
 }

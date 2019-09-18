@@ -5,6 +5,8 @@
  */
 package InventoryUI;
 
+import Entity.Furniture;
+import Entity.FurnitureTemplate;
 import Item.Item;
 import Item.ItemType;
 import World.World;
@@ -62,6 +64,21 @@ public class RecipeRequirementUI extends DescBox
         this.desc_lines = new ArrayList<String>();
         this.font = font;
     }
+    
+    public RecipeRequirementUI(FurnitureTemplate furniture,TrueTypeFont font,int index,int reqIndex)
+    {
+        super(furniture.getName(),furniture.getDesc(),font);
+        this.name = furniture.getName();
+        this.description = furniture.getDesc();
+        this.texture = furniture.getTexture();
+        this.type = furniture.getStationType();
+        this.bounds = new Rectangle(311+(reqIndex*71),64+(index*71),64,64);
+        this.renderDesc = false;
+        this.desc_lines = new ArrayList<String>();
+        this.font = font;
+    }
+    
+  
     
     public void tick(boolean[] k,boolean[] m,Input input,World world,int scroll)
     {

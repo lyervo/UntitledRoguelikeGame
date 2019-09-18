@@ -60,6 +60,18 @@ public class FurnitureTemplate
         this.texture = res.getTextureByName((String)jsonObj.get("texture"));
         
     }
+    
+    public int getStationType()
+    {
+        for(int i=0;i<properties.size();i++)
+        {
+            if(properties.get(i)>20&&properties.get(i)<50)
+            {
+                return properties.get(i);
+            }
+        }
+        return -1;
+    }
 
     public ArrayList<Integer> getProperties() {
         return properties;

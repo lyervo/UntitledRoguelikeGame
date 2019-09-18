@@ -5,6 +5,7 @@
  */
 package InventoryUI;
 
+import Entity.EntityLibrary;
 import Item.Crafting;
 import Item.ItemLibrary;
 import Item.Recipe;
@@ -44,7 +45,7 @@ public class RecipeUI extends DescBox
     
     private ArrayList<String> desc_lines;
     
-    public RecipeUI(Recipe recipe,ItemLibrary itemLibrary,int index,TrueTypeFont font)
+    public RecipeUI(Recipe recipe,ItemLibrary itemLibrary,EntityLibrary entityLibrary,int index,TrueTypeFont font)
     {
         super(recipe.getName(),itemLibrary.getItemByTrueName(recipe.getName()).getDescTrue(),font);
         this.recipe = recipe;
@@ -76,6 +77,12 @@ public class RecipeUI extends DescBox
                 req.add(new RecipeRequirementUI(itemLibrary.getItemByTrueName(recipe.getIngredients().get(i).getKey()),font,index,i));
             }
         }
+        
+        for(int i=0;i<recipe.getStations().size();i++)
+        {
+            req.add(new RecipeRequirementUI(entityLibrary.getFurnitureTemplateByStationType(recipe.getStations().get(i)),font,index,i+recipe.getIngredients().size()));
+        }
+        
         
     }
     

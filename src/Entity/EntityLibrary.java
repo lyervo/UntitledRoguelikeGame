@@ -79,6 +79,19 @@ public class EntityLibrary
         
         return null;
     }
+    
+    public FurnitureTemplate getFurnitureTemplateByStationType(int type)
+    {
+        for(FurnitureTemplate ft:furnitures)
+        {
+            if(ft.getStationType()==type)
+            {
+                return ft;
+            }
+        }
+        return null;
+    }
+    
     public Creature getCreatureByName(String name)
     {
         for(Creature c:creatures)

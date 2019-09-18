@@ -443,18 +443,11 @@ public class ItemUI extends DescBox
         {
             tickDesc(true);
             
-            
         }else
         {
             tickDesc(false);
         }
             
-            
-            
-        
-            
-        
-        
     }
     
     public void checkQuickItemBarDrop(Input input,QuickItemBarUI ui,LocalMap lm)
@@ -547,7 +540,7 @@ public class ItemUI extends DescBox
                     if(ui.getCraftingUI().getCrafting().getItems().size()<9)
                     {
                         
-                        ui.getCraftingUI().getCrafting().addIngridient(index);
+                        ui.getCraftingUI().getCrafting().addIngredient(index);
                         ui.getCraftingUI().refreshUI(lm);
                         ui.refreshInventoryUI(lm);
                         return;

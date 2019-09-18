@@ -4,6 +4,12 @@
 		"texture":"sharp_object",
 		"desc":"Any type of sharpened tools or weapons.",
 		"type":"51"
+	},
+	{
+		"name":"<Metal>",
+		"texture":"sharp_object",
+		"desc":"Any type of smelted metal.",
+		"type":"52"
 	}
 	
 ]

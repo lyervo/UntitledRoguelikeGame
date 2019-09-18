@@ -113,6 +113,14 @@ public class ItemOptionTab extends OptionTab
                 
                 lm.getWorld().moved();
                 break;
+            case 6:
+                for(int i=0;i<item.getEffects().size();i++)
+                {
+                    System.out.println(item.getEffects().get(i).getType());
+                    lm.getPlayer().getStatus().add(new Status(item.getEffects().get(i)));
+                }
+                lm.getWorld().moved();
+                break;
             case 20:
                 inventory.getEquipment().equip(item);
                 inventoryUI.refreshInventoryUI(lm);
@@ -123,7 +131,7 @@ public class ItemOptionTab extends OptionTab
                 lm.getWorld().moved();
                 break;
             case 25:
-                inventory.getCrafting().addIngridient(index);
+                inventory.getCrafting().addIngredient(index);
                 lm.getWorld().getInventory_ui().refreshInventoryUI(lm);
                 break;
         }
@@ -142,6 +150,9 @@ public class ItemOptionTab extends OptionTab
         if(state!=4&&state!=6)
         {
             options.add(new Pair("Drop",0));
+            
+            
+            
             if(item.getStack()>1)
             {
                 options.add(new Pair("Drop All",1));
@@ -168,6 +179,10 @@ public class ItemOptionTab extends OptionTab
                         options.add(new Pair("Empty",5));
                         break;
                     case 3:
+                        break;
+                    case 5:
+     
+                        options.add(new Pair("Read",6));
                         break;
                     case 20:
                         options.add(new Pair("Equip",20));

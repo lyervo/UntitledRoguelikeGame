@@ -34,14 +34,21 @@ public class CraftingUI
     
     private CraftingClearAllButton craftingClearAllButton;
     private CraftingCraftButton craftingCraftButton;
+    private CraftingFilterButton craftingFilterButton;
     private RecipeScrollUpButton recipeScrollUpButton;
     private RecipeScrollDownButton recipeScrollDownButton;
-    
+  
     
     private int scroll;
     
     private ArrayList<RecipeUI> recipes;
     private ArrayList<StationUI> stations;
+    
+    private int filter;
+    //0 = show all
+    //1 = show learnt
+    //2 = show learnt and craftable
+    //3 = show learnt and relevant name
     
     
     public CraftingUI(Crafting crafting,Res res,InventoryUI inventoryUI,ItemLibrary itemLibrary,World world)
@@ -54,6 +61,7 @@ public class CraftingUI
         itemUI = new ArrayList<ItemUI>();
         craftingClearAllButton = new CraftingClearAllButton(16,279,res.crafting_clear_all,crafting,inventoryUI);
         craftingCraftButton = new CraftingCraftButton(85,279,res.crafting_craft,crafting,inventoryUI);
+        craftingFilterButton = new CraftingFilterButton(154,279,res.crafting_filter_by_learnt,res.crafting_filter_by_learnt_and_craftable,this);
         
         recipeBounds = new Rectangle(231,66,700,284);
         
@@ -65,7 +73,7 @@ public class CraftingUI
         
         for(int i=0;i<itemLibrary.getRecipes().size();i++)
         {
-            recipes.add(new RecipeUI(itemLibrary.getRecipes().get(i),itemLibrary,i,res.disposableDroidBB));
+            recipes.add(new RecipeUI(itemLibrary.getRecipes().get(i),itemLibrary,world.getEntityLibrary(),i,res.disposableDroidBB));
         }
         
         stations = new ArrayList<StationUI>();
@@ -75,14 +83,18 @@ public class CraftingUI
             stations.add(new StationUI(crafting.getStations().get(i),i,res));
         }
         
+        filter = 0;
+        
     }
     
     public void render(Graphics g,Input input)
     {
         craftingClearAllButton.render(g);
         craftingCraftButton.render(g);
+        craftingFilterButton.render(g);
         recipeScrollUpButton.render(g);
         recipeScrollDownButton.render(g);
+        
         for(ItemUI i:itemUI)
         {
             i.render(g, input, 9, 0, 0);
@@ -123,6 +135,22 @@ public class CraftingUI
             }
         }
         
+        for(StationUI s:stations)
+        {
+            if(s.isDisplay())
+            {
+                s.renderDesc(g, input);
+            }
+        }
+        
+        for(ItemUI i:itemUI)
+        {
+            if(i.isDisplay())
+            {
+                i.renderDesc(g, input);
+            }
+        }
+        
         
         
     }
@@ -132,6 +160,7 @@ public class CraftingUI
     {
         craftingClearAllButton.tick(m, input, world);
         craftingCraftButton.tick(m, input, world);
+        craftingFilterButton.tick(m, input, world);
         recipeScrollUpButton.tick(m, input, world);
         recipeScrollDownButton.tick(m, input, world);
         if(recipeBounds.contains(new Point(input.getMouseX(),input.getMouseY())))
@@ -188,6 +217,7 @@ public class CraftingUI
         
         crafting.getNearbyStations(lm);
         stations.clear();
+        
         for(int i=0;i<crafting.getStations().size();i++)
         {
             stations.add(new StationUI(crafting.getStations().get(i),i,res));
@@ -199,6 +229,29 @@ public class CraftingUI
         for(int i=0;i<crafting.getItems().size();i++)
         {
             itemUI.add(new ItemUI(crafting.getItems().get(i),i,9,res));
+        }
+        
+        recipes.clear();
+        
+        int index = 0;
+        for(int i=0;i<crafting.getItemLibrary().getRecipes().size();i++)
+        {
+            
+            if(filter==1&&crafting.getItemLibrary().getLearntRecipe()[i])
+            {
+                recipes.add(new RecipeUI(crafting.getItemLibrary().getRecipes().get(i),crafting.getItemLibrary(),lm.getWorld().getEntityLibrary(),index,res.disposableDroidBB));
+                index++;
+            }
+            if(filter==2&&crafting.checkCraftingRecipe(crafting.getItemLibrary().getRecipes().get(i))&&crafting.getItemLibrary().getLearntRecipe()[i])
+            {
+
+                recipes.add(new RecipeUI(crafting.getItemLibrary().getRecipes().get(i),crafting.getItemLibrary(),lm.getWorld().getEntityLibrary(),index,res.disposableDroidBB));
+                index++;
+                
+            }else if(filter==0)
+            {
+                recipes.add(new RecipeUI(crafting.getItemLibrary().getRecipes().get(i),crafting.getItemLibrary(),lm.getWorld().getEntityLibrary(),i,res.disposableDroidBB));
+            }
         }
     }
 
@@ -240,6 +293,78 @@ public class CraftingUI
 
     public void setRes(Res res) {
         this.res = res;
+    }
+
+    public Rectangle getRecipeBounds() {
+        return recipeBounds;
+    }
+
+    public void setRecipeBounds(Rectangle recipeBounds) {
+        this.recipeBounds = recipeBounds;
+    }
+
+    public CraftingClearAllButton getCraftingClearAllButton() {
+        return craftingClearAllButton;
+    }
+
+    public void setCraftingClearAllButton(CraftingClearAllButton craftingClearAllButton) {
+        this.craftingClearAllButton = craftingClearAllButton;
+    }
+
+    public CraftingCraftButton getCraftingCraftButton() {
+        return craftingCraftButton;
+    }
+
+    public void setCraftingCraftButton(CraftingCraftButton craftingCraftButton) {
+        this.craftingCraftButton = craftingCraftButton;
+    }
+
+    public RecipeScrollUpButton getRecipeScrollUpButton() {
+        return recipeScrollUpButton;
+    }
+
+    public void setRecipeScrollUpButton(RecipeScrollUpButton recipeScrollUpButton) {
+        this.recipeScrollUpButton = recipeScrollUpButton;
+    }
+
+    public RecipeScrollDownButton getRecipeScrollDownButton() {
+        return recipeScrollDownButton;
+    }
+
+    public void setRecipeScrollDownButton(RecipeScrollDownButton recipeScrollDownButton) {
+        this.recipeScrollDownButton = recipeScrollDownButton;
+    }
+
+    public int getScroll() {
+        return scroll;
+    }
+
+    public void setScroll(int scroll) {
+        this.scroll = scroll;
+    }
+
+    public ArrayList<RecipeUI> getRecipes() {
+        return recipes;
+    }
+
+    public void setRecipes(ArrayList<RecipeUI> recipes) {
+        this.recipes = recipes;
+    }
+
+    public ArrayList<StationUI> getStations() {
+        return stations;
+    }
+
+    public void setStations(ArrayList<StationUI> stations) {
+        this.stations = stations;
+    }
+
+    public int getFilter() {
+        return filter;
+    }
+
+    public void setFilter(int filter) {
+        this.filter = filter;
     }
     
     

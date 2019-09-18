@@ -27,6 +27,8 @@ public class Recipe
     private Image texture;
     private int id;
     
+    private ArrayList<Pair<String,Integer>> byProducts;
+    
     public Recipe(JSONObject jsonObj,ItemLibrary itemLibrary,int id)
     {
         this.id = id;
@@ -68,6 +70,18 @@ public class Recipe
                 requirements.add(new Pair((String)reqObj.get("type"),Integer.parseInt((String)reqObj.get("level"))));
             }
         }
+        
+        byProducts = new ArrayList<Pair<String,Integer>>();
+        JSONArray proArr = (JSONArray)jsonObj.get("by_product");
+        if(proArr!=null)
+        {
+            for(int i=0;i<proArr.size();i++)
+            {
+                JSONObject proObj = (JSONObject)proArr.get(i);
+                byProducts.add(new Pair((String)proObj.get("name"),Integer.parseInt((String)proObj.get("amount"))));
+            }
+        }
+
         
        
         
@@ -147,6 +161,14 @@ public class Recipe
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public ArrayList<Pair<String, Integer>> getByProducts() {
+        return byProducts;
+    }
+
+    public void setByProducts(ArrayList<Pair<String, Integer>> byProducts) {
+        this.byProducts = byProducts;
     }
     
     

@@ -91,15 +91,7 @@ public class Game extends StateBasedGame
     public Game(String title) throws IOException, SlickException
     {
         super(title);
-       
-        
     }
-
-    
-
-    
-
-
     
 
     @Override

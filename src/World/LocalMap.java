@@ -394,7 +394,6 @@ public class LocalMap implements TileBasedMap, ILosBoard
         {
             if(((fu.getX()-x)>=-1&&(fu.getX()-x)<=1)&&((fu.getY()-y)>=-1&&(fu.getY()-y)<=1))
             {
-                System.out.println("add");
                 f.add(fu);
             }
         }

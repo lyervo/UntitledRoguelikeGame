@@ -133,11 +133,24 @@ public class Inventory
        
     }
     
+    public void removeItem(Item item,int amount)
+    {
+        
+        
+        items.remove(item);
+        
+        
+        
+       
+    }
+    
     
    
 
     public void debugInit(ItemLibrary itemLibrary)
     {
+        addItem(new Item(itemLibrary.getItemByTrueName("Iron Bar")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Woodworking Guide I")));
         addItem(new Item(itemLibrary.getItemByTrueName("Wooden Sword")));
         addItem(new Item(itemLibrary.getItemByTrueName("Iron Sword")));
         addItem(new Item(itemLibrary.getItemByTrueName("Zweihander")));

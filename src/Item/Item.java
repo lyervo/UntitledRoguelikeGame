@@ -44,6 +44,9 @@ public class Item
     //2 - liquid, drinkable, need container
     //3 - a liquid container
     //4 - stackable item
+    //5 - readable item
+    //6 - metal material
+    //7 - generic metal products
     //
     //Equipment properties, stats of an equipment is represented by it's effects
     //20 - Equipable item
@@ -268,7 +271,7 @@ public class Item
     
     
     public String getDesc() {
-        if(name==null)
+        if(unidentified_desc==null)
         {
             return desc;
         }

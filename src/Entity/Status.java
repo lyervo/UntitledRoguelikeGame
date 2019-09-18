@@ -26,30 +26,39 @@ public class Status
     {
         if(world.isMoved()&&effect.getDuration()>=1)
         {
-            switch(effect.getType())
+            if(effect.getType().startsWith("recipe&&")&&pawn.isControl())
             {
-                case "heal":
-                  
-                    pawn.getHp().addValue(effect.getValue());
-                    effect.depleteDuration();
-                    break;
-                case "poison":
-                    if(effect.getDuration()>0)
-                    {
-                        pawn.getHp().addValue(-effect.getValue());
+                
+                String[] splitter = effect.getType().split("&&");
+                world.getItemLibrary().learnRecipeByName(splitter[1]);
+                world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
+            }else
+            {
+                switch(effect.getType())
+                {
+                    case "heal":
+
+                        pawn.getHp().addValue(effect.getValue());
                         effect.depleteDuration();
-                    }
-                    break;
-                case "cure_poison":
-                    for(Status s:pawn.getStatus())
-                    {
-                        if(s.getEffect().getType().equals("poison"))
+                        break;
+                    case "poison":
+                        if(effect.getDuration()>0)
                         {
-                            s.getEffect().setDuration(0);
+                            pawn.getHp().addValue(-effect.getValue());
+                            effect.depleteDuration();
                         }
-                    }
-                    effect.depleteDuration();
-                    break;
+                        break;
+                    case "cure_poison":
+                        for(Status s:pawn.getStatus())
+                        {
+                            if(s.getEffect().getType().equals("poison"))
+                            {
+                                s.getEffect().setDuration(0);
+                            }
+                        }
+                        effect.depleteDuration();
+                        break;
+                }
             }
             
         }

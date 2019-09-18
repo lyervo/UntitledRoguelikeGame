@@ -41,6 +41,8 @@ public class ItemLibrary
     
     private boolean[] identify;
     
+    private boolean[] learntRecipe;
+    
     private ArrayList<Recipe> recipes;
     
     private ArrayList<ItemType> types;
@@ -55,6 +57,7 @@ public class ItemLibrary
         this.items = new ArrayList<Item>();
         this.recipes = new ArrayList<Recipe>();
         this.types = new ArrayList<ItemType>();
+        
         initItems();
         initRecipes();
         initItemType();
@@ -95,6 +98,8 @@ public class ItemLibrary
     
     public void initRecipes()
     {
+       
+        
         
         try {
             
@@ -123,6 +128,9 @@ public class ItemLibrary
         {
             Logger.getLogger(ItemLibrary.class.getName()).log(Level.SEVERE, null, e);
         }
+        
+        learntRecipe = new boolean[recipes.size()];
+        Arrays.fill(learntRecipe, false);
             
     }
     
@@ -243,6 +251,17 @@ public class ItemLibrary
         }
         
         
+    }
+    
+    public void learnRecipeByName(String name)
+    {
+        for(int i=0;i<recipes.size();i++)
+        {
+            if(recipes.get(i).getName().equals(name))
+            {
+                learntRecipe[i] = true;
+            }
+        }
     }
     
     public Image paintPotion(Image image,Pair<Color,Color> colors)
@@ -415,6 +434,14 @@ public class ItemLibrary
 
     public void setTypes(ArrayList<ItemType> types) {
         this.types = types;
+    }
+
+    public boolean[] getLearntRecipe() {
+        return learntRecipe;
+    }
+
+    public void setLearntRecipe(boolean[] learntRecipe) {
+        this.learntRecipe = learntRecipe;
     }
     
     

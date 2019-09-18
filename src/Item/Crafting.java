@@ -50,19 +50,11 @@ public class Crafting
         }
     }
     
-    public void addIngridient(int index)
+    public void addIngredient(int index)
     {
-        if(inventory.getItems().get(index).isStackable()&&inventory.getItems().get(index).getStack()>1)
-        {
-            Item a = new Item(inventory.getItems().get(index));
-            a.setStack(1);
-            items.add(a);
-            inventory.getItems().get(index).addStack(-1);
-        }else
-        {
-            items.add(new Item(inventory.getItems().get(index)));
-            inventory.removeItem(inventory.getItems().get(index));
-        }
+        items.add(new Item(inventory.getItems().get(index)));
+        inventory.removeItem(inventory.getItems().get(index),-1);
+        
         
     }
     
@@ -70,17 +62,15 @@ public class Crafting
     {
         if(lm != null)
         {
-            
-        
-        stations.clear();
-        ArrayList<Furniture> f = new ArrayList<Furniture>(lm.furnituresAround(lm.getPlayer().getX(), lm.getPlayer().getY()));
-        for(int i=0;i<f.size();i++)
-        {
-            if(f.get(i).getStationType()!=-1)
+            stations.clear();
+            ArrayList<Furniture> f = new ArrayList<Furniture>(lm.furnituresAround(lm.getPlayer().getX(), lm.getPlayer().getY()));
+            for(int i=0;i<f.size();i++)
             {
-                stations.add(f.get(i));
+                if(f.get(i).getStationType()!=-1)
+                {
+                    stations.add(f.get(i));
+                }
             }
-        }
         }
         
     }
@@ -94,21 +84,57 @@ public class Crafting
         
         if(itemLibrary.getRecipeById(selectIndex)!=null)
         {
-            if(checkCraftingRecipe(itemLibrary.getRecipeById(selectIndex)))
+            Recipe recipe = itemLibrary.getRecipeById(selectIndex);
+            if(checkCraftingRecipe(recipe))
             {
-                removeIngredients(itemLibrary.getRecipeById(selectIndex));
-                if(itemLibrary.getItemByTrueName(itemLibrary.getRecipeById(selectIndex).getName()).isStackable())
+                if(itemLibrary.getItemByTrueName(recipe.getName()).getProperties().contains(7))//is a metal generic
                 {
-                    Item a = itemLibrary.getItemByTrueName(itemLibrary.getRecipeById(selectIndex).getName());
-                    a.setStack(itemLibrary.getRecipeById(selectIndex).getAmount());
+                    
+                    Item a = new Item(itemLibrary.getItemByTrueName(recipe.getName()));
+                    
+                    for(int i=0;i<items.size();i++)
+                    {
+                        if(items.get(i).getProperties().contains(6))//is a metal material
+                        {
+                            String[] splitter = items.get(i).getName().split(" ");
+                            a.setTrueName(a.getTrueName().replace("<metal>", splitter[0]));
+                            a.setDesc(a.getDescTrue().replace("<metal>", splitter[0]));
+                            inventory.addItem(a);
+                            break;
+                        }
+                    }
+                }
+                else if(itemLibrary.getItemByTrueName(recipe.getName()).isStackable())
+                {
+                    Item a = itemLibrary.getItemByTrueName(recipe.getName());
+                    a.setStack(recipe.getAmount());
                     inventory.addItem(new Item(a));
                 }else
                 {
-                    for(int i=0;i<itemLibrary.getRecipeById(selectIndex).getAmount();i++)
+                    for(int i=0;i<recipe.getAmount();i++)
                     {
-                        inventory.addItem(new Item(itemLibrary.getItemByTrueName(itemLibrary.getRecipeById(selectIndex).getName())));
+                        inventory.addItem(new Item(itemLibrary.getItemByTrueName(recipe.getName())));
                     }
                 }
+                
+                for(int i=0;i<recipe.getByProducts().size();i++)
+                {
+                    if(itemLibrary.getItemByTrueName(recipe.getByProducts().get(i).getKey()).isStackable())
+                    {
+                        Item a = itemLibrary.getItemByTrueName(recipe.getByProducts().get(i).getKey());
+                        a.setStack(recipe.getByProducts().get(i).getValue());
+                        inventory.addItem(new Item(a));
+                    }else
+                    {
+                        for(int j=0;j<recipe.getByProducts().get(i).getValue();j++)
+                        {
+                            inventory.addItem(new Item(itemLibrary.getItemByTrueName(recipe.getByProducts().get(i).getKey())));
+                        }
+                    }
+                }
+                
+                removeIngredients(recipe);
+                
             }
             
         }
@@ -126,8 +152,21 @@ public class Crafting
                 {
                     if(items.get(j).getProperties().contains(itemLibrary.getItemTypeByName(recipe.getIngredients().get(i).getKey()).getType())&&recipe.getIngredients().get(i).getValue()==1)
                     {
-           
-                        items.remove(j);
+                        if(items.get(j).isStackable())
+                        {
+                        
+                            items.get(j).addStack(-1);
+                            
+                            if(items.get(j).getStack()==0)
+                            {
+                                items.remove(j);
+                            }
+                        
+                        }else
+                        {
+                            items.remove(j);
+                        }
+                            
                         break;
                     }
                 }else
@@ -135,22 +174,45 @@ public class Crafting
                     if(items.get(j).getTrueName().equals(recipe.getIngredients().get(i).getKey())&&recipe.getIngredients().get(i).getValue()==1)
                     {
                 
-                        items.remove(j);
+                        if(items.get(j).isStackable())
+                        {
+                        
+                            items.get(j).addStack(-1);
+                            
+                            if(items.get(j).getStack()==0)
+                            {
+                                items.remove(j);
+                            }
+                        
+                        }else
+                        {
+                            items.remove(j);
+                        }
                         break;
                     }
                 }
+                
+                
+                
             }
         }
     }
     
     public boolean checkCraftingRecipe(Recipe recipe)
     {
-        ArrayList<Item> recipeItems = new ArrayList<Item>(items);
+        
+        ArrayList<Item> recipeItems = new ArrayList<Item>();
+        for(int i=0;i<items.size();i++)
+        {
+            recipeItems.add(new Item(items.get(i)));
+        }
 
+        boolean notFound;
+        
         for(int i=0;i<recipe.getIngredients().size();i++)
         {
  
-            boolean notFound = true;
+            notFound = true;
             for(int j=recipeItems.size()-1;j>=0;j--)
             {
                 
@@ -159,7 +221,20 @@ public class Crafting
                     if(recipeItems.get(j).getProperties().contains(itemLibrary.getItemTypeByName(recipe.getIngredients().get(i).getKey()).getType())&&notFound)
                     {
                    
-                        recipeItems.remove(j);
+                        if(recipeItems.get(j).isStackable())
+                        {
+                        
+                            recipeItems.get(j).addStack(-1);
+                            
+                            if(recipeItems.get(j).getStack()==0)
+                            {
+                                recipeItems.remove(j);
+                            }
+                        
+                        }else
+                        {
+                            recipeItems.remove(j);
+                        }
                         notFound = false;
                     }
                 }else
@@ -167,10 +242,41 @@ public class Crafting
                     if(recipeItems.get(j).getTrueName().equals(recipe.getIngredients().get(i).getKey())&&notFound)
                     {
                         
-                        recipeItems.remove(j);
+                        if(recipeItems.get(j).isStackable())
+                        {
+                            recipeItems.get(j).addStack(-1);
+                            if(recipeItems.get(j).getStack()==0)
+                            {
+                                recipeItems.remove(j);
+                            }
+                        
+                        }else
+                        {
+                            recipeItems.remove(j);
+                        }
                         notFound = false;
                     }
                 }
+            }
+            if(notFound)
+            {
+                
+                return false;
+            }
+        }
+        
+        for(int i=0;i<recipe.getStations().size();i++)
+        {
+ 
+            notFound = true;
+            for(int j=stations.size()-1;j>=0;j--)
+            {
+                
+                if(recipe.getStations().get(i)==stations.get(j).getStationType())
+                {
+                    notFound = false;
+                }
+                        
             }
             if(notFound)
             {

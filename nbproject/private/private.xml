@@ -23,9 +23,11 @@
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Item/Recipe.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Game/Game.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/World/WorldMap.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/InventoryUI/DescBox.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Item/Equipment.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/InventoryUI/CraftingUI.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/InventoryUI/XItemTextField.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/UI/Button.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/GameStates/InGame.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/InventoryUI/XItemTextFieldExitButton.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Item/Item.java</file>
@@ -44,6 +46,7 @@
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/UI/OptionTab.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Item/Inventory.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/InventoryUI/CraftingCraftButton.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/InventoryUI/CraftingFilterButton.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Item/Effect.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/InventoryUI/NumericTextField.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Res/Res.java</file>
