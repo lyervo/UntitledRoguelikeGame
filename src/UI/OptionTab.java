@@ -5,17 +5,13 @@
  */
 package UI;
 
-import Item.Item;
-import Item.ItemPile;
 import Res.Res;
 import World.LocalMap;
-import World.Tile;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import javafx.util.Pair;
 import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
@@ -233,16 +229,16 @@ public abstract class OptionTab
         }
         w = optionFont.getWidth(options.get(longestIndex).getKey())+10;
            
-            h = options.size()*optionFont.getHeight();
-            if(h>optionFont.getHeight()*5)
-            {
-                h = optionFont.getHeight()*5;
-            }
-            bounds = new Rectangle(x,y,w,h);
-            for(int j=0;j<options.size();j++)
-            {
-                optionBounds.add(new Rectangle(x,y+(optionFont.getHeight()*j),w,optionFont.getHeight()));
-            }
+        h = options.size()*optionFont.getHeight();
+        if(h>optionFont.getHeight()*5)
+        {
+            h = optionFont.getHeight()*5;
+        }
+        bounds = new Rectangle(x,y,w,h);
+        for(int j=0;j<options.size();j++)
+        {
+            optionBounds.add(new Rectangle(x,y+(optionFont.getHeight()*j),w,optionFont.getHeight()));
+        }
     }
     
     public boolean isHover(int x,int y)

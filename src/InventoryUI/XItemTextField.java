@@ -44,9 +44,9 @@ public class XItemTextField extends TextField
         
         setText(getText().replaceAll("[^0-9]", ""));
         
-        if(getText().length()>=5)
+        if(getText().length()>=10)
         {
-            setText(getText().substring(0, 4));
+            setText(getText().substring(0, 9));
         }
         
         exitButton.tick(m, input, world);

@@ -116,7 +116,7 @@ public class ItemOptionTab extends OptionTab
             case 6:
                 for(int i=0;i<item.getEffects().size();i++)
                 {
-                    System.out.println(item.getEffects().get(i).getType());
+
                     lm.getPlayer().getStatus().add(new Status(item.getEffects().get(i)));
                 }
                 lm.getWorld().moved();

@@ -25,7 +25,7 @@ import org.newdawn.slick.util.pathfinding.TileBasedMap;
 import rlforj.los.IFovAlgorithm;
 import rlforj.los.ILosBoard;
 import rlforj.los.PrecisePermissive;
-import rlforj.los.ShadowCasting;
+
 
 
 
@@ -76,7 +76,7 @@ public class LocalMap implements TileBasedMap, ILosBoard
         this.input = world.getInput();
         this.world = world;
         tiles = new Tile[height][width];
-        cam = new Camera(world.getContainer().getWidth(),world.getContainer().getHeight(),width,height,world.getScale());
+        cam = new Camera(width,height);
         this.itemLibrary = itemLibrary;
         
         furnitures = new ArrayList<Furniture>();

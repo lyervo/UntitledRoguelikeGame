@@ -6,9 +6,14 @@
 package Item;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 
 /**
  *
@@ -73,6 +78,8 @@ public class Item
     private ItemLibrary itemLibrary;
     
     private String desc,unidentified_desc;
+    
+    private String metal;
     
     public Item(Item item)
     {
@@ -287,6 +294,92 @@ public class Item
         }
     }
     
+    public Image paintItem(Image image1,ItemColour colour)
+    {
+        try {
+            Image image = new Image(image1.getTexture());
+            Graphics g = image.getGraphics();
+            
+            Color c1 = Color.decode(colour.getFirst());
+            Color c2 = Color.decode(colour.getSecond());
+            Color c3 = Color.decode(colour.getThird());
+            Color c4 = Color.decode(colour.getFourth());
+            
+            Color cc1 = Color.decode("#ffff01");
+            Color cc2 = Color.decode("#ffff02");
+            Color cc3 = Color.decode("#ffff03");
+            Color cc4 = Color.decode("#ffff04");
+            
+            for(int i=0;i<image.getHeight();i++)
+            {
+                for(int j=0;j<image.getWidth();j++)
+                {
+                    if(image.getColor(j, i).equals(cc1))
+                    {
+                        g.setColor(c1);
+                        g.fillRect(j, i, 1, 1);
+                    }else if(image.getColor(j, i).equals(cc2))
+                    {
+                        g.setColor(c2);
+                        g.fillRect(j, i, 1, 1);
+                    }else if(image.getColor(j, i).equals(cc3))
+                    {
+                        g.setColor(c3);
+                        g.fillRect(j, i, 1, 1);
+                    }else if(image.getColor(j, i).equals(cc4))
+                    {
+                        g.setColor(c4);
+                        g.fillRect(j, i, 1, 1);
+                    }
+                }
+            }
+            
+
+            g.flush();
+            return image;
+        } catch (SlickException ex) {
+            Logger.getLogger(ItemLibrary.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    
+    public void setMetalMaterial(ItemLibrary itemLibrary,Material material,Image template)
+    {
+        trueName = trueName.replace("<metal>", material.getName());
+        desc = desc.replaceAll("<metal>", material.getName());
+        
+        for(int i=0;i<material.getProperties().size();i++)
+        {
+            if(!properties.contains(material.getProperties().get(i)))
+            {
+                properties.add(material.getProperties().get(i));
+            }
+        }
+        
+        for(int i=0;i<effects.size();i++)
+        {
+            for(int j=0;j<material.getMultipliers().size();j++)
+            {
+                if(effects.get(i).getType().startsWith(material.getMultipliers().get(j).getType()))
+                {
+                    effects.get(i).multiplyValue(material.getMultipliers().get(j).getValue());
+                }
+            }
+        }
+        
+        System.out.println("using colour"+material.getItemColor().getName());
+        this.texture = paintItem(template,material.getItemColor());
+        
+        
+        
+    }
+    
+    public boolean isMetalMaterial()
+    {
+        return properties.contains(52);
+    }
+    
     public String getDescTrue()
     {
         return desc;
@@ -302,6 +395,14 @@ public class Item
 
     public void setUnidentified_desc(String unidentified_desc) {
         this.unidentified_desc = unidentified_desc;
+    }
+
+    public String getMetal() {
+        return metal;
+    }
+
+    public void setMetal(String metal) {
+        this.metal = metal;
     }
     
     

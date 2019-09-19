@@ -29,6 +29,8 @@ public class Recipe
     
     private ArrayList<Pair<String,Integer>> byProducts;
     
+    private Image template_texture;
+    
     public Recipe(JSONObject jsonObj,ItemLibrary itemLibrary,int id)
     {
         this.id = id;
@@ -83,7 +85,11 @@ public class Recipe
         }
 
         
-       
+       if((String)jsonObj.get("template_texture")!=null)
+       {
+           
+           template_texture = new Image(itemLibrary.getRes().getTextureByName((String)jsonObj.get("template_texture")).getTexture());
+       }
         
         texture = itemLibrary.getItemByTrueName(name).getTexture();
         
@@ -169,6 +175,14 @@ public class Recipe
 
     public void setByProducts(ArrayList<Pair<String, Integer>> byProducts) {
         this.byProducts = byProducts;
+    }
+
+    public Image getTemplate_texture() {
+        return template_texture;
+    }
+
+    public void setTemplate_texture(Image template_texture) {
+        this.template_texture = template_texture;
     }
     
     

@@ -29,6 +29,9 @@ import org.newdawn.slick.util.ResourceLoader;
  */
 public class Res
 {
+    
+    
+    
     public Image human1,human2;
     public Image basicTile,basicWall;
 
@@ -65,12 +68,17 @@ public class Res
     
     public Image tree_1;
     
+    public Image potion_template,sword_template;
+    
     
     private ArrayList<Pair<String,Image>> images;
     private ArrayList<Pair<String,SpriteSheet>> sprites;
     
     
     public Sound potion_pop;
+    
+    
+    
     
     
     public Res(GameContainer container) throws IOException, SlickException
@@ -113,7 +121,8 @@ public class Res
         basicItem = item_sheet.getSprite(0, 0);
         
         
-        
+        potion_template = new Image("res/texture/items/potion_template.png");
+        sword_template = new Image("res/texture/items/sword_template.png");
         
         empty_potion = new Image("res/texture/items/empty_potion_bottle.png");
         wood = new Image("res/texture/items/wood.png");
@@ -139,6 +148,7 @@ public class Res
         
         book_1 = new Image("res/texture/items/book_1.png");
         
+        images.add(new Pair("sword_template",sword_template));
         images.add(new Pair("book_1",book_1));
         images.add(new Pair("empty_bottle",empty_potion));
         images.add(new Pair("wooden_sword",wooden_sword));

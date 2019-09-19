@@ -56,7 +56,6 @@ public class FurnitureTemplate
         {
             properties.add(Integer.parseInt((String)proArr.get(i)));
         }
-        System.out.println((String)jsonObj.get("texture"));
         this.texture = res.getTextureByName((String)jsonObj.get("texture"));
         
     }

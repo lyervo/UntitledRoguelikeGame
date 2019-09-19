@@ -29,6 +29,11 @@ public class Effect
         this.type = effect.getType();
     }
     
+    public void multiplyValue(double value)
+    {
+        this.value *= value;
+    }
+    
     public double getValue() {
         return value;
     }

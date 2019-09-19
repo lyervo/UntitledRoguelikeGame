@@ -71,7 +71,7 @@ public class Game extends StateBasedGame
             ScalableGame wrapper = new ScalableGame(new Game("Game"),1360,768);
             AppGameContainer app = new AppGameContainer(wrapper);
             app.setDisplayMode(1360, 768, false);
-            app.setFullscreen(true);   
+            app.setFullscreen(false);   
             app.start();
             
         }catch(IOException e)

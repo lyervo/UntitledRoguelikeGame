@@ -183,15 +183,39 @@
         "effects":[{"type":"slash_damage","duration":"1","value":"10"}]
 	},
 	{
+		"category":"equipment",
+		"trueName":"<metal> Axe",
+		"texture":"iron_sword",
+		"desc":"An Axe made of <metal>, tool for cutting down trees.",
+		"unidentified_desc":null,
+		"stack":"1",
+		"properties":[20,33,51,7],
+		"consumed":null,
+		"baseValue":75,
+        "effects":[{"type":"slash_damage","duration":"1","value":"10"}]
+	},
+	{
 		"category":"item",
 		"trueName":"Iron Bar",
 		"texture":"metal_bar",
-		"desc":"A basic Iron."
+		"desc":"A bar of Iron.",
 		"unidentified_desc":null,
 		"stack":"1",
 		"properties":[6,52],
 		"consumed":null,
 		"baseValue":75,
         "effects":[{"type":"slash_damage","duration":"1","value":"10"}]
+	},
+	{
+		"category":"item",
+		"trueName":"Steel Bar",
+		"texture":"metal_bar",
+		"desc":"A bar of Steel.",
+		"unidentified_desc":null,
+		"stack":"1",
+		"properties":[6,52],
+		"consumed":null,
+		"baseValue":75,
+        "effects":[{"type":"slash_damage","duration":"1","value":"20"}]
 	}
 ]

@@ -149,6 +149,7 @@ public class Inventory
 
     public void debugInit(ItemLibrary itemLibrary)
     {
+        addItem(new Item(itemLibrary.getItemByTrueName("Steel Bar")));
         addItem(new Item(itemLibrary.getItemByTrueName("Iron Bar")));
         addItem(new Item(itemLibrary.getItemByTrueName("Woodworking Guide I")));
         addItem(new Item(itemLibrary.getItemByTrueName("Wooden Sword")));

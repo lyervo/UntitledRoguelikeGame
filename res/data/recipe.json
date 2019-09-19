@@ -1,6 +1,7 @@
 [
 	{
 		"name":"Wood Shavings",
+		"template_texture":null,
 		"amount":"10",
 		"by_product":[],
 		"ingredients":[{"name":"<Sharp Object>","consumed":"0"},{"name":"Wood","consumed":"1"}],
@@ -9,6 +10,7 @@
 	},
 	{
 		"name":"Wooden Shaft",
+		"template_texture":null,
 		"amount":"1",
 		"by_product":[{"name":"Wood Shavings","amount":"2"}],
 		"ingredients":[{"name":"Wood","consumed":"1"},{"name":"<Sharp Object>","consumed":"0"}],
@@ -17,6 +19,7 @@
 	},
 	{
 		"name":"Reinforced Wooden Shield",
+		"template_texture":null,
 		"amount":"1",
 		"by_product":[],
 		"ingredients":[{"name":"Wood","consumed":"1"},{"name":"Wood","consumed":"1"},{"name":"Wooden Shield","consumed":"1"}],
@@ -25,6 +28,7 @@
 	},
 	{
 		"name":"Reinforced Wooden Shield",
+		"template_texture":null,
 		"amount":"1",
 		"by_product":[],
 		"ingredients":[{"name":"Wood","consumed":"1"},{"name":"Wood","consumed":"1"},{"name":"Wooden Shield","consumed":"1"}],
@@ -33,6 +37,7 @@
 	},
 	{
 		"name":"<metal> Sword",
+		"template_texture":"sword_template",
 		"amount":"1",
 		"by_product":[],
 		"ingredients":[{"name":"Wood","consumed":"1"},{"name":"<Metal>","consumed":"1"}],

@@ -19,7 +19,6 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
-import org.newdawn.slick.gui.TextField;
 
 /**
  *
@@ -84,7 +83,7 @@ public class World
         this.scale = (double)container.getHeight()/768;
         
         ancestor = new Narrator(container,res.disposableDroidBB);
-        cam = new Camera(container.getWidth(),container.getHeight(),100,100,scale);
+        cam = new Camera(100,100);
         
         xItemTextFieldActive = false;
         

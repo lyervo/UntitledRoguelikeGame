@@ -36,7 +36,6 @@ public abstract class Entity
     
     public Entity(int id,int x,int y,SpriteSheet sprites,boolean autoAnimate)
     {
-        System.out.println("i RUN");
         this.x = x;
         this.y = y;
         this.id = id;

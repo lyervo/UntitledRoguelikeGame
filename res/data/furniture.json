@@ -7,5 +7,13 @@
 		"texture":"table",
 		"auto_animate":"0",
 		"properties":["3","22"]
-	}
+	},
+	{
+		"name":"Anvil",
+		"use_spritesheet":"0",
+		"description":"A workstation for smithing.",
+		"texture":"table",
+		"auto_animate":"0",
+		"properties":["3","23"]
+	},
 ]

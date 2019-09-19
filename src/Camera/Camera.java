@@ -24,20 +24,19 @@ public class Camera
     private int tile_size;
     private double scale;
     
-    public Camera(int width,int height,int w,int h,double scale)
+    public Camera(int w,int h)
     {
+        this.h = h;
+        this.w = w;
         this.width = 992;
         
         
         this.height = 768;
-        this.h = h;
-        this.w = w;
+        
         xofs = 0;
         yofs = 0;
         
-        this.scale = scale;
-        
-        this.tile_size = (int)(32*scale);
+        this.tile_size = (int)(32);
         
     }
     

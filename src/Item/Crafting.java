@@ -52,7 +52,22 @@ public class Crafting
     
     public void addIngredient(int index)
     {
-        items.add(new Item(inventory.getItems().get(index)));
+        if(inventory.getItems().get(index).isMetalMaterial())
+        {
+            for(int i=items.size()-1;i>=0;i--)
+            {
+                if(items.get(i).isMetalMaterial())
+                {
+                    inventory.addItem(items.get(i));
+                    items.remove(i);
+                }
+            }
+            items.add(new Item(inventory.getItems().get(index)));
+        }else
+        {
+            items.add(new Item(inventory.getItems().get(index)));
+        }
+            
         inventory.removeItem(inventory.getItems().get(index),-1);
         
         
@@ -92,13 +107,12 @@ public class Crafting
                     
                     Item a = new Item(itemLibrary.getItemByTrueName(recipe.getName()));
                     
-                    for(int i=0;i<items.size();i++)
+                    for(int i=items.size()-1;i>=0;i--)
                     {
-                        if(items.get(i).getProperties().contains(6))//is a metal material
+                        if(items.get(i).getProperties().contains(52))//is a metal material
                         {
                             String[] splitter = items.get(i).getName().split(" ");
-                            a.setTrueName(a.getTrueName().replace("<metal>", splitter[0]));
-                            a.setDesc(a.getDescTrue().replace("<metal>", splitter[0]));
+                            a.setMetalMaterial(itemLibrary,itemLibrary.getMaterialByName(splitter[0]),recipe.getTemplate_texture());
                             inventory.addItem(a);
                             break;
                         }

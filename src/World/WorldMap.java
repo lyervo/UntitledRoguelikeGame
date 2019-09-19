@@ -53,8 +53,8 @@ public class WorldMap implements TileBasedMap
     public WorldMap(Res res,World world,GameContainer container)
     {        
         this.res = res;
-        cam = new Camera(1280,720,21,21,world.getScale());
-        wCam = new Camera(1280,720,100,100,world.getScale());
+        cam = new Camera(70,50);
+        wCam = new Camera(100,100);
         this.width = 100;
         this.height = 100;
         this.container = container;

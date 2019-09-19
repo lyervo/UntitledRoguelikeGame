@@ -47,6 +47,9 @@ public class ItemLibrary
     
     private ArrayList<ItemType> types;
     
+    private ArrayList<Material> materials;
+    
+    private ArrayList<ItemColour> colours;
     
     public ItemLibrary(String seed,Res res)
     {
@@ -57,12 +60,84 @@ public class ItemLibrary
         this.items = new ArrayList<Item>();
         this.recipes = new ArrayList<Recipe>();
         this.types = new ArrayList<ItemType>();
-        
+        this.materials = new ArrayList<Material>();
+        this.colours = new ArrayList<ItemColour>();
+        initItemColour();
         initItems();
         initRecipes();
         initItemType();
+        initMaterials();
     }
     
+    public void initItemColour()
+    {
+        try {
+            
+            File jsonFile = new File("res/data/colours.json");
+            Scanner jsonReader;
+            jsonReader = new Scanner(jsonFile);
+            String jsonString = "";
+            while(jsonReader.hasNext())
+            {
+                jsonString += jsonReader.nextLine();
+            }
+            JSONParser jsonParser = new JSONParser();
+            System.out.println(jsonString);
+            Object obj = jsonParser.parse(jsonString);
+            JSONArray jsonArr = (JSONArray)obj;
+            
+            for(int i=0;i<jsonArr.size();i++)
+            {
+                JSONObject jsonObj = (JSONObject)jsonArr.get(i);
+                colours.add(new ItemColour(jsonObj));
+            }
+            
+            
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ItemLibrary.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException e)
+        {
+            Logger.getLogger(ItemLibrary.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+    
+    
+    public void initMaterials()
+    {
+        try {
+            
+            File jsonFile = new File("res/data/materials.json");
+            Scanner jsonReader;
+            jsonReader = new Scanner(jsonFile);
+            String jsonString = "";
+            while(jsonReader.hasNext())
+            {
+                jsonString += jsonReader.nextLine();
+            }
+            JSONParser jsonParser = new JSONParser();
+            System.out.println(jsonString);
+            Object obj = jsonParser.parse(jsonString);
+            JSONArray jsonArr = (JSONArray)obj;
+            
+            
+            Collections.shuffle(colours);
+            
+            
+            for(int i=0;i<jsonArr.size();i++)
+            {
+                JSONObject jsonObj = (JSONObject)jsonArr.get(i);
+                System.out.println(colours.get(i).getName());
+                materials.add(new Material(jsonObj,colours.get(i)));
+            }
+            
+            
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ItemLibrary.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException e)
+        {
+            Logger.getLogger(ItemLibrary.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
     
     public void initItemType()
     {
@@ -188,35 +263,11 @@ public class ItemLibrary
         
         
         
-        
-        try {
-            
-            ArrayList<Pair<String,Pair<Color,Color>>> colors = new ArrayList<Pair<String,Pair<Color,Color>>>();
-            File colorNameFile = new File("res/data/potion_colors.json");
-            Scanner colorNameReader = new Scanner(colorNameFile);
-            
-            String colorJsonString = "";
-            
-            while(colorNameReader.hasNext())
-            {
-                colorJsonString +=colorNameReader.next();
-            }
-            
-            JSONParser colorNameParser = new JSONParser();
-            Object colorObj = colorNameParser.parse(colorJsonString);
-            JSONArray colorArr = (JSONArray)colorObj;
-            
-            for(int i=0;i<colorArr.size();i++)
-            {
-                JSONObject jsonObj = (JSONObject)colorArr.get(i);
-                
-                colors.add(new Pair((String)jsonObj.get("name"),new Pair(Color.decode((String)jsonObj.get("primary")),Color.decode((String)jsonObj.get("secondary")))));
-            }
-            
-            Collections.shuffle(colors);
+
+            Collections.shuffle(colours);
             
             
-            Random dice = new Random();
+            
             
             identify = new boolean[potions.size()];
             Arrays.fill(identify, false);
@@ -224,17 +275,17 @@ public class ItemLibrary
             for(int i=0;i<potions.size();i++)
             {
                 
-                Image temp = new Image(res.empty_potion.getTexture());
+                Image temp = new Image(res.potion_template.getTexture());
                 
-                temp = paintPotion(temp,colors.get(i).getValue());
+                temp = paintPotion(temp,colours.get(i));
                 
                 if(potions.get(i).getTexture()==null)
                 {
                     potions.get(i).setTexture(temp);
-                    potions.get(i).setName(colors.get(i).getKey()+" Potion");
+                    potions.get(i).setName(colours.get(i).getName()+" Potion");
                     if(potions.get(i).getUnidentified_desc()!=null)
                     {
-                        String new_desc = potions.get(i).getUnidentified_desc().replace("<color>", colors.get(i).getKey());
+                        String new_desc = potions.get(i).getUnidentified_desc().replace("<color>", colours.get(i).getName());
                         potions.get(i).setUnidentified_desc(new_desc);
                     }
                 }
@@ -244,11 +295,6 @@ public class ItemLibrary
             }
             
             
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(ItemLibrary.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParseException ex) {
-            Logger.getLogger(ItemLibrary.class.getName()).log(Level.SEVERE, null, ex);
-        }
         
         
     }
@@ -264,24 +310,45 @@ public class ItemLibrary
         }
     }
     
-    public Image paintPotion(Image image,Pair<Color,Color> colors)
+    public Image paintPotion(Image image,ItemColour colour)
     {
         try {
             Graphics g = image.getGraphics();
-            g.setColor(colors.getValue());
-            g.fillRect(12, 16, 2, 2);
-            g.fillRect(10, 18, 2, 4);
-            g.fillRect(12, 22, 2, 2);
-            g.fillRect(14, 24, 4, 2);
-            g.fillRect(18, 16, 2, 2);
-            g.fillRect(20, 18, 2, 4);
-            g.fillRect(18, 22, 2, 2);
             
-            g.setColor(colors.getKey());
-            g.fillRect(12, 10, 2, 2);
-            g.fillRect(14, 12, 2, 2);
-            g.fillRect(12, 18, 8, 4);
-            g.fillRect(14, 22, 4, 2);
+            Color c1 = Color.decode(colour.getFirst());
+            Color c2 = Color.decode(colour.getSecond());
+            Color c3 = Color.decode(colour.getThird());
+            Color c4 = Color.decode(colour.getFourth());
+            
+            Color cc1 = Color.decode("#ffff01");
+            Color cc2 = Color.decode("#ffff02");
+            Color cc3 = Color.decode("#ffff03");
+            Color cc4 = Color.decode("#ffff04");
+            
+            for(int i=0;i<image.getHeight();i++)
+            {
+                for(int j=0;j<image.getWidth();j++)
+                {
+                    if(image.getColor(j, i).equals(cc1))
+                    {
+                        g.setColor(c1);
+                        g.fillRect(j, i, 1, 1);
+                    }else if(image.getColor(j, i).equals(cc2))
+                    {
+                        g.setColor(c2);
+                        g.fillRect(j, i, 1, 1);
+                    }else if(image.getColor(j, i).equals(cc3))
+                    {
+                        g.setColor(c3);
+                        g.fillRect(j, i, 1, 1);
+                    }else if(image.getColor(j, i).equals(cc4))
+                    {
+                        g.setColor(c4);
+                        g.fillRect(j, i, 1, 1);
+                    }
+                }
+            }
+            
 
             g.flush();
         } catch (SlickException ex) {
@@ -319,6 +386,18 @@ public class ItemLibrary
             }
         }
         
+        return null;
+    }
+    
+    public Material getMaterialByName(String materialName)
+    {
+        for(Material m:materials)
+        {
+            if(m.getName().equals(materialName))
+            {
+                return m;
+            }
+        }
         return null;
     }
     
