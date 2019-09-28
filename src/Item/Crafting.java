@@ -112,7 +112,12 @@ public class Crafting
                         if(items.get(i).getProperties().contains(52))//is a metal material
                         {
                             String[] splitter = items.get(i).getName().split(" ");
-                            a.setMetalMaterial(itemLibrary,itemLibrary.getMaterialByName(splitter[0]),recipe.getTemplate_texture());
+                            String template_name = "";
+                            for(int z=1;z<splitter.length;z++)
+                            {
+                                template_name+=splitter[z];
+                            }
+                            a.setMetalMaterial(itemLibrary,itemLibrary.getMaterialByName(splitter[0]),recipe.getTemplate_texture(),template_name);
                             inventory.addItem(a);
                             break;
                         }

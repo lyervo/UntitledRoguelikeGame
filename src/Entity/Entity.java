@@ -24,6 +24,9 @@ public abstract class Entity
     protected SpriteSheet sprites;
     protected boolean autoAnimate;
     protected int id;
+    protected int direction;
+    protected int animatingIndex;
+    protected int animatingTimer;
     
     
     public Entity(int id,int x,int y,Image texture)
@@ -32,6 +35,7 @@ public abstract class Entity
         this.y = y;
         this.id = id;
         this.texture = texture;
+        this.direction = 0;
     }
     
     public Entity(int id,int x,int y,SpriteSheet sprites,boolean autoAnimate)
@@ -41,13 +45,36 @@ public abstract class Entity
         this.id = id;
         this.sprites = sprites;
         this.autoAnimate = autoAnimate;
+        this.direction = 0;
     }
     
     public abstract void tick(boolean[] k,boolean[] m,Input input,World world);
     
-    public void render(Camera cam,LocalMap map)
+    public void render(Camera cam,LocalMap map,boolean animate)
     {
-        texture.draw(x*32+cam.getXofs(),y*32+cam.getYofs());
+        if(sprites == null)
+        {
+            texture.draw(x*32+cam.getXofs(),y*32+cam.getYofs());
+        }else
+        {
+            if(autoAnimate)
+            {
+                if(animate)
+                {
+                    animatingIndex++;
+                    if(animatingIndex>=3)
+                    {
+                        animatingIndex = 0;
+                    }
+                    
+                    
+                   
+                }
+                sprites.getSprite(animatingIndex, 0).draw(x*32+cam.getXofs(),y*32+cam.getYofs());
+                
+                
+            }
+        }
     }
     
     public void move(int x,int y,LocalMap lm)
@@ -93,6 +120,46 @@ public abstract class Entity
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public SpriteSheet getSprites() {
+        return sprites;
+    }
+
+    public void setSprites(SpriteSheet sprites) {
+        this.sprites = sprites;
+    }
+
+    public boolean isAutoAnimate() {
+        return autoAnimate;
+    }
+
+    public void setAutoAnimate(boolean autoAnimate) {
+        this.autoAnimate = autoAnimate;
+    }
+
+    public int getDirection() {
+        return direction;
+    }
+
+    public void setDirection(int direction) {
+        this.direction = direction;
+    }
+
+    public int getAnimatingIndex() {
+        return animatingIndex;
+    }
+
+    public void setAnimatingIndex(int animatingIndex) {
+        this.animatingIndex = animatingIndex;
+    }
+
+    public int getAnimatingTimer() {
+        return animatingTimer;
+    }
+
+    public void setAnimatingTimer(int animatingTimer) {
+        this.animatingTimer = animatingTimer;
     }
 
     

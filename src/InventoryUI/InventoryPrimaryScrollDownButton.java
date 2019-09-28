@@ -18,9 +18,9 @@ public class InventoryPrimaryScrollDownButton extends Button
 
     private InventoryUI inventoryUI;
     
-    public InventoryPrimaryScrollDownButton(int x, int y, Image texture,InventoryUI inventoryUI)
+    public InventoryPrimaryScrollDownButton(int x, int y,int xofs,int yofs, Image texture,InventoryUI inventoryUI)
     {
-        super(x, y, texture);
+        super(x, y, xofs,yofs,texture);
         this.inventoryUI = inventoryUI;
     }
 

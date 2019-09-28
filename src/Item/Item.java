@@ -8,6 +8,7 @@ package Item;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.util.Pair;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.newdawn.slick.Color;
@@ -96,6 +97,8 @@ public class Item
         this.itemLibrary = item.getItemLibrary();
         this.stack = item.getStack();
     }
+    
+    
 
     public Item(JSONObject json,ItemLibrary itemLibrary)
     {
@@ -344,7 +347,7 @@ public class Item
     }
     
     
-    public void setMetalMaterial(ItemLibrary itemLibrary,Material material,Image template)
+    public void setMetalMaterial(ItemLibrary itemLibrary,Material material,Image template,String template_name)
     {
         trueName = trueName.replace("<metal>", material.getName());
         desc = desc.replaceAll("<metal>", material.getName());
@@ -368,8 +371,15 @@ public class Item
             }
         }
         
-        System.out.println("using colour"+material.getItemColor().getName());
-        this.texture = paintItem(template,material.getItemColor());
+        if(itemLibrary.getRes().getTextureByName(material.getItemColor().getName()+"_"+template_name)!=null)
+        {
+            this.texture = itemLibrary.getRes().getTextureByName(material.getItemColor().getName()+"_"+template_name);
+        }else
+        {
+            this.texture = paintItem(template,material.getItemColor());
+            itemLibrary.getRes().getImages().add(new Pair(material.getItemColor().getName()+"_"+template_name,this.texture));
+        }
+            
         
         
         
@@ -405,7 +415,17 @@ public class Item
         this.metal = metal;
     }
     
-    
+    public Effect getEffectByName(String name)
+    {
+        for(int i=0;i<effects.size();i++)
+        {
+            if(effects.get(i).getType().equals(name))
+            {
+                return effects.get(i);
+            }
+        }
+        return null;
+    }
     
     
     

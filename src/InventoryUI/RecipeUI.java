@@ -5,6 +5,7 @@
  */
 package InventoryUI;
 
+import UI.DescBox;
 import Entity.EntityLibrary;
 import Item.Crafting;
 import Item.ItemLibrary;

@@ -43,6 +43,15 @@
 		"ingredients":[{"name":"Wood","consumed":"1"},{"name":"<Metal>","consumed":"1"}],
 		"station":[],
 		"skill":[]
+	},
+	{
+		"name":"<metal> Dagger",
+		"template_texture":"dagger_template",
+		"amount":"1",
+		"by_product":[],
+		"ingredients":[{"name":"Wood","consumed":"1"},{"name":"<Metal>","consumed":"1"}],
+		"station":[],
+		"skill":[]
 	}
 	
 	

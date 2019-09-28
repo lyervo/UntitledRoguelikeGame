@@ -67,6 +67,17 @@ public abstract class Button
         this.display = true;
     }
     
+    public Button(int x,int y,int xofs,int yofs,Image texture)
+    {
+        this.x = x;
+        this.y = y;
+        this.width = texture.getWidth();
+        this.height = texture.getHeight();
+        this.texture = texture;
+        bounds = new Rectangle(x,y,width,height);
+        this.display = true;
+    }
+    
     public abstract void onClick(boolean[] m,World world);
     
     public void tick(boolean[] m,Input input,World world)
@@ -108,6 +119,45 @@ public abstract class Button
         
     }
     
+    public void tick(boolean[] m,Input input,World world,int x,int y)
+    {
+        if(display)
+        {
+            if(texture == null)
+            {
+                if(bounds.contains(new Point(input.getMouseX()-x,input.getMouseY()-y)))
+                {
+                    hover = true;
+                }else
+                {
+                    hover = false;
+                }
+            }else
+            {
+
+                if(bounds.contains(new Point(input.getMouseX()-x,input.getMouseY()-y)))
+                {
+                    if(texture.getColor(input.getAbsoluteMouseX()-this.x-x, input.getMouseY()-this.y-y).a == 0)
+                    {
+                        hover = false;
+                    }else
+                    {
+                        hover = true;
+                    }
+                }else
+                {
+                    hover = false;
+                }
+            }
+        
+            if(hover&&m[10])
+            {
+                onClick(m,world);
+            }
+        }
+        
+    }
+    
     public void render(Graphics g)
     {
         if(display)
@@ -134,6 +184,37 @@ public abstract class Button
                 }else
                 {
                     texture.draw(x, y,Color.gray);
+                }
+            }
+        }
+    }
+    
+    public void render(Graphics g,int x,int y)
+    {
+        if(display)
+        {
+            if(texture == null)
+            {
+                if(!hover)
+                {
+                    g.setColor(fill);
+                }else
+                {
+                    g.setColor(hoverFill);
+                }
+                g.fillRect(this.x+x, this.y+y, width, height);
+                g.setColor(border);
+                g.drawRect(this.x+x, this.y+y, width,height);
+                font.drawString(this.x+x+(width-font.getWidth(text))/2, this.y+y+(height-font.getHeight())/2, text);
+
+            }else
+            {
+                if(hover)
+                {
+                    texture.draw(this.x+x, this.y+y);
+                }else
+                {
+                    texture.draw(this.x+x, this.y+y,Color.gray);
                 }
             }
         }

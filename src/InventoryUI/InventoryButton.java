@@ -32,7 +32,7 @@ public class InventoryButton extends Button
     @Override
     public void onClick(boolean[] m, World world)
     {
-        world.setUIDisplay(1);
+        world.getInventoryWindow().setDisplay();
         world.deactivateXItemTextField();
     }
     

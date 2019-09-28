@@ -46,7 +46,7 @@ public class Tile {
     
     public void tick(boolean[] k,boolean[] m,Input input,World world,Camera cam)
     {
-        if(withinDisplayArea(cam)&&world.getUiDisplay()==0&&world.getMouse_z()==0&&world.getQuickItemBarUI().getLastDrag()==0)
+        if(withinDisplayArea(cam)&&world.getUiDisplay()==0&&world.getZ()==0)
         {
             if(bounds.contains(new Point(input.getMouseX()-cam.getMxofs(),input.getMouseY()-cam.getMyofs()))&&!world.getWm().getCurrentLocalMap().isHoveringTab())
             {
@@ -56,9 +56,9 @@ public class Tile {
                 hover = false;
             }
 
-            if(world.getMouse_z()==0)
+            if(world.getZ()==0)
             {
-                if(hover&&m[0]&&visit!=0)
+                if(hover&&m[10]&&visit!=0)
                 {
                     if(!solid)
                     {

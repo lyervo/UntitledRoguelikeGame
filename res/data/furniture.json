@@ -16,4 +16,12 @@
 		"auto_animate":"0",
 		"properties":["3","23"]
 	},
+	{
+		"name":"Camp Fire",
+		"use_spritesheet":"1",
+		"description":"A source of fire.",
+		"texture":"camp_fire",
+		"auto_animate":"1",
+		"properties":["1","23"]
+	}
 ]

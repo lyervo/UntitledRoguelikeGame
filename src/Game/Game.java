@@ -5,6 +5,7 @@
  */
 package Game;
 
+
 import GameStates.InGame;
 import Res.Res;
 import java.io.File;
@@ -62,16 +63,18 @@ public class Game extends StateBasedGame
                         
                     default:
                         System.out.println("UNKNOWN CONFIG LINE IN config.cfg LINE "+lineCount);
+                        break;
                 }
                 
                 lineCount++;
                 
             }
+            
             //Game is wraped in ScalableGame class to make it scale to screen size
-            ScalableGame wrapper = new ScalableGame(new Game("Game"),1360,768);
-            AppGameContainer app = new AppGameContainer(wrapper);
+            
+            AppGameContainer app = new AppGameContainer(new Game("Game"));
             app.setDisplayMode(1360, 768, false);
-            app.setFullscreen(false);   
+            app.setFullscreen(true);   
             app.start();
             
         }catch(IOException e)

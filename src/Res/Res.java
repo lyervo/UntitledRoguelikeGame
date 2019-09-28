@@ -49,7 +49,9 @@ public class Res
     
     public Image up_indicator,down_indicator;
     
-    public TrueTypeFont pixelCowboy,disposableDroidBB,disposableDroidBB20f;
+    public Image close_icon;
+    
+    public TrueTypeFont pixelCowboy,disposableDroidBB,disposableDroidBB20f,disposableDroidBB40f;
     
     public GameContainer container;
     
@@ -59,16 +61,18 @@ public class Res
     public Image empty_potion,wood,leaves,wooden_shaft,wood_shavings,book_1;
     
     
-    public Image wooden_sword,iron_sword,zweihander,wooden_shield;
+    public Image wooden_sword,iron_sword,zweihander,wooden_shield,dagger;
     
     public Image metal_bar;
     
     
     public Image table;
+    public SpriteSheet camp_fire;
+    
     
     public Image tree_1;
     
-    public Image potion_template,sword_template;
+    public Image potion_template,sword_template,dagger_template;
     
     
     private ArrayList<Pair<String,Image>> images;
@@ -85,7 +89,7 @@ public class Res
     {
         sprites = new ArrayList<Pair<String,SpriteSheet>>();
         
-        potion_pop = new Sound("res/audio/potion_pop.ogg");
+//        potion_pop = new Sound("res/audio/potion_pop.ogg");
         
         images = new ArrayList<Pair<String,Image>>();
         this.container = container;
@@ -97,7 +101,7 @@ public class Res
         basicWall = new Image("res/texture/map/tile/basic_wall.png");
 
         inventory_icon = new Image("res/texture/ui/icon/inventory_icon.png");
-        inventory_bg_1 = new Image("res/texture/ui/background/inventory_bg_1.png");
+        inventory_bg_1 = new Image("res/texture/ui/background/inventory_bg_1_small.png");
         inventory_bg_2 = new Image("res/texture/ui/background/inventory_bg_2.png");
         
         crafting_icon = new Image("res/texture/ui/icon/crafting_icon.png");
@@ -108,6 +112,7 @@ public class Res
         crafting_filter_by_learnt = new Image("res/texture/ui/icon/crafting_filter_by_learnt.png");
         crafting_filter_by_learnt_and_craftable = new Image("res/texture/ui/icon/crafting_filter_by_learnt_and_craftable.png");
         
+        close_icon = new Image("res/texture/ui/icon/close_icon.png");
         
         quick_item_bg = new Image("res/texture/ui/inventory/quick_item_bar.png");
         
@@ -123,6 +128,8 @@ public class Res
         
         potion_template = new Image("res/texture/items/potion_template.png");
         sword_template = new Image("res/texture/items/sword_template.png");
+        dagger_template = new Image("res/texture/items/dagger_template.png");
+        
         
         empty_potion = new Image("res/texture/items/empty_potion_bottle.png");
         wood = new Image("res/texture/items/wood.png");
@@ -131,6 +138,7 @@ public class Res
         
         metal_bar = new Image("res/texture/items/metal_bar.png");
         
+        dagger = new Image("res/texture/items/dagger.png");
         wooden_sword = new Image("res/texture/items/wooden_sword.png");
         iron_sword = new Image("res/texture/items/iron_sword.png");
         zweihander = new Image("res/texture/items/zweihander.png");
@@ -144,10 +152,14 @@ public class Res
         
         table = new Image("res/texture/furniture/table.png");
         
+        camp_fire = new SpriteSheet("res/texture/furniture/camp_fire.png",32,32);
+        
         SpriteSheet books = new SpriteSheet("res/texture/items/Book.png",32,32);
         
         book_1 = new Image("res/texture/items/book_1.png");
         
+        images.add(new Pair("dagger",dagger));
+        images.add(new Pair("dagger_template",dagger_template));
         images.add(new Pair("sword_template",sword_template));
         images.add(new Pair("book_1",book_1));
         images.add(new Pair("empty_bottle",empty_potion));
@@ -164,6 +176,9 @@ public class Res
         images.add(new Pair("table",table));
         images.add(new Pair("metal_bar",metal_bar));
         
+        
+        sprites.add(new Pair("camp_fire",camp_fire));
+        
         Graphics g = basicItem.getGraphics();
         g.setColor(Color.green);
         g.fillRect(0, 0, 20, 20);
@@ -174,7 +189,7 @@ public class Res
 		pixelCowboy = loadFont("res/font/PixelCowboy/Pixel_Cowboy.otf",24f);
                 disposableDroidBB = loadFont("res/font/DisposableDroidBB/DisposableDroidBB.ttf",30f);
                 disposableDroidBB20f = loadFont("res/font/DisposableDroidBB/DisposableDroidBB.ttf",20f);
- 
+                disposableDroidBB40f = loadFont("res/font/DisposableDroidBB/DisposableDroidBB.ttf",40f);
 	} catch (Exception e) {
 		e.printStackTrace();
 	}	
@@ -214,6 +229,22 @@ public class Res
         awtFont2 = awtFont2.deriveFont(size); // set font size
         TrueTypeFont font = new TrueTypeFont(awtFont2, false);
         return font;
+    }
+
+    public ArrayList<Pair<String, Image>> getImages() {
+        return images;
+    }
+
+    public void setImages(ArrayList<Pair<String, Image>> images) {
+        this.images = images;
+    }
+
+    public ArrayList<Pair<String, SpriteSheet>> getSprites() {
+        return sprites;
+    }
+
+    public void setSprites(ArrayList<Pair<String, SpriteSheet>> sprites) {
+        this.sprites = sprites;
     }
     
     

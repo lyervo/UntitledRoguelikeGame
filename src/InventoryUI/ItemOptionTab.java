@@ -132,7 +132,7 @@ public class ItemOptionTab extends OptionTab
                 break;
             case 25:
                 inventory.getCrafting().addIngredient(index);
-                lm.getWorld().getInventory_ui().refreshInventoryUI(lm);
+//                lm.getWorld().getInventory_ui().refreshInventoryUI(lm);
                 break;
         }
         

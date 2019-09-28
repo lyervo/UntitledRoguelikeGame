@@ -151,11 +151,15 @@ public class Inventory
     {
         addItem(new Item(itemLibrary.getItemByTrueName("Steel Bar")));
         addItem(new Item(itemLibrary.getItemByTrueName("Iron Bar")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Iron Bar")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Iron Bar")));
         addItem(new Item(itemLibrary.getItemByTrueName("Woodworking Guide I")));
         addItem(new Item(itemLibrary.getItemByTrueName("Wooden Sword")));
         addItem(new Item(itemLibrary.getItemByTrueName("Iron Sword")));
         addItem(new Item(itemLibrary.getItemByTrueName("Zweihander")));
         addItem(new Item(itemLibrary.getItemByTrueName("Wooden Shield")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Wood")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Wood")));
         addItem(new Item(itemLibrary.getItemByTrueName("Wood")));
         addItem(new Item(itemLibrary.getItemByTrueName("Wood")));
         addItem(new Item(itemLibrary.getItemByTrueName("Tree Leaves")));

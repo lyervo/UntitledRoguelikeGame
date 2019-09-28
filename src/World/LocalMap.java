@@ -76,12 +76,15 @@ public class LocalMap implements TileBasedMap, ILosBoard
         this.input = world.getInput();
         this.world = world;
         tiles = new Tile[height][width];
-        cam = new Camera(width,height);
+        System.out.println("width"+width+" height"+height);
+        cam = new Camera(width,height,container);
         this.itemLibrary = itemLibrary;
         
         furnitures = new ArrayList<Furniture>();
         
         furnitures.add(new Furniture(0,2,2,world.getEntityLibrary().getFurnitureTemplateByName("Workbench")));
+        furnitures.add(new Furniture(1,2,4,world.getEntityLibrary().getFurnitureTemplateByName("Camp Fire"),true));
+        
         
         generateTiles();
         hoveringTab = false;
@@ -197,7 +200,7 @@ public class LocalMap implements TileBasedMap, ILosBoard
        
     }
     
-    public void render(Graphics g)
+    public void render(Graphics g,boolean animate)
     {
         
         
@@ -210,17 +213,17 @@ public class LocalMap implements TileBasedMap, ILosBoard
         }
         for(ItemPile ip:itemPiles)
         {
-            ip.render(cam, this);
+            ip.render(cam, this, animate);
         }
         
         for(Furniture f:furnitures)
         {
-            f.render(cam, this);
+            f.render(cam, this, animate);
         }
         
         for(Entity e:pawns)
         {
-            e.render(cam,this);
+            e.render(cam,this, animate);
         }
         if(optionTab!=null)
         {
@@ -394,7 +397,13 @@ public class LocalMap implements TileBasedMap, ILosBoard
         {
             if(((fu.getX()-x)>=-1&&(fu.getX()-x)<=1)&&((fu.getY()-y)>=-1&&(fu.getY()-y)<=1))
             {
-                f.add(fu);
+                if(fu.isFuelable()&&fu.getFuel()>=2)
+                {
+                    f.add(fu);
+                }else if(!fu.isFuelable())
+                {
+                    f.add(fu);
+                }
             }
         }
         

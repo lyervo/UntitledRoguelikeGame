@@ -31,7 +31,7 @@ public class Status
                 
                 String[] splitter = effect.getType().split("&&");
                 world.getItemLibrary().learnRecipeByName(splitter[1]);
-                world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
+//                world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
             }else
             {
                 switch(effect.getType())

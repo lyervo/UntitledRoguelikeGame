@@ -38,6 +38,8 @@ public class InGame extends BasicGameState
     private long scrollLimit;
     
 
+    private long lastAnim,currentAnim;
+    private boolean animate;
     
     @Override
     public int getID()
@@ -65,7 +67,10 @@ public class InGame extends BasicGameState
         
         world = new World(res,container,input);
         
+        animate = false;
         
+        lastAnim = System.currentTimeMillis();
+        currentAnim = 0;
         
     }
 
@@ -74,6 +79,13 @@ public class InGame extends BasicGameState
     {
         m[button] = true;
         m[19] = true;
+    }
+    
+    @Override
+    public void mousePressed(int button,int x,int y)
+    {
+       m[button+10] = true;
+        System.out.println("mouse " + (button+10));
     }
     
     
@@ -116,13 +128,26 @@ public class InGame extends BasicGameState
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
         if(res!=null)
         {
-            world.render(g);
+            world.render(g,animate);
         }
+        animate = false;
         
     }
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+        
+        if(currentAnim<=500)
+        {
+            currentAnim+= System.currentTimeMillis() - lastAnim;
+            lastAnim = System.currentTimeMillis();
+        }else
+        {
+            animate = true;
+            currentAnim = 0;
+            lastAnim = System.currentTimeMillis();
+        }
+        
         if(res!=null)
         {
             world.tick(keys,m, input);
@@ -139,8 +164,18 @@ public class InGame extends BasicGameState
     @Override
     public void keyReleased(int key,char c)
     {
+        
+        
+    }
+    
+    @Override
+    public void keyPressed(int key,char c)
+    {
+
         keys[key] = true;
         keys[255] = true;
+        
+        
     }
 
     

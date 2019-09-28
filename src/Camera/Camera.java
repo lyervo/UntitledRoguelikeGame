@@ -6,6 +6,7 @@
 package Camera;
 
 import Entity.Pawn;
+import org.newdawn.slick.GameContainer;
 
 /**
  *
@@ -24,14 +25,14 @@ public class Camera
     private int tile_size;
     private double scale;
     
-    public Camera(int w,int h)
+    public Camera(int w,int h,GameContainer gc)
     {
         this.h = h;
         this.w = w;
-        this.width = 992;
+        this.width = gc.getWidth();
         
         
-        this.height = 768;
+        this.height = gc.getHeight()-64;
         
         xofs = 0;
         yofs = 0;
@@ -48,50 +49,50 @@ public class Camera
     public void tick()
     {
         
-        if(w<=31)
+        if(w<=(width/32))
         {
             xofs = (width-(w*32))/2;
         }else
         {
             if(target!=null)
             {
-                if(target.getX()<=15)
+                if(target.getX()<=(width/64))
                 {
                     xofs = 0;
-                    mxofs = (int)(xofs*scale);
-                }else if(target.getX()>15&&target.getX()<=w-15)
+                    mxofs = (int)(xofs);
+                }else if(target.getX()>(width/64)&&target.getX()<=w-(width/64))
                 {
-                    xofs = -(target.getX()-15)*32;
-                    mxofs = (int)(xofs*scale);
+                    xofs = -(target.getX()-(width/64))*32;
+                    mxofs = (int)(xofs);
                 }else
                 {
-                    xofs = -(w-(15)-(15))*32;
-                    mxofs = (int)(xofs*scale);
+                    xofs = -(w-(width/32))*32;
+                    mxofs = (int)(xofs);
                 }
             }
             
             
         }
         
-        if(h<=23)
+        if(h<=(height/32))
         {
             yofs = (height-(h*32))/2;
         }else
         {
             if(target!=null)
             {
-                if(target.getY()<=12)
+                if(target.getY()<=(height/64))
                 {
                     yofs = 0;
-                    myofs = (int)(yofs*scale);
-                }else if(target.getY()>12&&target.getY()<=h-12)
+                    myofs = (int)(yofs);
+                }else if(target.getY()>(height/64)&&target.getY()<=h-(height/64))
                 {
-                    yofs = -(target.getY()-11)*32;
-                    myofs = (int)(yofs*scale);
+                    yofs = -(target.getY()-(height/64))*32;
+                    myofs = (int)(yofs);
                 }else
                 {
-                    yofs = -(h-11-11)*32;
-                    myofs = (int)(yofs*scale);
+                    yofs = -(h-(height/32))*32;
+                    myofs = (int)(yofs);
                 }
             }
         }

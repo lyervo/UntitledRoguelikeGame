@@ -5,6 +5,7 @@
  */
 package InventoryUI;
 
+import UI.DescBox;
 import Item.Item;
 import Res.Res;
 import World.LocalMap;
@@ -61,25 +62,25 @@ public class ItemUI extends DescBox
         last_desc_hover = 0;
         if(state == 1)
         {
-            if(index>12)
+            if(index>8)
             {
-                int columnIndex = index % 13;
-                int rowIndex = index / 13;
-                bounds = new Rectangle((columnIndex * 64) + (columnIndex * 7) + 16, 397 + ((rowIndex) * 64) + ((rowIndex) * 7), 64, 64);
+                int columnIndex = index % 9;
+                int rowIndex = index / 9;
+                bounds = new Rectangle((columnIndex*71) + 16, 32 + (rowIndex*71), 64, 64);
             } else {
-                bounds = new Rectangle((index * (64)) + (index * 7) + 16, 397, 64, 64);
+                bounds = new Rectangle((index * (64)) + (index * 7) + 16, 32, 64, 64);
             }
         }else if(state == 2)
         {
-            if(index>5)
+            if(index>3)
             {
-                int columnIndex = index % 6;
-                int rowIndex = index / 6;
+                int columnIndex = index % 4;
+                int rowIndex = index / 4;
                 
-                bounds = new Rectangle((columnIndex * 64) + (columnIndex * 7) + 16, 397 + ((rowIndex) * 64) + ((rowIndex) * 7), 64, 64);
+                bounds = new Rectangle((columnIndex*71) + 16, 32 + (rowIndex*71), 64, 64);
             } else {
                 
-                bounds = new Rectangle((index * (64)) + (index * 7) + 16, 397, 64, 64);
+                bounds = new Rectangle((index * (64)) + (index * 7) + 16, 32, 64, 64);
             }
         }else if(state == 4)
         {
@@ -87,9 +88,9 @@ public class ItemUI extends DescBox
             {
                 int columnIndex = index % 6;
                 int rowIndex = index / 6;
-                bounds = new Rectangle((columnIndex * 64) + (columnIndex * 7) + 514, 397 + ((rowIndex) * 64) + ((rowIndex) * 7), 64, 64);
+                bounds = new Rectangle((columnIndex*71) + 371, 32 + (rowIndex*71), 64, 64);
             } else {
-                bounds = new Rectangle((index * (64)) + (index * 7) + 514, 397, 64, 64);
+                bounds = new Rectangle((index * (64)) + (index * 7) + 371, 32, 64, 64);
             }
         }else if(state == 5)
         {
@@ -105,7 +106,7 @@ public class ItemUI extends DescBox
                 {
                     int colIndex = index%3;
                     int rowIndex = index/3;
-                    bounds = new Rectangle((colIndex * 64) + (colIndex * 7) + 16, ((rowIndex) * 64) + ((rowIndex) * 7)+66, 64, 64);
+                    bounds = new Rectangle((colIndex * 64) + (colIndex * 7) + 16, (rowIndex*71)+66, 64, 64);
                 }
             }else
             {
@@ -121,7 +122,7 @@ public class ItemUI extends DescBox
             {
                 int colIndex = index%3;
                 int rowIndex = index/3;
-                bounds = new Rectangle((colIndex * 64) + (colIndex * 7) + 16, ((rowIndex) * 64) + ((rowIndex) * 7)+66, 64, 64);
+                bounds = new Rectangle((colIndex * 64) + (colIndex * 7) + 16, (rowIndex*71)+66, 64, 64);
             }
             
         }
@@ -135,140 +136,140 @@ public class ItemUI extends DescBox
         
     }
     
-    public void render(Graphics g,Input input,int state,int scroll1,int scroll2)
+    public void render(Graphics g,Input input,int state,int scroll1,int scroll2,int x,int y)
     {
         if(!drag)
         {
             if(state == 1)
             {
-                if((index/13)-scroll1>=0&&(index/13)-scroll1<=4)
+                if((index/9)-scroll1>=0&&(index/9)-scroll1<=4)
                 {
-                    if(index>12)
+                    if(index>8)
                     {
-                        int columnIndex = index%13;
-                        int rowIndex = index/13;
+                        int columnIndex = index%9;
+                        int rowIndex = index/9;
                         if(hover)
                         {
-                            item.getTexture().draw((columnIndex*64)+(columnIndex*7)+16,397+((rowIndex-scroll1)*64)+((rowIndex-scroll1)*7),64,64);
+                            item.getTexture().draw((columnIndex*64)+(columnIndex*7)+16+x,32+((rowIndex-scroll1)*64)+((rowIndex-scroll1)*7)+y,64,64);
                             if(item.isStackable())
                             {
-                                fontSmall.drawString((columnIndex*64)+(columnIndex*7)+16,397+((rowIndex-scroll1)*64)+((rowIndex-scroll1)*7),""+item.getStack());
+                                fontSmall.drawString((columnIndex*64)+(columnIndex*7)+16+x,32+((rowIndex-scroll1)*64)+((rowIndex-scroll1)*7)+y,""+item.getStack());
                             }
                         }else
                         {
-                            item.getTexture().draw((columnIndex*64)+(columnIndex*7)+16,397+((rowIndex-scroll1)*64)+((rowIndex-scroll1)*7),64,64,Color.gray);
+                            item.getTexture().draw((columnIndex*64)+(columnIndex*7)+16+x,32+((rowIndex-scroll1)*64)+((rowIndex-scroll1)*7)+y,64,64,Color.gray);
                             if(item.isStackable())
                             {
-                                fontSmall.drawString((columnIndex*64)+(columnIndex*7)+16,397+((rowIndex-scroll1)*64)+((rowIndex-scroll1)*7),""+item.getStack());
+                                fontSmall.drawString((columnIndex*64)+(columnIndex*7)+16+x,32+((rowIndex-scroll1)*64)+((rowIndex-scroll1)*7)+y,""+item.getStack());
                             }
                         }
                     }else
                     {
                         if(hover)
                         {
-                            item.getTexture().draw((index*(64))+(index*7)+16,397-(scroll1*64)-(scroll1*7),64,64);
+                            item.getTexture().draw((index*(64))+(index*7)+16+x,32-(scroll1*64)-(scroll1*7)+y,64,64);
                             if(item.isStackable())
                             {
-                                fontSmall.drawString((index*(64))+(index*7)+16,397-(scroll1*64)-(scroll1*7),""+item.getStack());
+                                fontSmall.drawString((index*(64))+(index*7)+16+x,32-(scroll1*64)-(scroll1*7)+y,""+item.getStack());
                             }
                         }else
                         {
                          
-                            item.getTexture().draw((index*(64))+(index*7)+16,397-(scroll1*64)-(scroll1*7),64,64,Color.gray);
+                            item.getTexture().draw((index*(64))+(index*7)+16+x,32-(scroll1*64)-(scroll1*7)+y,64,64,Color.gray);
                             if(item.isStackable())
                             {
-                                fontSmall.drawString((index*(64))+(index*7)+16,397-(scroll1*64)-(scroll1*7),""+item.getStack());
+                                fontSmall.drawString((index*(64))+(index*7)+16+x,32-(scroll1*64)-(scroll1*7)+y,""+item.getStack());
                             }
                         }
                     }
                 }
             }else if(state == 2)
             {
-                if((index/6)-scroll1>=0&&(index/6)-scroll1<=4)
+                if((index/4)-scroll1>=0&&(index/4)-scroll1<=4)
                 {
-                    if(index>5)
+                    if(index>3)
                     {
-                        int columnIndex = index%6;
-                        int rowIndex = index/6;
+                        int columnIndex = index%4;
+                        int rowIndex = index/4;
                         if(hover)
                         {
-                            item.getTexture().draw((columnIndex*64)+(columnIndex*7)+16,397+((rowIndex-scroll1)*64)+((rowIndex-scroll1)*7),64,64);
+                            item.getTexture().draw((columnIndex*64)+(columnIndex*7)+16+x,32+((rowIndex-scroll1)*64)+((rowIndex-scroll1)*7)+y,64,64);
                             if(item.isStackable())
                             {
                                 
-                                fontSmall.drawString((columnIndex*64)+(columnIndex*7)+16,397+((rowIndex-scroll1)*64)+((rowIndex-scroll1)*7),""+item.getStack());
+                                fontSmall.drawString((columnIndex*64)+(columnIndex*7)+16+x,32+((rowIndex-scroll1)*64)+((rowIndex-scroll1)*7)+y,""+item.getStack());
                             }
                             
                         }else
                         {
-                            item.getTexture().draw((columnIndex*64)+(columnIndex*7)+16,397+((rowIndex-scroll1)*64)+((rowIndex-scroll1)*7),64,64,Color.gray);
+                            item.getTexture().draw((columnIndex*71)+16+x,32+((rowIndex-scroll1)*64)+((rowIndex-scroll1)*7)+y,64,64,Color.gray);
                             if(item.isStackable())
                             {
                                 
-                                fontSmall.drawString((columnIndex*64)+(columnIndex*7)+16,397+((rowIndex-scroll1)*64)+((rowIndex-scroll1)*7),""+item.getStack());
+                                fontSmall.drawString((columnIndex*64)+(columnIndex*7)+16+x,32+((rowIndex-scroll1)*64)+((rowIndex-scroll1)*7)+y,""+item.getStack());
                             }
                         }
                     }else
                     {
                         if(hover)
                         {
-                            item.getTexture().draw((index*(64))+(index*7)+16,397-(scroll1*64)-(scroll1*7),64,64);
+                            item.getTexture().draw((index*(64))+(index*7)+16+x,32-(scroll1*64)-(scroll1*7)+y,64,64);
                             if(item.isStackable())
                             {
                               
-                                fontSmall.drawString((index*(64))+(index*7)+16,397-(scroll1*64)-(scroll1*7),""+item.getStack());
+                                fontSmall.drawString((index*(64))+(index*7)+16+x,32-(scroll1*64)-(scroll1*7)+y,""+item.getStack());
                             }
                         }else
                         {
-                            item.getTexture().draw((index*(64))+(index*7)+16,397-(scroll1*64)-(scroll1*7),64,64,Color.gray);
+                            item.getTexture().draw((index*(64))+(index*7)+16+x,32-(scroll1*64)-(scroll1*7)+y,64,64,Color.gray);
                             if(item.isStackable())
                             {
                                 
-                                fontSmall.drawString((index*(64))+(index*7)+16,397-(scroll1*64)-(scroll1*7),""+item.getStack());
+                                fontSmall.drawString((index*(64))+(index*7)+16+x,32-(scroll1*64)-(scroll1*7)+y,""+item.getStack());
                             }
                         }
                     }
                 }
             }else if(state == 4)
             {
-                if((index/6)-scroll2>=0&&(index/6)-scroll2<=4)
+                if((index/4)-scroll2>=0&&(index/4)-scroll2<=4)
                 {
-                    if(index>5)
+                    if(index>3)
                     {
-                        int columnIndex = index%6;
-                        int rowIndex = index/6;
+                        int columnIndex = index%4;
+                        int rowIndex = index/4;
                         if(hover)
                         {
-                            item.getTexture().draw((columnIndex*64)+(columnIndex*7)+514,397+((rowIndex-scroll2)*64)+((rowIndex-scroll2)*7),64,64);
+                            item.getTexture().draw((columnIndex*71)+371+x,32+((rowIndex-scroll2)*71)+y,64,64);
                             if(item.isStackable())
                             {
-                                fontSmall.drawString((columnIndex*64)+(columnIndex*7)+514,397+((rowIndex-scroll2)*64)+((rowIndex-scroll2)*7),""+item.getStack());
+                                fontSmall.drawString((columnIndex*71)+371+x,32+((rowIndex-scroll2)*71)+y,""+item.getStack());
                             }
                         }else
                         {
-                            item.getTexture().draw((columnIndex*64)+(columnIndex*7)+514,397+((rowIndex-scroll2)*64)+((rowIndex-scroll2)*7),64,64,Color.gray);
+                            item.getTexture().draw((columnIndex*71)+371+x,32+((rowIndex-scroll2)*71)+y,64,64,Color.gray);
                             if(item.isStackable())
                             {
                                
-                                fontSmall.drawString((columnIndex*64)+(columnIndex*7)+514,397+((rowIndex-scroll2)*64)+((rowIndex-scroll2)*7),""+item.getStack());
+                                fontSmall.drawString((columnIndex*71)+371+x,32+((rowIndex-scroll2)*71)+y,""+item.getStack());
                             }
                         }
                     }else
                     {
                         if(hover)
                         {
-                            item.getTexture().draw((index*(64))+(index*7)+514,397-(scroll2*64)-(scroll2*7),64,64);
+                            item.getTexture().draw((index*(71))+371+x,32-(scroll2*71)+y,64,64);
                             if(item.isStackable())
                             {
-                                fontSmall.drawString((index*(64))+(index*7)+514,397-(scroll2*64)-(scroll2*7),""+item.getStack());
+                                fontSmall.drawString((index*(71))+371+x,32-(scroll2*71)+y,""+item.getStack());
                             }
                         }else
                         {
-                            item.getTexture().draw((index*(64))+(index*7)+514,397-(scroll2*64)-(scroll2*7),64,64,Color.gray);
+                            item.getTexture().draw((index*(71))+371+x,32-(scroll2*71)+y,64,64,Color.gray);
                             if(item.isStackable())
                             {
                                 g.setColor(Color.white);
-                                fontSmall.drawString((index*(64))+(index*7)+514,397-(scroll2*64)-(scroll2*7),""+item.getStack());
+                                fontSmall.drawString((index*(71))+371+x,32-(scroll2*71)+y,""+item.getStack());
                             }
                         }
                     }
@@ -287,7 +288,7 @@ public class ItemUI extends DescBox
                 {
                     int colIndex = index%3;
                     int rowIndex = index/3;
-                    item.getTexture().draw((colIndex * 64) + (colIndex * 7) + 16, ((rowIndex) * 64) + ((rowIndex) * 7)+66, 64, 64);
+                    item.getTexture().draw((colIndex * 64) + (colIndex * 7) + 16, (rowIndex*71)+66, 64, 64);
                 }else
                 {
                     item.getTexture().draw(16,137, 64, 64);
@@ -297,11 +298,11 @@ public class ItemUI extends DescBox
                 int colIndex = index%3;
                 int rowIndex = index/3;
                 
-                item.getTexture().draw((colIndex * 64) + (colIndex * 7) + 16, ((rowIndex) * 64) + ((rowIndex) * 7)+66, 64, 64);
+                item.getTexture().draw((colIndex * 64) + (colIndex * 7) + 16, (rowIndex*71)+66, 64, 64);
                 
                 if(item.isStackable())
                 {
-                    font.drawString((colIndex * 64) + (colIndex * 7) + 16, ((rowIndex) * 64) + ((rowIndex) * 7)+66,item.getStack()+"");
+                    font.drawString((colIndex * 64) + (colIndex * 7) + 16, (rowIndex*71)+66,item.getStack()+"");
                 }
                 
             }
@@ -326,13 +327,14 @@ public class ItemUI extends DescBox
     }
     
     
-    public void tick(boolean[] k,boolean[] m,Input input,World world,int state, int scroll1,int scroll2,InventoryUI ui,QuickItemBarUI quickItemBarUI)
+    public void tick(boolean[] k,boolean[] m,Input input,World world,int state, int scroll1,int scroll2,InventoryUI ui,QuickItemBarUI quickItemBarUI,int x,int y)
     {
-
+        
+        
+   
             if(state<=2)
             {
-                if(bounds.contains(new Point(input.getMouseX(),input.getMouseY()+(scroll1*64)+(scroll1*7)))
-                 &&input.getMouseY()>397)
+                if(bounds.contains(new Point(input.getMouseX()-x,input.getMouseY()+(scroll1*71)-y))&&ui.getPrimaryBounds().contains(new Point(input.getMouseX()-x,input.getMouseY()-y)))
                 {
                     hover = true;
                 }else
@@ -341,9 +343,9 @@ public class ItemUI extends DescBox
                 }
             }else if(state == 4)
             {
-                if(bounds.contains(new Point(input.getMouseX(),input.getMouseY()+(scroll2*64)+(scroll2*7)))
-                   &&input.getMouseY()>397)
+                if(bounds.contains(new Point(input.getMouseX()-x,input.getMouseY()+(scroll2*71)-y)))
                 {
+                    
                     hover = true;
                 }else
                 {
@@ -366,23 +368,25 @@ public class ItemUI extends DescBox
                 if(m[1]&&hover)
                 {
                     ui.spawnOptionTab(input.getMouseX(), input.getMouseY(), world.getWm().getCurrentLocalMap(), item,index,this.state,world.getItemLibrary());
-                }else if(input.isMouseButtonDown(0)&&hover&&!ui.isDrag())
+                }else if(input.isMouseButtonDown(0)&&hover&&!ui.isDrag()&&!world.isDrag())
                 {
-                    xofs = input.getMouseX()-bounds.x;
+                    xofs = input.getMouseX()-x-bounds.x;
                     if(state<=2)
                     {
-                        yofs = input.getMouseY()-bounds.y+(scroll1*64+scroll1*7);
+                        yofs = input.getMouseY()-y-bounds.y+(scroll1*64+scroll1*7);
                     }else if(state == 4)
                     {
-                        yofs = input.getMouseY()-bounds.y+(scroll2*64+scroll2*7);
+                        yofs = input.getMouseY()-y-bounds.y+(scroll2*64+scroll2*7);
                     }
                     drag = true;
                     ui.setDrag(true);
+                    world.setDrag(true);
                 }else if(m[0]&&drag)
                 {
-                    checkDrop(input,ui,world.getWm().getCurrentLocalMap(),scroll1,scroll2);
+                    checkDrop(input,ui,world.getWm().getCurrentLocalMap(),scroll1,scroll2,x,y);
                     drag = false;
                     ui.setDrag(false);
+                    world.setDrag(false);
 
                 }
             }else if(state == 5)
@@ -390,7 +394,7 @@ public class ItemUI extends DescBox
                 if(m[1]&&hover)
                 {
                     quickItemBarUI.spawnOptionTab(input.getMouseX(), input.getMouseY(), world.getWm().getCurrentLocalMap(), item,index,this.state,world.getItemLibrary());
-                }else if(input.isMouseButtonDown(0)&&hover&&!quickItemBarUI.isDrag())
+                }else if(input.isMouseButtonDown(0)&&hover&&!quickItemBarUI.isDrag()&&!world.isDrag())
                 {
                     xofs = input.getMouseX()-bounds.x;
                     if(state<=2)
@@ -401,12 +405,14 @@ public class ItemUI extends DescBox
                         yofs = input.getMouseY()-bounds.y+(scroll2*64+scroll2*7);
                     }
                     drag = true;
+                    world.setDrag(true);
                     quickItemBarUI.setDrag(true);
                 }else if(m[0]&&drag)
                 {
                     checkQuickItemBarDrop(input,quickItemBarUI,world.getWm().getCurrentLocalMap());
                     drag = false;
                     quickItemBarUI.setDrag(false);
+                    world.setDrag(false);
 
                 }
 
@@ -415,7 +421,7 @@ public class ItemUI extends DescBox
                 if(m[1]&&hover)
                 {
                     ui.spawnOptionTab(input.getMouseX(), input.getMouseY(), world.getWm().getCurrentLocalMap(), item,index,this.state,world.getItemLibrary());
-                }else if(input.isMouseButtonDown(0)&&hover&&!ui.isDrag())
+                }else if(input.isMouseButtonDown(0)&&hover&&!ui.isDrag()&&!world.isDrag())
                 {
                     xofs = input.getMouseX()-bounds.x;
                     if(state<=2)
@@ -426,12 +432,14 @@ public class ItemUI extends DescBox
                         yofs = input.getMouseY()-bounds.y+(scroll2*64+scroll2*7);
                     }
                     drag = true;
+                    world.setDrag(true);
                     ui.setDrag(true);
                 }else if(m[0]&&drag)
                 {
-                    checkDrop(input,ui,world.getWm().getCurrentLocalMap(),scroll1,scroll2);
+                    checkDrop(input,ui,world.getWm().getCurrentLocalMap(),scroll1,scroll2,x,y);
                     drag = false;
                     ui.setDrag(false);
+                    world.setDrag(false);
 
                 }
             }
@@ -478,16 +486,15 @@ public class ItemUI extends DescBox
         }
     }
     
-    public void checkDrop(Input input,InventoryUI ui,LocalMap lm,int scroll1,int scroll2)
+    public void checkDrop(Input input,InventoryUI ui,LocalMap lm,int scroll1,int scroll2,int x,int y)
     {
-        
         ArrayList<Pair<Integer,Integer>> pixelIntersection = new ArrayList<Pair<Integer,Integer>>();
         int max = 0;
         int maxIndex = -1;
         
         if(drag)
         {
-            dropRect = new Rectangle(input.getMouseX()-xofs,input.getMouseY()-yofs+scroll1*(64+7),64,64);
+            dropRect = new Rectangle(input.getMouseX()-xofs-x,input.getMouseY()-yofs+scroll1*(64+7)-y,64,64);
 
             
 
@@ -501,51 +508,58 @@ public class ItemUI extends DescBox
                         {
                             
                             Collections.swap(ui.getPlayer_inventory().getItems(), i, index);
+                            ui.refreshInventoryUI(lm);
                             return;
                         }
                     }
                     
                     
-                }else if(ui.getSecondaryBounds()!=null)
+                }else if(ui.getSecondaryBounds()!=null&&dropRect.intersects(ui.getSecondaryBounds()))
                 {
                     if(dropRect.intersects(ui.getSecondaryBounds()))
                     {
                         ui.getPlayer_inventory().dropItem(lm.getPlayer().getX(), lm.getPlayer().getY(), index, lm,-1);
-                        return;
-                    }
-                }
-                
-                if(dropRect.intersects(ui.getPlayerEquipment().getMainBounds())&&lm.getWorld().getUiDisplay()==1)
-                {
-                    if(item.getType()==33&&dropRect.intersects(ui.getPlayerEquipment().getBounds().get(3).getValue()))
-                    {
-                        ui.getPlayerEquipment().getEquipment().equip(item);
-                        lm.getWorld().moved();
-                        return;
-                    }
-                    
-                    for(Pair<Integer,Rectangle> p:ui.getPlayerEquipment().getBounds())
-                    {
-                        if(p.getKey()==item.getType()&&p.getValue().intersects(dropRect))
-                        {
-                            ui.getPlayerEquipment().getEquipment().equip(item);
-                            lm.getWorld().moved();
-                            return;
-                        }
-                    }
-                }
-                
-                if(dropRect.intersects(ui.getCraftingUI().getBounds())&&lm.getWorld().getUiDisplay()==2)
-                {
-                    if(ui.getCraftingUI().getCrafting().getItems().size()<9)
-                    {
-                        
-                        ui.getCraftingUI().getCrafting().addIngredient(index);
-                        ui.getCraftingUI().refreshUI(lm);
                         ui.refreshInventoryUI(lm);
                         return;
                     }
+                }else
+                {
+                    ui.getPlayer_inventory().dropItem(lm.getPlayer().getX(), lm.getPlayer().getY(), index, lm,-1);
+                    ui.refreshInventoryUI(lm);
+                    return;
                 }
+                
+////                if(dropRect.intersects(ui.getPlayerEquipment().getMainBounds())&&lm.getWorld().getUiDisplay()==1)
+////                {
+////                    if(item.getType()==33&&dropRect.intersects(ui.getPlayerEquipment().getBounds().get(3).getValue()))
+////                    {
+////                        ui.getPlayerEquipment().getEquipment().equip(item);
+////                        lm.getWorld().moved();
+////                        return;
+////                    }
+////                    
+////                    for(Pair<Integer,Rectangle> p:ui.getPlayerEquipment().getBounds())
+////                    {
+////                        if(p.getKey()==item.getType()&&p.getValue().intersects(dropRect))
+////                        {
+////                            ui.getPlayerEquipment().getEquipment().equip(item);
+////                            lm.getWorld().moved();
+////                            return;
+////                        }
+////                    }
+////                }
+////                
+////                if(dropRect.intersects(ui.getCraftingUI().getBounds())&&lm.getWorld().getUiDisplay()==2)
+////                {
+////                    if(ui.getCraftingUI().getCrafting().getItems().size()<9)
+////                    {
+////                        
+////                        ui.getCraftingUI().getCrafting().addIngredient(index);
+////                        ui.getCraftingUI().refreshUI(lm);
+////                        ui.refreshInventoryUI(lm);
+////                        return;
+////                    }
+////                }
                 
               
                 
@@ -580,13 +594,13 @@ public class ItemUI extends DescBox
             {
                 if(dropRect.intersects(ui.getPrimaryBounds()))
                 {
-                    ui.getCraftingUI().getCrafting().removeIngridient(index);
-                    ui.getCraftingUI().refreshUI(lm);
+//                    ui.getCraftingUI().getCrafting().removeIngridient(index);
+//                    ui.getCraftingUI().refreshUI(lm);
                     ui.refreshInventoryUI(lm);
                 }
             }
             
-            
+            ui.refreshInventoryUI(lm);
         }   
             
     }

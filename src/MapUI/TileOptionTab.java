@@ -42,6 +42,7 @@ public class TileOptionTab extends OptionTab
         initOptions();
         initOptionTab();
     }
+    
 
     @Override
     public void runOption(LocalMap lm)
@@ -107,7 +108,15 @@ public class TileOptionTab extends OptionTab
                 }
             }
         }
-        ip = lm.getItemPileAt(t.getX(),t.getY());
+        
+        if(furniture!=null)
+        {
+            if(furniture.isFuelable())
+            {
+                options.add(new Pair("Add Fuel",3));
+            }
+        }
+        
         setLongestIndex();
     }
     

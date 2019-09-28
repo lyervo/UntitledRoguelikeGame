@@ -37,7 +37,7 @@ public class ItemPile extends Entity
     }
     
     @Override
-    public void render(Camera cam,LocalMap map)
+    public void render(Camera cam,LocalMap map,boolean animate)
     {
         if(map.getTiles()[y][x].isVisit())
         {
@@ -115,6 +115,7 @@ public class ItemPile extends Entity
     public void setItems(ArrayList<Item> items) {
         this.items = items;
     }
+    
     
     
     

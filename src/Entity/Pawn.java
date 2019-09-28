@@ -120,7 +120,7 @@ public class Pawn extends Entity
                             
                             world.getWm().getCurrentLocalMap().getItemPileAt(x, y).takeFrom(world.getWm().getPlayerInventory(),task.getIndex(),world.getWm().getCurrentLocalMap(),-1);
                             
-                            world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
+//                            world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
                             task = new Task(x,y,-1,-1,0);
 
                             world.moved();
@@ -131,7 +131,7 @@ public class Pawn extends Entity
                 {
                     playerKeyboardControl(k,input,world);
                 }
-            }else if(m[19]||k[255])
+            }else if(k[255])
             {
                 //k[255] will be true whenever a key is pressed
                 task = new Task(x,y,-1,-1,0);
@@ -236,7 +236,7 @@ public class Pawn extends Entity
     
     
     @Override
-    public void render(Camera cam,LocalMap map)
+    public void render(Camera cam,LocalMap map,boolean animate)
     {
         if(map.getTiles()[y][x].isVisit())
         {

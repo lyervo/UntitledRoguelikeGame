@@ -5,6 +5,7 @@
  */
 package InventoryUI;
 
+import UI.DescBox;
 import Entity.Furniture;
 import Res.Res;
 import World.World;
@@ -32,7 +33,13 @@ public class StationUI extends DescBox
         super(furniture.getName(),furniture.getDesc(),res.disposableDroidBB);
         this.name = furniture.getName();
         this.desc = furniture.getDesc();
-        this.texture = furniture.getTexture();
+        if(furniture.getTexture()!=null)
+        {
+            this.texture = furniture.getTexture();
+        }else
+        {
+            this.texture = furniture.getSprites().getSubImage(32, 32, 32, 32);
+        }
         this.index = index;
         this.bounds = new Rectangle(16+(35*index),29,32,32);
     }

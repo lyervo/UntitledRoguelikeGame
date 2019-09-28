@@ -13,8 +13,12 @@ import Narrator.Narrator;
 import Res.Res;
 import InventoryUI.InventoryButton;
 import InventoryUI.InventoryUI;
+import InventoryUI.InventoryUIWindow;
 import InventoryUI.QuickItemBarUI;
 import InventoryUI.XItemTextField;
+import UI.UIComponent;
+import UI.UIWindow;
+import java.util.ArrayList;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -28,7 +32,7 @@ public class World
 {
     public WorldMap wm;
     
-    
+    private boolean hoveringWindow;
     
     //tells the rest of the entities that whether player has made a move
     public boolean moved;
@@ -42,11 +46,7 @@ public class World
     private double scale;
     private Input input;
     
-    private InventoryButton inventoryButton;
-    private CraftingButton craftingButton;
-    
     public Camera cam;
-    private InventoryUI inventory_ui;
     
     private boolean mapTick;
     
@@ -66,8 +66,22 @@ public class World
     private boolean xItemTextFieldActive;
     
     
+    private ArrayList<UIWindow> uis;
+    
+    private InventoryUIWindow inventoryWindow;
+    private InventoryUI inventory_ui;
+    
+    private boolean drag;
+    
+    private InventoryButton inventoryButton;
+    
+    private int z;
+    
+    
     public World(Res res,GameContainer container,Input input)
     {
+        this.z = 0;
+        hoveringWindow = false;
         
         itemLibrary = new ItemLibrary("test",res);
         entityLibrary = new EntityLibrary(res);
@@ -83,24 +97,19 @@ public class World
         this.scale = (double)container.getHeight()/768;
         
         ancestor = new Narrator(container,res.disposableDroidBB);
-        cam = new Camera(100,100);
+        cam = new Camera(100,100,container);
         
         xItemTextFieldActive = false;
         
         xItemTextField = new XItemTextField(container,res.disposableDroidBB,496-((res.disposableDroidBB.getWidth("00000")+5)/2),384-(res.disposableDroidBB.getHeight()/2),res.disposableDroidBB.getWidth("00000")+5,res.disposableDroidBB.getHeight(),res);
+
         
-        inventoryButton = new InventoryButton(994,100,res.inventory_icon);
-        craftingButton = new CraftingButton(1078,100,res.crafting_icon);
+        inventory_ui = new InventoryUI(100,100,0,0,wm.getPlayerInventory(),res,quickItemBarUI,this,inventoryWindow);
         
-        quickItemBarUI = new QuickItemBarUI(res,wm.getPlayerInventory(),null,64,640);
-        quickItemBarUIDisplay = true;
-        
-        inventory_ui = new InventoryUI(wm.getPlayerInventory(),res,quickItemBarUI,this);
-        
-        quickItemBarUI.setInventoryUI(inventory_ui);
         
         uiDisplay = 0;
         
+        drag = false;
         
         
         ancestor.addText("Ruin has come to our family. You remember our venerable house,"
@@ -110,59 +119,69 @@ public class World
         
         mapTick = false;
        
+        inventoryWindow = new InventoryUIWindow(100,100,"Inventoy",inventory_ui,res.disposableDroidBB40f,res);
+        
+        uis = new ArrayList<UIWindow>();
+        
+        uis.add(inventoryWindow);
+        
+        for(int i=0;i<uis.size();i++)
+        {
+            uis.get(i).setZ(i+1);
+        }
+        
+        inventoryButton = new InventoryButton(10,container.getHeight()-64,res.inventory_icon);
         
         
-        
-//        window1 = new Window(100,100,100,100);
         
     }
     
     public void tick(boolean[] k,boolean[] m,Input input)
     {
-     
         
+        hoveringWindow = false;
+        inventoryWindow.tick(k, m, input, this);
+        
+        if(!hoveringWindow)
+        {
+            z = 0;
+        }
+        
+        inventoryButton.tick(m, input, this);
         
         if(k[Input.KEY_I])
         {
             deactivateXItemTextField();
-            if(uiDisplay!=1)
-            {
-                uiDisplay = 1;
-                inventory_ui.refreshInventoryUI(wm.getCurrentLocalMap());
-            }else
-            {
-                uiDisplay = 0;
-            }
+            inventoryWindow.setDisplay();
         }else if(k[Input.KEY_TAB]&&uiDisplay == 0)
         {
-            deactivateXItemTextField();
-            quickItemBarUIDisplay = !quickItemBarUIDisplay;
+//            deactivateXItemTextField();
+//            quickItemBarUIDisplay = !quickItemBarUIDisplay;
         }
         
         
         
         if(xItemTextFieldActive)
         {
-            xItemTextField.tick(k,m, input, this,inventory_ui,quickItemBarUI);
+//            xItemTextField.tick(k,m, input, this,inventory_ui,quickItemBarUI);
         }
         
-        inventoryButton.tick(m, input, this);
-        craftingButton.tick(m, input, this);
+
         
         switch(uiDisplay)
         {
             case 0:
                 if(quickItemBarUIDisplay)
                 {
-                    quickItemBarUI.tick(k, m, input, this);
+//                    quickItemBarUI.tick(k, m, input, this);
                 }
                 break;
-            case 1:
-                inventory_ui.tick(k,m, input, this,uiDisplay);
-                break;
-            case 2:
-                inventory_ui.tick(k, m, input, this,uiDisplay);
-                break;
+//            case 1:
+//                inventory_ui.tick(k,m, input, this,uiDisplay);
+//                break;
+//            case 2:
+//                inventory_ui.tick(k, m, input, this,uiDisplay);
+//                break;
         }
         
         wm.tick(k,m,input,this);
@@ -175,28 +194,28 @@ public class World
         
     }
     
-    public void render(Graphics g)
+    public void render(Graphics g,boolean animate)
     {
+
         inventoryButton.render(g);
-        craftingButton.render(g);
         ancestor.render(g,cam);
         switch(uiDisplay)
         {
             case 0:
-                wm.render(g);
-                if(quickItemBarUIDisplay)
-                {
-                    quickItemBarUI.render(g, input);
-                }
+                wm.render(g, animate);
+//                if(quickItemBarUIDisplay)
+//                {
+//                    quickItemBarUI.render(g, input);
+//                }
                 
                 break;
             
-            case 1:
-                inventory_ui.render(g,input,uiDisplay);
-                break;
-            case 2:
-                inventory_ui.render(g, input,uiDisplay);
-                break;
+//            case 1:
+//                inventory_ui.render(g,input,uiDisplay);
+//                break;
+//            case 2:
+//                inventory_ui.render(g, input,uiDisplay);
+//                break;
                 
         }
         
@@ -212,7 +231,22 @@ public class World
             g.setColor(Color.white);
             xItemTextField.render(container, g);
         }
-
+        
+        inventoryWindow.render(g, input);
+        
+        if(inventoryWindow.isDrag())
+        {
+            inventoryWindow.dragRender(g, input);
+        }
+        
+        for(UIWindow ui:uis)
+        {
+            if(ui.getUiComponent().isDrag())
+            {
+                ui.getUiComponent().dragRender(g,input);
+            }
+            
+        }
         
     }
     
@@ -233,7 +267,7 @@ public class World
     {
         if(uiDisplay==2)
         {
-            inventory_ui.getCraftingUI().getCrafting().clearAllIngridient();
+//            inventory_ui.getCraftingUI().getCrafting().clearAllIngridient();
         }
         
         if(uiDisplay!=ui)
@@ -245,7 +279,7 @@ public class World
         }
         
         
-        inventory_ui.refreshInventoryUI(wm.getCurrentLocalMap());
+//        inventory_ui.refreshInventoryUI(wm.getCurrentLocalMap());
         
     }
     
@@ -324,14 +358,6 @@ public class World
         this.ancestor = ancestor;
     }
 
-    public InventoryButton getInventoryButton() {
-        return inventoryButton;
-    }
-
-    public void setInventoryButton(InventoryButton inventoryButton) {
-        this.inventoryButton = inventoryButton;
-    }
-
     public Camera getCam() {
         return cam;
     }
@@ -348,13 +374,13 @@ public class World
         this.mouse_z = mouse_z;
     }
 
-    public InventoryUI getInventory_ui() {
-        return inventory_ui;
-    }
-
-    public void setInventory_ui(InventoryUI inventory_ui) {
-        this.inventory_ui = inventory_ui;
-    }
+//    public InventoryUI getInventory_ui() {
+//        return inventory_ui;
+//    }
+//
+//    public void setInventory_ui(InventoryUI inventory_ui) {
+//        this.inventory_ui = inventory_ui;
+//    }
 
     public int getUiDisplay() {
         return uiDisplay;
@@ -412,13 +438,39 @@ public class World
         this.xItemTextFieldActive = xItemTextFieldActive;
     }
 
-    public CraftingButton getCraftingButton() {
-        return craftingButton;
+    public ArrayList<UIWindow> getUis() {
+        return uis;
     }
 
-    public void setCraftingButton(CraftingButton craftingButton) {
-        this.craftingButton = craftingButton;
+    public void setUis(ArrayList<UIWindow> uis) {
+        this.uis = uis;
     }
+
+    public InventoryUIWindow getInventoryWindow() {
+        return inventoryWindow;
+    }
+
+    public void setInventoryWindow(InventoryUIWindow inventoryWindow) {
+        this.inventoryWindow = inventoryWindow;
+    }
+
+    public InventoryUI getInventory_ui() {
+        return inventory_ui;
+    }
+
+    public void setInventory_ui(InventoryUI inventory_ui) {
+        this.inventory_ui = inventory_ui;
+    }
+
+    public boolean isDrag() {
+        return drag;
+    }
+
+    public void setDrag(boolean drag) {
+        this.drag = drag;
+    }
+
+    
 
     public EntityLibrary getEntityLibrary() {
         return entityLibrary;
@@ -426,6 +478,22 @@ public class World
 
     public void setEntityLibrary(EntityLibrary entityLibrary) {
         this.entityLibrary = entityLibrary;
+    }
+
+    public int getZ() {
+        return z;
+    }
+
+    public void setZ(int z) {
+        this.z = z;
+    }
+
+    public boolean isHoveringWindow() {
+        return hoveringWindow;
+    }
+
+    public void setHoveringWindow(boolean hoveringWindow) {
+        this.hoveringWindow = hoveringWindow;
     }
     
     

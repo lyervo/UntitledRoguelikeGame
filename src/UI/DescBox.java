@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package InventoryUI;
+package UI;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ public abstract class DescBox
             desc_lines.add(placeholder);
 
         } else {
-            desc_lines.add(desc);
+            desc_lines.add(" "+desc);
         }
         
     }

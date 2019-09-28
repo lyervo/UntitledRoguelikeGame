@@ -9,6 +9,8 @@ import Item.Inventory;
 import Item.Item;
 import Item.ItemLibrary;
 import Res.Res;
+import UI.UIComponent;
+import UI.UIWindow;
 import World.LocalMap;
 import World.World;
 import java.awt.Point;
@@ -25,20 +27,17 @@ import org.newdawn.slick.gui.TextField;
  *
  * @author Timot
  */
-public class InventoryUI 
+public class InventoryUI extends UIComponent 
 {
     private Inventory player_inventory,interacting_inventory;
     
-    
+    private Image bg1,bg2;
     //screen resolution
     private int width,height;
-    //center the UI
+    
     private int xofs,yofs;
     private boolean display;
     
-    private Image bg1,bg2;
-    
-    private Image crafting_bg1,crafting_bg2;
     
     private ArrayList<ItemUI> primaryItemUI,secondaryItemUI;
     private int scroll1,scroll2;
@@ -61,19 +60,14 @@ public class InventoryUI
     
     private int secondaryMaxScroll,primaryMaxScroll,primary_height,secondary_height;
     
-    private boolean drag;
-    
-    private EquipmentUI playerEquipment,interactingEquipment;
     
     
-    private QuickItemBarUI quickItemBarUI;
     
-    private CraftingUI craftingUI;
     
-    public InventoryUI(Inventory player_inventory,Res res,QuickItemBarUI quickItemBarUI,World world)
+    public InventoryUI(int x,int y,int xofs,int yofs,Inventory player_inventory,Res res,QuickItemBarUI quickItemBarUI,World world,UIWindow window)
     {
+        super(x,y,xofs,yofs,window);
         this.player_inventory = player_inventory;
-        this.quickItemBarUI = quickItemBarUI;
         
         this.display = false;
         
@@ -83,11 +77,9 @@ public class InventoryUI
         this.res = res;
         this.bg1 = res.inventory_bg_1;
         this.bg2 = res.inventory_bg_2;
-        
         primaryItemUI = new ArrayList<ItemUI>();
         secondaryItemUI = new ArrayList<ItemUI>();
         
-        playerEquipment = new EquipmentUI(player_inventory.getEquipment(),res,this,6);
         
         
         for(int i=0;i<player_inventory.getItems().size();i++)
@@ -95,117 +87,105 @@ public class InventoryUI
            primaryItemUI.add(new ItemUI(player_inventory.getItems().get(i),i,state,res));
         }
         
-        primaryBounds = new Rectangle(16,397,916,348);
+        primaryBounds = new Rectangle(21,32,628,348);
         
-        primaryUp = new InventoryPrimaryScrollUpButton(940,397,res.inventory_scroll_up,this);
-        primaryDown = new InventoryPrimaryScrollDownButton(940,718,res.inventory_scroll_down,this);
+        primaryUp = new InventoryPrimaryScrollUpButton(655,32,xofs,yofs,res.inventory_scroll_up,this);
+        primaryDown = new InventoryPrimaryScrollDownButton(655,352,xofs,yofs,res.inventory_scroll_down,this);
         
-        secondaryUp = new InventorySecondaryScrollUpButton(940,397,res.inventory_scroll_up,this);
+        secondaryUp = new InventorySecondaryScrollUpButton(655,32,res.inventory_scroll_up,this);
         secondaryUp.setDisplay(false);
-        secondaryDown = new InventorySecondaryScrollDownButton(940,718,res.inventory_scroll_down,this);
+        secondaryDown = new InventorySecondaryScrollDownButton(655,352,res.inventory_scroll_down,this);
         secondaryDown.setDisplay(false);
-        drag = false;
         
-        
-        crafting_bg1 = res.crafting_bg_1;
-        crafting_bg2 = res.crafting_bg_2;
-        
-        craftingUI = new CraftingUI(player_inventory.getCrafting(),res,this,world.getItemLibrary(),world);
         
     }
     
-    public void render(Graphics g,Input input,int uiDisplay)
+    @Override
+    public void render(Graphics g,Input input,int x,int y)
     {
+        int uiDisplay = 1;
         if(uiDisplay == 1)
         {
             if(state == 1)
             {
-                bg1.draw(0,0);
+                bg1.draw(x,y);
             }else if(state == 2)
             {
-                bg2.draw(0,0);
-            }
-        }else if(uiDisplay == 2)
-        {
-            if(state == 1)
-            {
-                crafting_bg1.draw(0,0);
-            }else if(state == 2)
-            {
-                crafting_bg2.draw(0,0);
+                bg2.draw(x,y);
             }
         }
-            
+        
+           
         for(ItemUI i:primaryItemUI)
         {
-            i.render(g,input,state,scroll1,scroll2);
-        }
-        for(ItemUI i:secondaryItemUI)
-        {
-            i.render(g,input,4,scroll1,scroll2);
+            i.render(g,input,state,scroll1,scroll2,x,y);
         }
         
-        primaryUp.render(g);
-        primaryDown.render(g);
-        secondaryUp.render(g);
-        secondaryDown.render(g);
-        renderScrollBars(g);
-        
-        if(uiDisplay == 1)
+        if(state==2)
         {
-            playerEquipment.render(g, input);
-            if(interactingEquipment!=null)
+            for(ItemUI i:secondaryItemUI)
             {
-                interactingEquipment.render(g, input);
+                i.render(g,input,4,scroll1,scroll2,x,y);
             }
-        }else if(uiDisplay == 2)
-        {
-            craftingUI.render(g,input);
         }
+        primaryUp.render(g,x,y);
+        primaryDown.render(g,x,y);
+        
+        g.setColor(Color.green);
+        g.drawRect(primaryBounds.x+x, primaryBounds.y+y, primaryBounds.width,primaryBounds.height);
+        
+        if(secondaryBounds!=null)
+        {
+            g.drawRect(secondaryBounds.x+x,secondaryBounds.y+y,secondaryBounds.width,secondaryBounds.height);
+        }
+        
+        secondaryUp.render(g,x,y);
+        secondaryDown.render(g,x,y);
+
         
         if(itemOptionTab!=null)
         {
             itemOptionTab.render(g);
         }
-        
-        
-        
-        if(!drag)
-        {
-            for(ItemUI i:primaryItemUI)
-            {
-                if(i.isDisplay())
-                {
-                    i.renderDesc(g, input);
-                }
-            }
-            
-            for(ItemUI i:secondaryItemUI)
-            {
-                if(i.isDisplay())
-                {
-                    i.renderDesc(g, input);
-                }
-            }
-            
-        }else
-        {
-            for(ItemUI i:primaryItemUI)
-            {
-                if(i.isDrag())
-                {
-                    i.dragRender(g, input);
-                }
-            }
-
-            for(ItemUI i:secondaryItemUI)
-            {
-                if(i.isDrag())
-                {
-                    i.dragRender(g, input);
-                }
-            }
-        }
+//        
+//        
+//        
+//        if(!drag)
+//        {
+//            for(ItemUI i:primaryItemUI)
+//            {
+//                if(i.isDisplay())
+//                {
+//                    i.renderDesc(g, input);
+//                }
+//            }
+//            
+//            for(ItemUI i:secondaryItemUI)
+//            {
+//                if(i.isDisplay())
+//                {
+//                    i.renderDesc(g, input);
+//                }
+//            }
+//            
+//        }else
+//        {
+//            for(ItemUI i:primaryItemUI)
+//            {
+//                if(i.isDrag())
+//                {
+//                    i.dragRender(g, input);
+//                }
+//            }
+//
+//            for(ItemUI i:secondaryItemUI)
+//            {
+//                if(i.isDrag())
+//                {
+//                    i.dragRender(g, input);
+//                }
+//            }
+//        }
         
 
     }
@@ -250,89 +230,116 @@ public class InventoryUI
     }
     
 
-    public void tick(boolean[] k,boolean[] m,Input input,World world,int uiDisplay)
+    @Override
+    public void tick(boolean[] k,boolean[] m,Input input,World world,int x,int y)
     {
-        primaryUp.tick(m, input, world);
-        primaryDown.tick(m, input, world);
-        secondaryUp.tick(m, input, world);
-        secondaryDown.tick(m, input, world);
+        
+        primaryUp.tick(m, input, world,x,y);
+        primaryDown.tick(m, input, world,x,y);
+        secondaryUp.tick(m, input, world,x,y);
+        secondaryDown.tick(m, input, world,x,y);
 
         
         
         
         if(m[11])
         {
-            if(primaryBounds.contains(new Point(input.getMouseX(),input.getMouseY())))
+            if(primaryBounds.contains(new Point(input.getMouseX()-x,input.getMouseY()-y)))
             {
                 primaryScrollUp();
             }else if(secondaryBounds!=null)
             {
-                if(secondaryBounds.contains(new Point(input.getMouseX(),input.getMouseY())))
+                if(secondaryBounds.contains(new Point(input.getMouseX()-x,input.getMouseY()-y)))
                 {
                     secondaryScrollUp();
                 }
             }
         }else if(m[12])
         {
-            if(primaryBounds.contains(new Point(input.getMouseX(),input.getMouseY())))
+            if(primaryBounds.contains(new Point(input.getMouseX()-x,input.getMouseY()-y)))
             {
                 primaryScrollDown();
             }else if(secondaryBounds!=null)
             {
-                if(secondaryBounds.contains(new Point(input.getMouseX(),input.getMouseY())))
+                if(secondaryBounds.contains(new Point(input.getMouseX()-x,input.getMouseY()-y)))
                 {
                     secondaryScrollDown();
                 }
             }
         }
-        
-        if(uiDisplay==1)
-        {
-            playerEquipment.tick(k, m, input, world,this);
-
-            if(interactingEquipment!=null)
-            {
-                interactingEquipment.tick(k, m, input, world,this);
-            }
-        }else if(uiDisplay==2)
-        {
-            craftingUI.tick(k, m, input, world);
-        }
-        
+//        
+////        if(uiDisplay==1)
+////        {
+////            playerEquipment.tick(k, m, input, world,this);
+////
+////            if(interactingEquipment!=null)
+////            {
+////                interactingEquipment.tick(k, m, input, world,this);
+////            }
+////        }else if(uiDisplay==2)
+////        {
+////            craftingUI.tick(k, m, input, world);
+////        }
+//        
         for(int i=primaryItemUI.size()-1;i>=0;i--)
         {
-            primaryItemUI.get(i).tick(k, m, input, world, state, scroll1,scroll2,this,null);
+            primaryItemUI.get(i).tick(k, m, input, world, state, scroll1,scroll2,this,null,x,y);
+        }
+        for(int i=secondaryItemUI.size()-1;i>=0;i--)
+        {
+            secondaryItemUI.get(i).tick(k, m, input, world, 4, scroll1,scroll2,this,null,x,y);
+        }
+        
+        
+//        
+//        
+//        if(m[0]&&itemOptionTab!=null)
+//        {
+//            itemOptionTab.runOption(world.getWm().getCurrentLocalMap());
+//            itemOptionTab = null;
+//            refreshInventoryUI(world.getWm().getCurrentLocalMap());
+//        }else if(k[255])
+//        {
+//            itemOptionTab = null;
+//        }
+//        
+//        if(itemOptionTab!=null)
+//        {
+//            itemOptionTab.tick(k, m, input, world.getWm().getCurrentLocalMap());
+//        }
+//        
+//        if(m[0])
+//        {
+//            refreshInventoryUI(world.getWm().getCurrentLocalMap());
+//        }
+
+        
+    }
+    
+    @Override
+    public void dragRender(Graphics g, Input input)
+    {
+        for(ItemUI i:primaryItemUI)
+        {
+            if(i.isDrag())
+            {
+                i.dragRender(g, input);
+                return;
+            }
         }
         
         for(ItemUI i:secondaryItemUI)
         {
-            i.tick(k, m, input, world, 4, scroll1, scroll2,this,null);
+            if(i.isDrag())
+            {
+                i.dragRender(g, input);
+                return;
+            }
         }
-        
-        
-        if(m[0]&&itemOptionTab!=null)
-        {
-            itemOptionTab.runOption(world.getWm().getCurrentLocalMap());
-            itemOptionTab = null;
-            refreshInventoryUI(world.getWm().getCurrentLocalMap());
-        }else if(k[255])
-        {
-            itemOptionTab = null;
-        }
-        
-        if(itemOptionTab!=null)
-        {
-            itemOptionTab.tick(k, m, input, world.getWm().getCurrentLocalMap());
-        }
-        
-        if(m[0])
-        {
-            refreshInventoryUI(world.getWm().getCurrentLocalMap());
-        }
-        
-        
-        
+
+           
     }
+
     
     public void spawnOptionTab(int x,int y,LocalMap lm,Item item,int index,int state,ItemLibrary itemLibrary)
     {
@@ -354,25 +361,18 @@ public class InventoryUI
     {
         refreshSecondaryInventoryUI(lm);
         refreshPrimaryInventoryUI();
-        playerEquipment.refreshUI();
-        craftingUI.refreshUI(lm);
-        if(interactingEquipment!=null)
-        {
-            interactingEquipment.refreshUI();
-        }
-        quickItemBarUI.refreshUI();
-
+        
         
         if(state == 1)
         {
-            primaryMaxScroll = (player_inventory.getItems().size()/13)+1-4;
+            primaryMaxScroll = (player_inventory.getItems().size()/9)+1-4;
             primary_height = 284/primaryMaxScroll;
-            if(primaryItemUI.size()<=65)
+            if(primaryItemUI.size()<=45)
             {
                 scroll1 = 0;
-            }else if(scroll1>(primaryItemUI.size()/13))
+            }else if(scroll1>(primaryItemUI.size()/8))
             {
-                scroll1 = (primaryItemUI.size()/13)-4;
+                scroll1 = (primaryItemUI.size()/8)-4;
             }
         }else if(state == 2)
         {
@@ -445,11 +445,11 @@ public class InventoryUI
                 secondaryItemUI.add(new ItemUI(interacting_inventory.getItems().get(i), i, 4,res));
             }
             
-            primaryBounds = new Rectangle(16,397,426,348);
-            secondaryBounds = new Rectangle(514,397,426,348);
+            primaryBounds = new Rectangle(16,32,277,348);
+            secondaryBounds = new Rectangle(371,32,277,348);
             
-            primaryUp.setX(442);
-            primaryDown.setX(442);
+            primaryUp.setX(300);
+            primaryDown.setX(300);
             secondaryUp.setDisplay(true);
             secondaryDown.setDisplay(true);
             
@@ -459,10 +459,10 @@ public class InventoryUI
         {
             
             state = 1;
-            primaryBounds = new Rectangle(16,397,916,348);
+            primaryBounds = new Rectangle(21,32,628,348);
             secondaryBounds = null;
-            primaryUp.setX(940);
-            primaryDown.setX(940);
+            primaryUp.setX(655);
+            primaryDown.setX(655);
             secondaryUp.setDisplay(false);
             secondaryDown.setDisplay(false);    
         }
@@ -548,8 +548,13 @@ public class InventoryUI
         this.interacting_inventory = interacting_inventory;
     }
 
-    public int getWidth() {
-        return width;
+    public int getUIWidth() {
+        return bg1.getWidth();
+    }
+    
+    public int getUIHeight()
+    {
+        return bg1.getHeight();
     }
 
     public void setWidth(int width) {
@@ -586,22 +591,6 @@ public class InventoryUI
 
     public void setDisplay(boolean display) {
         this.display = display;
-    }
-
-    public Image getBg1() {
-        return bg1;
-    }
-
-    public void setBg1(Image bg1) {
-        this.bg1 = bg1;
-    }
-
-    public Image getBg2() {
-        return bg2;
-    }
-
-    public void setBg2(Image bg2) {
-        this.bg2 = bg2;
     }
 
     public ArrayList<ItemUI> getPrimaryItemUI() {
@@ -740,64 +729,8 @@ public class InventoryUI
         this.secondary_height = secondary_height;
     }
 
-    public boolean isDrag() {
-        return drag;
-    }
-
-    public void setDrag(boolean drag) {
-        this.drag = drag;
-    }
 
 
-    public QuickItemBarUI getQuickItemBarUI() {
-        return quickItemBarUI;
-    }
 
-    public void setQuickItemBarUI(QuickItemBarUI quickItemBarUI) {
-        this.quickItemBarUI = quickItemBarUI;
-    }
-
-    public EquipmentUI getPlayerEquipment() {
-        return playerEquipment;
-    }
-
-    public void setPlayerEquipment(EquipmentUI playerEquipment) {
-        this.playerEquipment = playerEquipment;
-    }
-
-    public EquipmentUI getInteractingEquipment() {
-        return interactingEquipment;
-    }
-
-    public void setInteractingEquipment(EquipmentUI interactingEquipment) {
-        this.interactingEquipment = interactingEquipment;
-    }
-
-    public Image getCrafting_bg1() {
-        return crafting_bg1;
-    }
-
-    public void setCrafting_bg1(Image crafting_bg1) {
-        this.crafting_bg1 = crafting_bg1;
-    }
-
-    public Image getCrafting_bg2() {
-        return crafting_bg2;
-    }
-
-    public void setCrafting_bg2(Image crafting_bg2) {
-        this.crafting_bg2 = crafting_bg2;
-    }
-
-    public CraftingUI getCraftingUI() {
-        return craftingUI;
-    }
-
-    public void setCraftingUI(CraftingUI craftingUI) {
-        this.craftingUI = craftingUI;
-    }
-    
-    
-    
     
 }

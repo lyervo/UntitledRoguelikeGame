@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package InventoryUI;
+package UI;
 
-import UI.Button;
 import World.World;
 import org.newdawn.slick.Image;
 
@@ -13,21 +12,21 @@ import org.newdawn.slick.Image;
  *
  * @author Timot
  */
-public class InventoryPrimaryScrollUpButton extends Button
+public class CloseWindowButton extends Button
 {
 
-    private InventoryUI inventoryUI;
+    UIWindow window;
     
-    public InventoryPrimaryScrollUpButton(int x, int y,int xofs,int yofs, Image texture,InventoryUI inventoryUI)
+    public CloseWindowButton(int x, int y, Image texture,UIWindow window)
     {
-        super(x, y,xofs,yofs, texture);
-        this.inventoryUI = inventoryUI;
+        super(x, y, texture);
+        this.window = window;
     }
 
     @Override
     public void onClick(boolean[] m, World world)
     {
-        inventoryUI.primaryScrollUp();
+        window.setDisplay();
     }
     
 }

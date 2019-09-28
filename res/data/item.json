@@ -19,7 +19,7 @@
 		"desc":"Restores health and mend wounds when drank.",
 		"unidentified_desc":"A <color> potion, further examination is needed to identify the potion.",
 		"stack":"1",
-		"properties":[1,2,4],
+		"properties":[1,2],
 		"consumed":[{"name":"Empty Potion Bottle"}],
 		"baseValue":20,
         "effects":[{"type":"heal","duration":"1","value":"20"}]
@@ -195,13 +195,25 @@
         "effects":[{"type":"slash_damage","duration":"1","value":"10"}]
 	},
 	{
+		"category":"equipment",
+		"trueName":"<metal> Dagger",
+		"texture":"dagger",
+		"desc":"A Dagger made of <metal>.",
+		"unidentified_desc":null,
+		"stack":"1",
+		"properties":[20,33,51,7],
+		"consumed":null,
+		"baseValue":75,
+        "effects":[{"type":"stab_damage","duration":"1","value":"5"}]
+	},
+	{
 		"category":"item",
 		"trueName":"Iron Bar",
 		"texture":"metal_bar",
 		"desc":"A bar of Iron.",
 		"unidentified_desc":null,
 		"stack":"1",
-		"properties":[6,52],
+		"properties":[6,52,4],
 		"consumed":null,
 		"baseValue":75,
         "effects":[{"type":"slash_damage","duration":"1","value":"10"}]
@@ -213,7 +225,7 @@
 		"desc":"A bar of Steel.",
 		"unidentified_desc":null,
 		"stack":"1",
-		"properties":[6,52],
+		"properties":[6,52,4],
 		"consumed":null,
 		"baseValue":75,
         "effects":[{"type":"slash_damage","duration":"1","value":"20"}]

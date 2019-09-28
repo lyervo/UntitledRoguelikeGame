@@ -53,8 +53,8 @@ public class WorldMap implements TileBasedMap
     public WorldMap(Res res,World world,GameContainer container)
     {        
         this.res = res;
-        cam = new Camera(70,50);
-        wCam = new Camera(100,100);
+        cam = new Camera(70,50,container);
+        wCam = new Camera(100,100,container);
         this.width = 100;
         this.height = 100;
         this.container = container;
@@ -106,7 +106,7 @@ public class WorldMap implements TileBasedMap
         }
     }
     
-    public void render(Graphics g)
+    public void render(Graphics g,boolean animate)
     {
         if(currentMap!=-1)
         {
@@ -114,7 +114,7 @@ public class WorldMap implements TileBasedMap
             if(locations[travelers.get(0).getY()][travelers.get(0).getX()].getLocalMap()!=null)
             {
                 //travelers.get(0) will always be the traveler object that the player controls
-                locations[travelers.get(0).getY()][travelers.get(0).getX()].getLocalMap().render(g);
+                locations[travelers.get(0).getY()][travelers.get(0).getX()].getLocalMap().render(g,animate);
             }
             
         }else
