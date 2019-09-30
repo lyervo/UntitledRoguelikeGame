@@ -39,7 +39,7 @@ public class Res
     
     //Inventory UI
     public Image inventory_icon;
-    public Image inventory_bg_1,inventory_bg_2,crafting_bg_1,crafting_bg_2;
+    public Image inventory_bg_1,inventory_bg_2,crafting_bg_1,crafting_bg_2,equipment_bg;
     public Image inventory_scroll_up,inventory_scroll_down;
     public Image quick_item_bg;
     //crafting UI
@@ -103,6 +103,7 @@ public class Res
         inventory_icon = new Image("res/texture/ui/icon/inventory_icon.png");
         inventory_bg_1 = new Image("res/texture/ui/background/inventory_bg_1_small.png");
         inventory_bg_2 = new Image("res/texture/ui/background/inventory_bg_2.png");
+        equipment_bg = new Image("res/texture/ui/background/equipment_bg.png");
         
         crafting_icon = new Image("res/texture/ui/icon/crafting_icon.png");
         crafting_bg_1 = new Image("res/texture/ui/background/crafting_bg_1.png");

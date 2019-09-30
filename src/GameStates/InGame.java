@@ -85,7 +85,6 @@ public class InGame extends BasicGameState
     public void mousePressed(int button,int x,int y)
     {
        m[button+10] = true;
-        System.out.println("mouse " + (button+10));
     }
     
     

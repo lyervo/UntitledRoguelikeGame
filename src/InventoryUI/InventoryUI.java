@@ -103,17 +103,15 @@ public class InventoryUI extends UIComponent
     @Override
     public void render(Graphics g,Input input,int x,int y)
     {
-        int uiDisplay = 1;
-        if(uiDisplay == 1)
+        
+        if(state == 1)
         {
-            if(state == 1)
-            {
-                bg1.draw(x,y);
-            }else if(state == 2)
-            {
-                bg2.draw(x,y);
-            }
+            bg1.draw(x,y);
+        }else if(state == 2)
+        {
+            bg2.draw(x,y);
         }
+        
         
            
         for(ItemUI i:primaryItemUI)
@@ -231,65 +229,53 @@ public class InventoryUI extends UIComponent
     
 
     @Override
-    public void tick(boolean[] k,boolean[] m,Input input,World world,int x,int y)
+    public void tick(boolean[] k,boolean[] m,Input input,World world,int x,int y,UIWindow window)
     {
-        
-        primaryUp.tick(m, input, world,x,y);
-        primaryDown.tick(m, input, world,x,y);
-        secondaryUp.tick(m, input, world,x,y);
-        secondaryDown.tick(m, input, world,x,y);
+        if(window.getZ()==world.getZ())
+        {
+            primaryUp.tick(m, input, world,x,y);
+            primaryDown.tick(m, input, world,x,y);
+            secondaryUp.tick(m, input, world,x,y);
+            secondaryDown.tick(m, input, world,x,y);
+
 
         
         
-        
-        if(m[11])
-        {
-            if(primaryBounds.contains(new Point(input.getMouseX()-x,input.getMouseY()-y)))
+            if(m[11])
             {
-                primaryScrollUp();
-            }else if(secondaryBounds!=null)
-            {
-                if(secondaryBounds.contains(new Point(input.getMouseX()-x,input.getMouseY()-y)))
+                if(primaryBounds.contains(new Point(input.getMouseX()-x,input.getMouseY()-y)))
                 {
-                    secondaryScrollUp();
+                    primaryScrollUp();
+                }else if(secondaryBounds!=null)
+                {
+                    if(secondaryBounds.contains(new Point(input.getMouseX()-x,input.getMouseY()-y)))
+                    {
+                        secondaryScrollUp();
+                    }
+                }
+            }else if(m[12])
+            {
+                if(primaryBounds.contains(new Point(input.getMouseX()-x,input.getMouseY()-y)))
+                {
+                    primaryScrollDown();
+                }else if(secondaryBounds!=null)
+                {
+                    if(secondaryBounds.contains(new Point(input.getMouseX()-x,input.getMouseY()-y)))
+                    {
+                        secondaryScrollDown();
+                    }
                 }
             }
-        }else if(m[12])
-        {
-            if(primaryBounds.contains(new Point(input.getMouseX()-x,input.getMouseY()-y)))
+
+            for(int i=primaryItemUI.size()-1;i>=0;i--)
             {
-                primaryScrollDown();
-            }else if(secondaryBounds!=null)
+                primaryItemUI.get(i).tick(k, m, input, world, state, scroll1,scroll2,this,null,x,y);
+            }
+            for(int i=secondaryItemUI.size()-1;i>=0;i--)
             {
-                if(secondaryBounds.contains(new Point(input.getMouseX()-x,input.getMouseY()-y)))
-                {
-                    secondaryScrollDown();
-                }
+                secondaryItemUI.get(i).tick(k, m, input, world, 4, scroll1,scroll2,this,null,x,y);
             }
         }
-//        
-////        if(uiDisplay==1)
-////        {
-////            playerEquipment.tick(k, m, input, world,this);
-////
-////            if(interactingEquipment!=null)
-////            {
-////                interactingEquipment.tick(k, m, input, world,this);
-////            }
-////        }else if(uiDisplay==2)
-////        {
-////            craftingUI.tick(k, m, input, world);
-////        }
-//        
-        for(int i=primaryItemUI.size()-1;i>=0;i--)
-        {
-            primaryItemUI.get(i).tick(k, m, input, world, state, scroll1,scroll2,this,null,x,y);
-        }
-        for(int i=secondaryItemUI.size()-1;i>=0;i--)
-        {
-            secondaryItemUI.get(i).tick(k, m, input, world, 4, scroll1,scroll2,this,null,x,y);
-        }
-        
         
 //        
 //        

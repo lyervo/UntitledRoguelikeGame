@@ -6,6 +6,7 @@
 package Camera;
 
 import Entity.Pawn;
+import World.World;
 import org.newdawn.slick.GameContainer;
 
 /**
@@ -25,6 +26,8 @@ public class Camera
     private int tile_size;
     private double scale;
     
+    private double zoom;
+    
     public Camera(int w,int h,GameContainer gc)
     {
         this.h = h;
@@ -37,61 +40,95 @@ public class Camera
         xofs = 0;
         yofs = 0;
         
-        this.tile_size = (int)(32);
+        zoom = 1;
         
+        this.tile_size = 32;
+        
+    }
+    
+    public void zoomIn()
+    {
+        if(zoom<2)
+        {
+            zoom+=0.5;
+            tile_size=(int)(32*zoom);
+        }
+    }
+    
+    public void zoomOut()
+    {
+        if(zoom>0.5)
+        {
+            zoom -= 0.5;
+            tile_size=(int)(32*zoom);
+        }
     }
     
     
     
     
-    
-    
-    public void tick()
+    public void tick(boolean[] k,boolean[] m,World world)
     {
         
-        if(w<=(width/32))
+        if(world.getZ()==0)
         {
-            xofs = (width-(w*32))/2;
+            if(m[11])
+            {
+                zoomIn();
+            }else if(m[12])
+            {
+                zoomOut();
+            }
+        }
+        
+        System.out.println(target.getX()+"+"+(width/(tile_size*2))+"+"+(w-(width/(tile_size*2))));
+        
+        if(w<=(width/tile_size))
+        {
+            System.out.println("0");
+            xofs = (width-(w*tile_size))/2;
         }else
         {
             if(target!=null)
             {
-                if(target.getX()<=(width/64))
+                if(target.getX()<=(width/(tile_size*2)))
                 {
                     xofs = 0;
                     mxofs = (int)(xofs);
-                }else if(target.getX()>(width/64)&&target.getX()<=w-(width/64))
+                }else if(target.getX()<=w-(width/(tile_size*2)))
                 {
-                    xofs = -(target.getX()-(width/64))*32;
+                    xofs = -(target.getX()-(width/(tile_size*2)))*tile_size;
                     mxofs = (int)(xofs);
                 }else
                 {
-                    xofs = -(w-(width/32))*32;
+                    System.out.println("3");
+                    xofs = -(w-(width/tile_size))*tile_size;
                     mxofs = (int)(xofs);
                 }
             }
             
             
         }
+        System.out.println(xofs);
         
-        if(h<=(height/32))
+        if(h<=(height/tile_size))
         {
-            yofs = (height-(h*32))/2;
+            yofs = (height-(h*tile_size))/2;
         }else
         {
             if(target!=null)
             {
-                if(target.getY()<=(height/64))
+                if(target.getY()<=(height/(tile_size*2)))
                 {
                     yofs = 0;
                     myofs = (int)(yofs);
-                }else if(target.getY()>(height/64)&&target.getY()<=h-(height/64))
+                }else if(target.getY()<=h-(height/(tile_size*2)))
                 {
-                    yofs = -(target.getY()-(height/64))*32;
+                    yofs = -(target.getY()-(height/(tile_size*2)))*tile_size;
                     myofs = (int)(yofs);
                 }else
                 {
-                    yofs = -(h-(height/32))*32;
+                    yofs = -(h-(height/tile_size))*tile_size;
                     myofs = (int)(yofs);
                 }
             }
@@ -186,6 +223,14 @@ public class Camera
 
     public void setMyofs(int myofs) {
         this.myofs = myofs;
+    }
+
+    public double getZoom() {
+        return zoom;
+    }
+
+    public void setZoom(double zoom) {
+        this.zoom = zoom;
     }
     
     

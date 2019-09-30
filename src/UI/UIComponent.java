@@ -34,7 +34,7 @@ public abstract class UIComponent
     
     public abstract void render(Graphics g,Input input,int x,int y);
     
-    public abstract void tick(boolean[] k,boolean[] m,Input input,World world,int x,int y);
+    public abstract void tick(boolean[] k,boolean[] m,Input input,World world,int x,int y,UIWindow window);
 
     public abstract void dragRender(Graphics g,Input input);
     

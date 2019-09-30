@@ -103,7 +103,7 @@ public class Furniture extends Entity
         {
             if(sprites == null)
             {
-                texture.draw(x*32+cam.getXofs(),y*32+cam.getYofs());
+                texture.draw(x*cam.getTile_size()+cam.getXofs(),y*cam.getTile_size()+cam.getYofs(),cam.getTile_size(),cam.getTile_size());
             }else
             {
                 if(autoAnimate)
@@ -120,7 +120,7 @@ public class Furniture extends Entity
                         
                     }
                     
-                    sprites.getSprite(animatingIndex, fuelAnim).draw(x*32+cam.getXofs(),y*32+cam.getYofs());
+                    sprites.getSprite(animatingIndex, fuelAnim).draw(x*cam.getTile_size()+cam.getXofs(),y*cam.getTile_size()+cam.getYofs(),cam.getTile_size(),cam.getTile_size());
 
 
                 }

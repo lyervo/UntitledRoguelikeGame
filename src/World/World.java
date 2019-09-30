@@ -8,6 +8,9 @@ package World;
 import Camera.Camera;
 import Entity.EntityLibrary;
 import InventoryUI.CraftingButton;
+import InventoryUI.EquipmentButton;
+import InventoryUI.EquipmentUI;
+import InventoryUI.EquipmentUIWindow;
 import Item.ItemLibrary;
 import Narrator.Narrator;
 import Res.Res;
@@ -19,6 +22,7 @@ import InventoryUI.XItemTextField;
 import UI.UIComponent;
 import UI.UIWindow;
 import java.util.ArrayList;
+import java.util.Collections;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -69,11 +73,16 @@ public class World
     private ArrayList<UIWindow> uis;
     
     private InventoryUIWindow inventoryWindow;
+    private EquipmentUIWindow equipmentWindow;
+    
+    
     private InventoryUI inventory_ui;
+    private EquipmentUI equipment_ui;
     
     private boolean drag;
     
     private InventoryButton inventoryButton;
+    private EquipmentButton equipmentButton;
     
     private int z;
     
@@ -104,7 +113,7 @@ public class World
         xItemTextField = new XItemTextField(container,res.disposableDroidBB,496-((res.disposableDroidBB.getWidth("00000")+5)/2),384-(res.disposableDroidBB.getHeight()/2),res.disposableDroidBB.getWidth("00000")+5,res.disposableDroidBB.getHeight(),res);
 
         
-        inventory_ui = new InventoryUI(100,100,0,0,wm.getPlayerInventory(),res,quickItemBarUI,this,inventoryWindow);
+        
         
         
         uiDisplay = 0;
@@ -118,12 +127,20 @@ public class World
                 + " decadence and luxury... and yet, I began to tire of... conventional extravagance.");
         
         mapTick = false;
-       
+        
+        
+        inventory_ui = new InventoryUI(100,100,0,0,wm.getPlayerInventory(),res,quickItemBarUI,this,inventoryWindow);
         inventoryWindow = new InventoryUIWindow(100,100,"Inventoy",inventory_ui,res.disposableDroidBB40f,res);
         
-        uis = new ArrayList<UIWindow>();
+        equipment_ui = new EquipmentUI(wm.getPlayerInventory().getEquipment(),res,9,100,100,0,0,equipmentWindow);
+        equipmentWindow = new EquipmentUIWindow(100,100,"Equipment",equipment_ui,res);
         
+        
+        
+        uis = new ArrayList<UIWindow>();
+        uis.add(equipmentWindow);
         uis.add(inventoryWindow);
+        
         
         for(int i=0;i<uis.size();i++)
         {
@@ -131,6 +148,7 @@ public class World
         }
         
         inventoryButton = new InventoryButton(10,container.getHeight()-64,res.inventory_icon);
+        equipmentButton = new EquipmentButton(84,container.getHeight()-64,res.inventory_icon);
         
         
         
@@ -141,6 +159,7 @@ public class World
         
         hoveringWindow = false;
         inventoryWindow.tick(k, m, input, this);
+        equipmentWindow.tick(k, m, input, this);
         
         if(!hoveringWindow)
         {
@@ -148,6 +167,9 @@ public class World
         }
         
         inventoryButton.tick(m, input, this);
+        equipmentButton.tick(m, input, this);
+        
+        System.out.println(z);
         
         if(k[Input.KEY_I])
         {
@@ -198,26 +220,9 @@ public class World
     {
 
         inventoryButton.render(g);
-        ancestor.render(g,cam);
-        switch(uiDisplay)
-        {
-            case 0:
-                wm.render(g, animate);
-//                if(quickItemBarUIDisplay)
-//                {
-//                    quickItemBarUI.render(g, input);
-//                }
-                
-                break;
-            
-//            case 1:
-//                inventory_ui.render(g,input,uiDisplay);
-//                break;
-//            case 2:
-//                inventory_ui.render(g, input,uiDisplay);
-//                break;
-                
-        }
+        equipmentButton.render(g);
+        wm.render(g, animate);
+
         
         if(wm.getPlayer()!=null)
         {
@@ -232,22 +237,67 @@ public class World
             xItemTextField.render(container, g);
         }
         
-        inventoryWindow.render(g, input);
-        
-        if(inventoryWindow.isDrag())
+        for(int i=0;i<uis.size();i++)
         {
-            inventoryWindow.dragRender(g, input);
+            if(uis.get(i).isDisplay())
+            {
+                uis.get(i).render(g, input);
+            }
         }
+      
         
         for(UIWindow ui:uis)
         {
-            if(ui.getUiComponent().isDrag())
+            if(ui.isDrag())
             {
-                ui.getUiComponent().dragRender(g,input);
+                switch(ui.getName())
+                {
+                    case "Inventory":
+                        ((InventoryUIWindow)ui).dragRender(g, input);
+                        break;
+                    
+                    case "Equipment":
+                        ((EquipmentUIWindow)ui).dragRender(g, input);
+                        break;
+                    
+                    default:
+                        ui.dragRender(g, input);
+                        break;
+                }
+            }else if(ui.getUiComponent().isDrag())
+            {
+                ui.getUiComponent().dragRender(g, input);
             }
+            
             
         }
         
+    }
+    
+    public void moveWindowToTop(UIWindow window)
+    {
+        for(int i=uis.size()-1;i>=0;i--)
+        {
+            if(uis.get(i).equals(window))
+            {
+                System.out.println(i+" changed "+uis.get(i).getName());
+                
+                
+                Collections.swap(uis, i, uis.size()-1);
+
+                resetZ();
+                return;
+                
+            }
+        }
+    }
+    
+    public void resetZ()
+    {
+        for(int i=0;i<uis.size();i++)
+        {
+            uis.get(i).setZ(i+1);
+        }
     }
     
     public void activateXItemTextField(int index,int state)
@@ -261,7 +311,11 @@ public class World
     {
         xItemTextFieldActive = false;
         xItemTextField.setText("");
+    
     }
+    
+    
+    
     
     public void setUIDisplay(int ui)
     {
@@ -494,6 +548,38 @@ public class World
 
     public void setHoveringWindow(boolean hoveringWindow) {
         this.hoveringWindow = hoveringWindow;
+    }
+
+    public EquipmentUIWindow getEquipmentWindow() {
+        return equipmentWindow;
+    }
+
+    public void setEquipmentWindow(EquipmentUIWindow equipmentWindow) {
+        this.equipmentWindow = equipmentWindow;
+    }
+
+    public EquipmentUI getEquipment_ui() {
+        return equipment_ui;
+    }
+
+    public void setEquipment_ui(EquipmentUI equipment_ui) {
+        this.equipment_ui = equipment_ui;
+    }
+
+    public InventoryButton getInventoryButton() {
+        return inventoryButton;
+    }
+
+    public void setInventoryButton(InventoryButton inventoryButton) {
+        this.inventoryButton = inventoryButton;
+    }
+
+    public EquipmentButton getEquipmentButton() {
+        return equipmentButton;
+    }
+
+    public void setEquipmentButton(EquipmentButton equipmentButton) {
+        this.equipmentButton = equipmentButton;
     }
     
     

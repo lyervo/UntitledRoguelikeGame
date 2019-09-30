@@ -330,7 +330,7 @@ public class ItemUI extends DescBox
     public void tick(boolean[] k,boolean[] m,Input input,World world,int state, int scroll1,int scroll2,InventoryUI ui,QuickItemBarUI quickItemBarUI,int x,int y)
     {
         
-        
+        if(!world.isDrag())
    
             if(state<=2)
             {

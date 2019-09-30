@@ -48,7 +48,7 @@ public class Tile {
     {
         if(withinDisplayArea(cam)&&world.getUiDisplay()==0&&world.getZ()==0)
         {
-            if(bounds.contains(new Point(input.getMouseX()-cam.getMxofs(),input.getMouseY()-cam.getMyofs()))&&!world.getWm().getCurrentLocalMap().isHoveringTab())
+            if(bounds.contains(new Point((int)((input.getMouseX()-cam.getMxofs())/cam.getZoom()),(int)((input.getMouseY()-cam.getMyofs())/cam.getZoom())))&&!world.getWm().getCurrentLocalMap().isHoveringTab())
             {
                 hover = true;
             }else
@@ -88,31 +88,31 @@ public class Tile {
             if(visit == 2&&hover)
             {
                 if (wall != null) {
-                    wall.getTexture().draw(x * 32+cam.getXofs(), y * 32+cam.getYofs(),Color.lightGray);
+                    wall.getTexture().draw(x * cam.getTile_size()+cam.getXofs(), y * cam.getTile_size()+cam.getYofs(),cam.getTile_size(),cam.getTile_size(),Color.lightGray);
                 } else {
-                    texture.draw(x * 32+cam.getXofs(), y * 32+cam.getYofs(),Color.lightGray);
+                    texture.draw(x * cam.getTile_size()+cam.getXofs(), y * cam.getTile_size()+cam.getYofs(),cam.getTile_size(),cam.getTile_size(),Color.lightGray);
                 }
             }else if(visit == 1&&hover)
             {
                 if (wall != null) {
-                    wall.getTexture().draw(x * 32+cam.getXofs(), y * 32+cam.getYofs(),Color.lightGray);
+                    wall.getTexture().draw(x * cam.getTile_size()+cam.getXofs(), y * cam.getTile_size()+cam.getYofs(),cam.getTile_size(),cam.getTile_size(),Color.lightGray);
                 } else {
-                    texture.draw(x * 32+cam.getXofs(), y * 32+cam.getYofs(),Color.lightGray);
+                    texture.draw(x * cam.getTile_size()+cam.getXofs(), y * cam.getTile_size()+cam.getYofs(),cam.getTile_size(),cam.getTile_size(),Color.lightGray);
                 }
             }
             else if(visit == 2)
             {
                 if (wall != null) {
-                    wall.getTexture().draw(x * 32+cam.getXofs(), y * 32+cam.getYofs());
+                    wall.getTexture().draw(x * cam.getTile_size()+cam.getXofs(), y * cam.getTile_size()+cam.getYofs(),cam.getTile_size(),cam.getTile_size());
                 } else {
-                    texture.draw(x * 32+cam.getXofs(), y * 32+cam.getYofs());
+                    texture.draw(x * cam.getTile_size()+cam.getXofs(), y * cam.getTile_size()+cam.getYofs(),cam.getTile_size(),cam.getTile_size());
                 }
             }else if(visit == 1)
             {
                 if (wall != null) {
-                    wall.getTexture().draw(x * 32+cam.getXofs(), y * 32+cam.getYofs(),Color.gray);
+                    wall.getTexture().draw(x * cam.getTile_size()+cam.getXofs(), y * cam.getTile_size()+cam.getYofs(),cam.getTile_size(),cam.getTile_size(),Color.gray);
                 } else {
-                    texture.draw(x * 32+cam.getXofs(), y * 32+cam.getYofs(),Color.gray);
+                    texture.draw(x * cam.getTile_size()+cam.getXofs(), y * cam.getTile_size()+cam.getYofs(),cam.getTile_size(),cam.getTile_size(),Color.gray);
                 }
 
             }
@@ -124,7 +124,7 @@ public class Tile {
     
     public boolean withinDisplayArea(Camera cam)
     {
-        return (x*32+cam.getXofs()>=0&&x*32+cam.getXofs()<cam.getWidth())&&(y*32+cam.getYofs()>=0&&y*32+cam.getYofs()<cam.getHeight());
+        return (x*cam.getTile_size()+cam.getXofs()>=0&&x*cam.getTile_size()+cam.getXofs()<cam.getWidth())&&(y*cam.getTile_size()+cam.getYofs()>=0&&y*cam.getTile_size()+cam.getYofs()<cam.getHeight());
     }
 
     public boolean isSolid() {

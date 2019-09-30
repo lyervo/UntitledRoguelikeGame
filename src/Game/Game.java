@@ -73,7 +73,7 @@ public class Game extends StateBasedGame
             //Game is wraped in ScalableGame class to make it scale to screen size
             
             AppGameContainer app = new AppGameContainer(new Game("Game"));
-            app.setDisplayMode(1360, 768, false);
+            app.setDisplayMode(1920, 1080, false);
             app.setFullscreen(true);   
             app.start();
             

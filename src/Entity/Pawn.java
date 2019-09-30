@@ -240,7 +240,7 @@ public class Pawn extends Entity
     {
         if(map.getTiles()[y][x].isVisit())
         {
-            texture.draw(x*32+cam.getXofs(),y*32+cam.getYofs());
+            texture.draw(x*cam.getTile_size()+cam.getXofs(),y*cam.getTile_size()+cam.getYofs(),cam.getTile_size(),cam.getTile_size());
         }
         
     }

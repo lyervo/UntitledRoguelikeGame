@@ -8,24 +8,26 @@ package InventoryUI;
 import Item.Equipment;
 import Item.Slot;
 import Res.Res;
+import UI.UIComponent;
+import UI.UIWindow;
 import World.World;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import javafx.util.Pair;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 
 /**
  *
  * @author Timot
  */
-public class EquipmentUI
+public class EquipmentUI extends UIComponent
 {
     private Equipment equipment;
     private Res res;
     private int state;
-    private InventoryUI inventoryUI;
     
     private ArrayList<ItemUI> itemUI;
     
@@ -35,13 +37,16 @@ public class EquipmentUI
     private ArrayList<Pair<Integer,Rectangle>> bounds;
     private Rectangle mainBounds;
     
-    public EquipmentUI(Equipment equipment,Res res,InventoryUI inventoryUI,int state)
+    private Image bg;
+    
+    public EquipmentUI(Equipment equipment,Res res,int state,int x,int y,int xofs,int yofs,UIWindow window)
     {
+        
+        super(x,y,xofs,yofs,window);
         this.res = res;
         this.equipment = equipment;
         this.state = state;
         itemUI = new ArrayList<ItemUI>();
-        this.inventoryUI = inventoryUI;
         for(Slot s:equipment.getEquipments())
         {
             if(s.getItem()!=null)
@@ -65,44 +70,63 @@ public class EquipmentUI
             }
         }
         
+        bg = res.equipment_bg;
+        
+        
     }
     
-    
-    
-    public void tick(boolean[] k,boolean[] m,Input input,World world,InventoryUI ui)
+    @Override
+    public void tick(boolean[] k, boolean[] m, Input input, World world, int x, int y,UIWindow window) 
     {
-        
-        for(int i=0;i<itemUI.size();i++)
-        {
-            itemUI.get(i).tick(k, m, input, world, state, 0, 0,inventoryUI , null);
-        }
-        
+//        for(int i=itemUI.size()-1;i>=0;i--)
+//        {
+//            itemUI.get(i).tick(k, m, input, world, 0,0,0, null, null, x, y);
+//        }
     }
+
+    @Override
+    public void dragRender(Graphics g, Input input) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int getUIWidth()
+    {
+        return bg.getWidth();
+    }
+
+    @Override
+    public int getUIHeight()
+    {
+        return bg.getHeight();
+    }
+   
     
    
     
-    public void render(Graphics g,Input input)
+    public void render(Graphics g,Input input,int x,int y)
     {
         
-        for(int i=0;i<itemUI.size();i++)
-        {
-            itemUI.get(i).render(g, input, state, 0, 0);
-        }
-        
-        for(ItemUI i:itemUI)
-        {
-            if(i.isDrag())
-            {
-                i.dragRender(g, input);
-            }
-        }
-        
-        g.setColor(Color.red);
-        for(Pair<Integer,Rectangle> p: bounds)
-        {
-            g.drawRect(p.getValue().x, p.getValue().y, p.getValue().width, p.getValue().height);
-            g.drawString(p.getKey()+"", p.getValue().x+10, p.getValue().y+10);
-        }
+        bg.draw(x,y);
+//        for(int i=0;i<itemUI.size();i++)
+//        {
+//            itemUI.get(i).render(g, input, state, 0, 0,x,y);
+//        }
+//        
+//        for(ItemUI i:itemUI)
+//        {
+//            if(i.isDrag())
+//            {
+//                i.dragRender(g, input);
+//            }
+//        }
+//        
+//        g.setColor(Color.red);
+//        for(Pair<Integer,Rectangle> p: bounds)
+//        {
+//            g.drawRect(p.getValue().x, p.getValue().y, p.getValue().width, p.getValue().height);
+//            g.drawString(p.getKey()+"", p.getValue().x+10, p.getValue().y+10);
+//        }
         
     }
     
@@ -158,14 +182,6 @@ public class EquipmentUI
         this.state = state;
     }
 
-    public InventoryUI getInventoryUI() {
-        return inventoryUI;
-    }
-
-    public void setInventoryUI(InventoryUI inventoryUI) {
-        this.inventoryUI = inventoryUI;
-    }
-
     public ArrayList<ItemUI> getItemUI() {
         return itemUI;
     }
@@ -197,6 +213,16 @@ public class EquipmentUI
     public void setMainBounds(Rectangle mainBounds) {
         this.mainBounds = mainBounds;
     }
+
+    public Image getBg() {
+        return bg;
+    }
+
+    public void setBg(Image bg) {
+        this.bg = bg;
+    }
+
+    
     
     
     

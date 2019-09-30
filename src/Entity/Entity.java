@@ -54,7 +54,7 @@ public abstract class Entity
     {
         if(sprites == null)
         {
-            texture.draw(x*32+cam.getXofs(),y*32+cam.getYofs());
+            texture.draw(x*cam.getTile_size()+cam.getXofs(),y*cam.getTile_size()+cam.getYofs());
         }else
         {
             if(autoAnimate)
@@ -70,7 +70,7 @@ public abstract class Entity
                     
                    
                 }
-                sprites.getSprite(animatingIndex, 0).draw(x*32+cam.getXofs(),y*32+cam.getYofs());
+                sprites.getSprite(animatingIndex, 0).draw(x*cam.getTile_size()+cam.getXofs(),y*cam.getTile_size()+cam.getYofs());
                 
                 
             }

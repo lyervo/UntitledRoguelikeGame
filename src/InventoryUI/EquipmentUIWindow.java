@@ -19,28 +19,43 @@ import org.newdawn.slick.TrueTypeFont;
  *
  * @author Timot
  */
-public class InventoryUIWindow extends UIWindow
+public class EquipmentUIWindow extends UIWindow
 {
     
-    private InventoryUI inventoryUI;
+    private EquipmentUI equipmentUI;
     private TrueTypeFont font;
     
-    
-    public InventoryUIWindow(int x, int y,String name,InventoryUI inventoryUI,TrueTypeFont font,Res res) 
+    public EquipmentUIWindow(int x, int y, String name, EquipmentUI uiComponent, Res res)
     {
-        super(x, y, name, inventoryUI,res);
-        this.inventoryUI = inventoryUI;
-        this.font = font;
+        super(x, y, name, uiComponent, res);
+        this.equipmentUI = uiComponent;
+        this.font = res.disposableDroidBB40f;
     }
     
+    @Override
+    public void render(Graphics g,Input input)
+    {
+        if(display&&!drag)
+        {
+            g.setColor(Color.blue);
+            g.drawRect(x, y-32, dragBounds.width, dragBounds.height);
+            g.setColor(Color.yellow);
+            g.drawRect(x, y, width, height);
+            equipmentUI.getBg().draw(x,y);
+            g.setColor(Color.white);
+            g.setFont(font);
+            g.drawString(name, x+32, y-37);
+            closeWindowButton.render(g,x, y);
+        }
+    }
     
     @Override
     public void tick(boolean[] k,boolean[] m,Input input,World world)
     {
-        
-        
         if(display)
         {
+            closeWindowButton.tick(m, input, world,x,y);
+            
             if(bounds.contains(new Point(input.getMouseX(),input.getMouseY())))
             {
 
@@ -49,8 +64,7 @@ public class InventoryUIWindow extends UIWindow
             {
                 hover = false;
             }
-            
-            
+
 
 
             if(dragBounds.contains(new Point(input.getMouseX(),input.getMouseY())))
@@ -61,7 +75,6 @@ public class InventoryUIWindow extends UIWindow
             {
                 dragHover = false;
             }
-            
 
             
             
@@ -75,10 +88,6 @@ public class InventoryUIWindow extends UIWindow
                 world.setZ(z);
                 world.setHoveringWindow(true);
             }
-            
-            closeWindowButton.tick(m, input, world,x,y);
-            
-            
             
 
             if(dragHover&&input.isMouseButtonDown(0)&&!drag&&!world.isDrag())
@@ -98,29 +107,9 @@ public class InventoryUIWindow extends UIWindow
 
             if(!drag)
             {
-                inventoryUI.tick(k, m, input, world,x,y,this);
+                equipmentUI.tick(k, m, input, world,x,y,this);
             }
         }
-    }
-    
-    
-    @Override
-    public void render(Graphics g,Input input)
-    {
-        if(!drag&&display)
-        {
-            
-            inventoryUI.render(g, input, bounds.x, bounds.y);
-            g.setColor(Color.blue);
-            g.drawRect(dragBounds.x, dragBounds.y, dragBounds.width, dragBounds.height);
-            g.setColor(Color.yellow);
-            g.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
-            g.setColor(Color.white);
-            g.setFont(font);
-            g.drawString(name, dragBounds.x+32, dragBounds.y-5);
-            closeWindowButton.render(g,x,y);
-        }
-        
     }
     
     @Override
@@ -132,7 +121,7 @@ public class InventoryUIWindow extends UIWindow
             g.drawRect(input.getMouseX()-xofs, input.getMouseY()-yofs, dragBounds.width, dragBounds.height);
             g.setColor(Color.yellow);
             g.drawRect(input.getMouseX()-xofs, input.getMouseY()-yofs+32, width, height);
-            inventoryUI.render(g, input, input.getMouseX()-xofs, input.getMouseY()-yofs+32);
+            equipmentUI.render(g, input, input.getMouseX()-xofs, input.getMouseY()-yofs+32);
             g.setColor(Color.white);
             g.setFont(font);
             g.drawString(name, input.getMouseX()-xofs+32, input.getMouseY()-yofs-5);
