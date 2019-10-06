@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package InventoryUI;
+package CraftingUI;
 
 import UI.Button;
 import World.World;
@@ -13,10 +13,10 @@ import org.newdawn.slick.Image;
  *
  * @author Timot
  */
-public class EquipmentButton extends Button
+public class CraftingButton extends Button
 {
 
-    public EquipmentButton(int x, int y, Image texture)
+    public CraftingButton(int x, int y, Image texture)
     {
         super(x, y, texture);
     }
@@ -24,7 +24,8 @@ public class EquipmentButton extends Button
     @Override
     public void onClick(boolean[] m, World world)
     {
-        world.getEquipmentWindow().setDisplay();
+       world.setUIDisplay(2);
+        world.deactivateXItemTextField();
     }
     
 }

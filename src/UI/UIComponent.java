@@ -16,7 +16,7 @@ import org.newdawn.slick.Input;
 public abstract class UIComponent
 {
 
-    private int x,y,xofs,yofs;
+    protected int x,y,xofs,yofs;
     
     protected boolean drag;
     
@@ -31,6 +31,8 @@ public abstract class UIComponent
         this.drag = false;
         this.window = window;
     }
+    
+    public abstract void checkDrop(boolean[] k,boolean[] m,Input input,World world);
     
     public abstract void render(Graphics g,Input input,int x,int y);
     

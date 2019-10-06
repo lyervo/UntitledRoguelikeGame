@@ -7,18 +7,21 @@ package World;
 
 import Camera.Camera;
 import Entity.EntityLibrary;
-import InventoryUI.CraftingButton;
-import InventoryUI.EquipmentButton;
-import InventoryUI.EquipmentUI;
-import InventoryUI.EquipmentUIWindow;
+import CraftingUI.CraftingButton;
+import EquipmentUI.EquipmentButton;
+import EquipmentUI.EquipmentUI;
+import EquipmentUI.EquipmentUIWindow;
 import Item.ItemLibrary;
 import Narrator.Narrator;
 import Res.Res;
 import InventoryUI.InventoryButton;
 import InventoryUI.InventoryUI;
 import InventoryUI.InventoryUIWindow;
+import InventoryUI.ItemOptionTab;
 import InventoryUI.QuickItemBarUI;
 import InventoryUI.XItemTextField;
+import Item.Item;
+import UI.OptionTab;
 import UI.UIComponent;
 import UI.UIWindow;
 import java.util.ArrayList;
@@ -85,6 +88,8 @@ public class World
     private EquipmentButton equipmentButton;
     
     private int z;
+    
+    private OptionTab optionTab;
     
     
     public World(Res res,GameContainer container,Input input)
@@ -161,6 +166,42 @@ public class World
         inventoryWindow.tick(k, m, input, this);
         equipmentWindow.tick(k, m, input, this);
         
+        if(optionTab!=null)
+        {
+            optionTab.tick(k, m, input, wm.getCurrentLocalMap());
+            if(m[10]&&optionTab.getHoveringIndex()!=-1)
+            {
+                optionTab.runOption(wm.getCurrentLocalMap());
+                optionTab = null;
+                drag = false;
+                for(UIWindow ui:uis)
+                {
+                    ui.setDrag(false);
+                    ui.getUiComponent().setDrag(false);
+                }
+            }else if((m[10]&&optionTab.getHoveringIndex()==-1)||k[255])
+            {
+                optionTab = null;
+                drag = false;
+                for(UIWindow ui:uis)
+                {
+                    ui.setDrag(false);
+                    ui.getUiComponent().setDrag(false);
+                }
+                
+            }
+        }
+        
+        if(m[0]&&drag)
+        {
+            for(UIWindow ui:uis)
+            {
+               
+                ui.itemUICheckDrop(k, m, input, this);
+                
+            }
+        }
+        
         if(!hoveringWindow)
         {
             z = 0;
@@ -169,7 +210,6 @@ public class World
         inventoryButton.tick(m, input, this);
         equipmentButton.tick(m, input, this);
         
-        System.out.println(z);
         
         if(k[Input.KEY_I])
         {
@@ -272,6 +312,11 @@ public class World
             
         }
         
+        if(optionTab!=null)
+        {
+            optionTab.render(g);
+        }
+        
     }
     
     public void moveWindowToTop(UIWindow window)
@@ -280,7 +325,6 @@ public class World
         {
             if(uis.get(i).equals(window))
             {
-                System.out.println(i+" changed "+uis.get(i).getName());
                 
                 
                 Collections.swap(uis, i, uis.size()-1);
@@ -314,6 +358,11 @@ public class World
     
     }
     
+    
+    public void spawnItemOptionTab(int x,int y,int index,int state,Item item)
+    {
+        optionTab = new ItemOptionTab(x,y,wm.getCurrentLocalMap(),res,wm.getPlayerInventory(),inventory_ui,item, index,state,itemLibrary);
+    }
     
     
     

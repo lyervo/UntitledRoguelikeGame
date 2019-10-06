@@ -18,7 +18,7 @@ import org.newdawn.slick.Input;
  *
  * @author Timot
  */
-public class UIWindow 
+public abstract class UIWindow 
 {
     
     protected int x,y,z,width,height;
@@ -59,6 +59,9 @@ public class UIWindow
         
         
     }
+    
+    
+    public abstract void itemUICheckDrop(boolean[] k,boolean[] m,Input input,World world);
     
     public void render(Graphics g,Input input)
     {
@@ -160,6 +163,9 @@ public class UIWindow
             this.bounds.y = input.getMouseY()-yofs+32;
             this.dragBounds.y = input.getMouseY()-yofs;
         }
+        
+        uiComponent.setX(x);
+        uiComponent.setY(y);
             
     }
 

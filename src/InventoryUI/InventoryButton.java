@@ -34,6 +34,7 @@ public class InventoryButton extends Button
     {
         world.getInventoryWindow().setDisplay();
         world.deactivateXItemTextField();
+        world.setDrag(false);
     }
     
     

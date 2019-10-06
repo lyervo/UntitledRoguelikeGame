@@ -3,29 +3,34 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package InventoryUI;
+package CraftingUI;
 
 import UI.Button;
 import World.World;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.TrueTypeFont;
 
 /**
  *
  * @author Timot
  */
-public class CraftingButton extends Button
+public class RecipeScrollDownButton extends Button
 {
 
-    public CraftingButton(int x, int y, Image texture)
-    {
+    private CraftingUI craftingUI;
+
+    public RecipeScrollDownButton(int x, int y, Image texture,CraftingUI craftingUI) {
         super(x, y, texture);
+        this.craftingUI = craftingUI;
     }
+    
+    
 
     @Override
     public void onClick(boolean[] m, World world)
     {
-       world.setUIDisplay(2);
-        world.deactivateXItemTextField();
+        craftingUI.scrollDown();
     }
     
 }

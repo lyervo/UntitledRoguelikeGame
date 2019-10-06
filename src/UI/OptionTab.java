@@ -115,14 +115,16 @@ public abstract class OptionTab
         
         if(hoveringIndex!=-1)
         {
-            if(m[11])
+            if(m[16])
             {
                 optionTabScrollUp();
-            }else if(m[12])
+            }else if(m[17])
             {
                 optionTabScrollDown();
             }
         }
+        
+        
         
         
         

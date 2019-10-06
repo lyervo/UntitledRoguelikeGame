@@ -39,7 +39,7 @@ public class InventoryUI extends UIComponent
     private boolean display;
     
     
-    private ArrayList<ItemUI> primaryItemUI,secondaryItemUI;
+    private ArrayList<InventoryItemUI> primaryItemUI,secondaryItemUI;
     private int scroll1,scroll2;
     
     
@@ -77,14 +77,14 @@ public class InventoryUI extends UIComponent
         this.res = res;
         this.bg1 = res.inventory_bg_1;
         this.bg2 = res.inventory_bg_2;
-        primaryItemUI = new ArrayList<ItemUI>();
-        secondaryItemUI = new ArrayList<ItemUI>();
+        primaryItemUI = new ArrayList<InventoryItemUI>();
+        secondaryItemUI = new ArrayList<InventoryItemUI>();
         
         
         
         for(int i=0;i<player_inventory.getItems().size();i++)
         {
-           primaryItemUI.add(new ItemUI(player_inventory.getItems().get(i),i,state,res));
+           primaryItemUI.add(new InventoryItemUI(player_inventory.getItems().get(i),i,res,this,state));
         }
         
         primaryBounds = new Rectangle(21,32,628,348);
@@ -116,14 +116,14 @@ public class InventoryUI extends UIComponent
            
         for(ItemUI i:primaryItemUI)
         {
-            i.render(g,input,state,scroll1,scroll2,x,y);
+            i.render(g,input,x,y);
         }
         
         if(state==2)
         {
             for(ItemUI i:secondaryItemUI)
             {
-                i.render(g,input,4,scroll1,scroll2,x,y);
+                i.render(g,input,x,y);
             }
         }
         primaryUp.render(g,x,y);
@@ -188,7 +188,35 @@ public class InventoryUI extends UIComponent
 
     }
     
-    
+    @Override
+    public void checkDrop(boolean[] k, boolean[] m, Input input, World world)
+    {
+        for(int i=primaryItemUI.size()-1;i>=0;i--)
+        {
+            if(primaryItemUI.get(i).isDrag())
+            {
+                drag = false;
+                world.setDrag(false);
+                primaryItemUI.get(i).setDrag(false);
+                primaryItemUI.get(i).checkDrop(input, world, x, y);
+                
+                
+            }
+        }
+        
+        for(int i=secondaryItemUI.size()-1;i>=0;i--)
+        {
+            if(secondaryItemUI.get(i).isDrag())
+            {
+                drag = false;
+                world.setDrag(false);
+                secondaryItemUI.get(i).setDrag(false);
+                secondaryItemUI.get(i).checkDrop(input, world, x, y);
+                
+                
+            }
+        }
+    }
     
     
     public void renderScrollBars(Graphics g)
@@ -241,7 +269,7 @@ public class InventoryUI extends UIComponent
 
         
         
-            if(m[11])
+            if(m[16])
             {
                 if(primaryBounds.contains(new Point(input.getMouseX()-x,input.getMouseY()-y)))
                 {
@@ -253,7 +281,7 @@ public class InventoryUI extends UIComponent
                         secondaryScrollUp();
                     }
                 }
-            }else if(m[12])
+            }else if(m[17])
             {
                 if(primaryBounds.contains(new Point(input.getMouseX()-x,input.getMouseY()-y)))
                 {
@@ -269,11 +297,11 @@ public class InventoryUI extends UIComponent
 
             for(int i=primaryItemUI.size()-1;i>=0;i--)
             {
-                primaryItemUI.get(i).tick(k, m, input, world, state, scroll1,scroll2,this,null,x,y);
+                primaryItemUI.get(i).tick(k, m, input, world,x,y);
             }
             for(int i=secondaryItemUI.size()-1;i>=0;i--)
             {
-                secondaryItemUI.get(i).tick(k, m, input, world, 4, scroll1,scroll2,this,null,x,y);
+                secondaryItemUI.get(i).tick(k, m, input, world,x,y);
             }
         }
         
@@ -329,16 +357,7 @@ public class InventoryUI extends UIComponent
     
     public void spawnOptionTab(int x,int y,LocalMap lm,Item item,int index,int state,ItemLibrary itemLibrary)
     {
-        if(state<=2)
-        {
-            itemOptionTab = new ItemOptionTab(x,y,lm,res.disposableDroidBB,res,this.player_inventory,this,item, index,state,itemLibrary);
-        }else if(state==4)
-        {
-            itemOptionTab = new ItemOptionTab(x,y,lm,res.disposableDroidBB,res,this.interacting_inventory,this,item, index,state,itemLibrary);
-        }else if(state==6)
-        {
-            itemOptionTab = new ItemOptionTab(x,y,lm,res.disposableDroidBB,res,this.player_inventory,this,item, index,state,itemLibrary);
-        }
+
     }
     
 
@@ -408,7 +427,7 @@ public class InventoryUI extends UIComponent
         for(int i=0;i<player_inventory.getItems().size();i++)
         {
             
-            primaryItemUI.add(new ItemUI(player_inventory.getItems().get(i),i,state,res));
+            primaryItemUI.add(new InventoryItemUI(player_inventory.getItems().get(i),i,res,this,state));
         }
         
     }
@@ -428,7 +447,7 @@ public class InventoryUI extends UIComponent
             
             for (int i = 0; i < interacting_inventory.getItems().size(); i++)
             {
-                secondaryItemUI.add(new ItemUI(interacting_inventory.getItems().get(i), i, 4,res));
+                secondaryItemUI.add(new InventoryItemUI(interacting_inventory.getItems().get(i),i,res,this,4));
             }
             
             primaryBounds = new Rectangle(16,32,277,348);
@@ -579,19 +598,19 @@ public class InventoryUI extends UIComponent
         this.display = display;
     }
 
-    public ArrayList<ItemUI> getPrimaryItemUI() {
+    public ArrayList<InventoryItemUI> getPrimaryItemUI() {
         return primaryItemUI;
     }
 
-    public void setPrimaryItemUI(ArrayList<ItemUI> primaryItemUI) {
+    public void setPrimaryItemUI(ArrayList<InventoryItemUI> primaryItemUI) {
         this.primaryItemUI = primaryItemUI;
     }
 
-    public ArrayList<ItemUI> getSecondaryItemUI() {
+    public ArrayList<InventoryItemUI> getSecondaryItemUI() {
         return secondaryItemUI;
     }
 
-    public void setSecondaryItemUI(ArrayList<ItemUI> secondaryItemUI) {
+    public void setSecondaryItemUI(ArrayList<InventoryItemUI> secondaryItemUI) {
         this.secondaryItemUI = secondaryItemUI;
     }
 

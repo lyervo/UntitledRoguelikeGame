@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package InventoryUI;
+package CraftingUI;
 
 import Entity.Furniture;
+import InventoryUI.InventoryUI;
+import InventoryUI.ItemUI;
 import Item.Crafting;
 import Item.ItemLibrary;
 import Item.Recipe;
@@ -165,10 +167,10 @@ public class CraftingUI
         recipeScrollDownButton.tick(m, input, world);
         if(recipeBounds.contains(new Point(input.getMouseX(),input.getMouseY())))
         {
-            if(m[11])
+            if(m[16])
             {
                 scrollUp();
-            }else if(m[12])
+            }else if(m[17])
             {
                 scrollDown();
             }

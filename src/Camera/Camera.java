@@ -72,20 +72,20 @@ public class Camera
         
         if(world.getZ()==0)
         {
-            if(m[11])
+            if(m[16])
             {
                 zoomIn();
-            }else if(m[12])
+            }else if(m[17])
             {
                 zoomOut();
             }
         }
         
-        System.out.println(target.getX()+"+"+(width/(tile_size*2))+"+"+(w-(width/(tile_size*2))));
+     
         
         if(w<=(width/tile_size))
         {
-            System.out.println("0");
+         
             xofs = (width-(w*tile_size))/2;
         }else
         {
@@ -101,7 +101,7 @@ public class Camera
                     mxofs = (int)(xofs);
                 }else
                 {
-                    System.out.println("3");
+                 
                     xofs = -(w-(width/tile_size))*tile_size;
                     mxofs = (int)(xofs);
                 }
@@ -109,7 +109,7 @@ public class Camera
             
             
         }
-        System.out.println(xofs);
+   
         
         if(h<=(height/tile_size))
         {

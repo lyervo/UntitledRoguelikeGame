@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package InventoryUI;
+package CraftingUI;
 
 import UI.Button;
 import World.World;
@@ -15,22 +15,21 @@ import org.newdawn.slick.TrueTypeFont;
  *
  * @author Timot
  */
-public class RecipeScrollDownButton extends Button
+public class RecipeScrollUpButton extends Button
 {
 
     private CraftingUI craftingUI;
 
-    public RecipeScrollDownButton(int x, int y, Image texture,CraftingUI craftingUI) {
+    public RecipeScrollUpButton(int x, int y, Image texture,CraftingUI craftingUI) {
         super(x, y, texture);
         this.craftingUI = craftingUI;
     }
-    
     
 
     @Override
     public void onClick(boolean[] m, World world)
     {
-        craftingUI.scrollDown();
+        craftingUI.scrollUp();
     }
     
 }

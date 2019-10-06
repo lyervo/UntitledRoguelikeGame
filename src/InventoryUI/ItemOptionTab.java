@@ -38,9 +38,9 @@ public class ItemOptionTab extends OptionTab
     private int state;
     private Res res;
     
-    public ItemOptionTab(int x, int y, LocalMap lm, TrueTypeFont font,Res res, Inventory inventory,InventoryUI ui,Item item,int index,int state,ItemLibrary itemLibrary)
+    public ItemOptionTab(int x, int y, LocalMap lm,Res res, Inventory inventory,InventoryUI ui,Item item,int index,int state,ItemLibrary itemLibrary)
     {
-        super(x, y, lm, font,res);
+        super(x, y, lm, res.disposableDroidBB,res);
         this.item = item;
         this.index = index;
         this.inventory = inventory;
@@ -96,7 +96,7 @@ public class ItemOptionTab extends OptionTab
                 
                 break;
             case 4:
-                res.potion_pop.play();
+//                res.potion_pop.play();
                 for(int i=0;i<item.getEffects().size();i++)
                 {
                     lm.getPlayer().getStatus().add(new Status(item.getEffects().get(i)));

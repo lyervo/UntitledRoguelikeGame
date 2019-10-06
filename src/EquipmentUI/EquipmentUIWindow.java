@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package InventoryUI;
+package EquipmentUI;
 
 import Res.Res;
 import UI.UIComponent;
@@ -42,6 +42,7 @@ public class EquipmentUIWindow extends UIWindow
             g.setColor(Color.yellow);
             g.drawRect(x, y, width, height);
             equipmentUI.getBg().draw(x,y);
+            equipmentUI.render(g, input, x, y);
             g.setColor(Color.white);
             g.setFont(font);
             g.drawString(name, x+32, y-37);
@@ -95,9 +96,10 @@ public class EquipmentUIWindow extends UIWindow
                 xofs = input.getMouseX()-dragBounds.x;
                 yofs = input.getMouseY()-dragBounds.y;
                 drag = true;
+                world.setDrag(true);
             }
 
-            if(m[0]&&drag)
+            if(m[0]&&drag&&world.isDrag())
             {
 
                 drag = false;
@@ -127,6 +129,11 @@ public class EquipmentUIWindow extends UIWindow
             g.drawString(name, input.getMouseX()-xofs+32, input.getMouseY()-yofs-5);
             closeWindowButton.render(g,input.getMouseX()-xofs, input.getMouseY()-yofs+32);
         }
+    }
+
+    @Override
+    public void itemUICheckDrop(boolean[] k, boolean[] m, Input input, World world) {
+        equipmentUI.checkDrop(k, m, input, world);
     }
     
 }

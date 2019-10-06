@@ -44,6 +44,7 @@ public class Inventory
     
     public void dropItem(int x,int y,int index,LocalMap lm,int amount)
     {
+        System.out.println("index is "+index);
         if(amount>0&&amount<=items.get(index).getStack()&&items.get(index).isStackable())
         {
             if(lm.getItemPileAt(owner.getX(), owner.getY())==null)

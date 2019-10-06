@@ -86,9 +86,10 @@ public class InventoryUIWindow extends UIWindow
                 xofs = input.getMouseX()-dragBounds.x;
                 yofs = input.getMouseY()-dragBounds.y;
                 drag = true;
+                world.setDrag(true);
             }
 
-            if(m[0]&&drag)
+            if(m[0]&&drag&&world.isDrag())
             {
 
                 drag = false;
@@ -101,6 +102,12 @@ public class InventoryUIWindow extends UIWindow
                 inventoryUI.tick(k, m, input, world,x,y,this);
             }
         }
+    }
+    
+    @Override
+    public void itemUICheckDrop(boolean[] k, boolean[] m, Input input, World world)
+    {
+        inventoryUI.checkDrop(k, m, input, world);
     }
     
     
@@ -139,5 +146,7 @@ public class InventoryUIWindow extends UIWindow
             closeWindowButton.render(g,input.getMouseX()-xofs, input.getMouseY()-yofs+32);
         }
     }
+
+    
     
 }

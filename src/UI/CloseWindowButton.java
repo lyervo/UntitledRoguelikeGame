@@ -26,7 +26,10 @@ public class CloseWindowButton extends Button
     @Override
     public void onClick(boolean[] m, World world)
     {
-        window.setDisplay();
+        if(world.getZ()==window.getZ())
+        {
+            window.setDisplay();
+        }
     }
     
 }

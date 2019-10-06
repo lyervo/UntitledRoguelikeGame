@@ -91,19 +91,7 @@ public class InGame extends BasicGameState
     @Override
     public void mouseDragged(int oldx,int oldy,int newx,int newy)
     {
-        m[18] = true;
-        if(System.currentTimeMillis()-scrollLimit>500)
-        {
-            if(oldy<newy)
-            {
-                m[14] = true;
-                scrollLimit = System.currentTimeMillis();
-            }else 
-            {
-                m[13] = true;
-                scrollLimit = System.currentTimeMillis();
-            }
-        }
+        
     }
     
     @Override 
@@ -113,10 +101,10 @@ public class InGame extends BasicGameState
         {
             if(change>0)
             {
-                m[11] = true;
+                m[16] = true;
             }else if(change<0)
             {
-                m[12] = true;
+                m[17] = true;
             }
         }
     }

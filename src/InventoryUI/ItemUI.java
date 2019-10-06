@@ -26,106 +26,105 @@ import org.newdawn.slick.TrueTypeFont;
  */
 public class ItemUI extends DescBox
 {
-    private Item item;
+    protected Item item;
 
-    private int index;
+    protected int index;
     
-    private Rectangle bounds;
+    protected Rectangle bounds;
     
-    private Rectangle dropRect;
+    protected Rectangle dropRect;
     
-    private boolean hover;
+    protected boolean hover;
     
-    private int state;
     
-    private boolean drag;
-    private int xofs,yofs;
-    private int posX,posY;
+    protected boolean drag;
+    protected int xofs,yofs;
+    protected int posX,posY;
     
     private long last_desc_hover;
     private long desc_hover;
     private boolean desc_display;
     private ArrayList<String> desc_lines;
     
-    private TrueTypeFont font,fontSmall;
+    protected TrueTypeFont font,fontSmall;
     
-    public ItemUI(Item item,int index,int state,Res res)
+    public ItemUI(Item item,int index,Res res)
     {
         super(item.getName(),item.getDesc(),res.disposableDroidBB);
         this.drag = false;
         this.item = item;
         this.index = index;
-        this.state = state;
+        
         desc_hover = 0;
         hover = false;
         font = res.disposableDroidBB;
         last_desc_hover = 0;
-        if(state == 1)
-        {
-            if(index>8)
-            {
-                int columnIndex = index % 9;
-                int rowIndex = index / 9;
-                bounds = new Rectangle((columnIndex*71) + 16, 32 + (rowIndex*71), 64, 64);
-            } else {
-                bounds = new Rectangle((index * (64)) + (index * 7) + 16, 32, 64, 64);
-            }
-        }else if(state == 2)
-        {
-            if(index>3)
-            {
-                int columnIndex = index % 4;
-                int rowIndex = index / 4;
-                
-                bounds = new Rectangle((columnIndex*71) + 16, 32 + (rowIndex*71), 64, 64);
-            } else {
-                
-                bounds = new Rectangle((index * (64)) + (index * 7) + 16, 32, 64, 64);
-            }
-        }else if(state == 4)
-        {
-            if(index>5)
-            {
-                int columnIndex = index % 6;
-                int rowIndex = index / 6;
-                bounds = new Rectangle((columnIndex*71) + 371, 32 + (rowIndex*71), 64, 64);
-            } else {
-                bounds = new Rectangle((index * (64)) + (index * 7) + 371, 32, 64, 64);
-            }
-        }else if(state == 5)
-        {
-            bounds = new Rectangle(76+(index*(64+7)),666,64,64);
-        }else if(state == 6)
-        {
-            if(item.getType()!=33)
-            {
-                if(index<3)
-                {
-                    bounds = new Rectangle(16+(index*(71)),66,64,64);
-                }else
-                {
-                    int colIndex = index%3;
-                    int rowIndex = index/3;
-                    bounds = new Rectangle((colIndex * 64) + (colIndex * 7) + 16, (rowIndex*71)+66, 64, 64);
-                }
-            }else
-            {
-                bounds = new Rectangle(16,137,64,64);
-            }
-        }else if(state == 9)
-        {
-            
-            if(index<3)
-            {
-                bounds = new Rectangle(16+(index*(71)),66,64,64);
-            }else
-            {
-                int colIndex = index%3;
-                int rowIndex = index/3;
-                bounds = new Rectangle((colIndex * 64) + (colIndex * 7) + 16, (rowIndex*71)+66, 64, 64);
-            }
-            
-        }
+//        if(state == 1)
+//        {
+//            if(index>8)
+//            {
+//                int columnIndex = index % 9;
+//                int rowIndex = index / 9;
+//                bounds = new Rectangle((columnIndex*71) + 16, 32 + (rowIndex*71), 64, 64);
+//            } else {
+//                bounds = new Rectangle((index * (64)) + (index * 7) + 16, 32, 64, 64);
+//            }
+//        }else if(state == 2)
+//        {
+//            if(index>3)
+//            {
+//                int columnIndex = index % 4;
+//                int rowIndex = index / 4;
+//                
+//                bounds = new Rectangle((columnIndex*71) + 16, 32 + (rowIndex*71), 64, 64);
+//            } else {
+//                
+//                bounds = new Rectangle((index * (64)) + (index * 7) + 16, 32, 64, 64);
+//            }
+//        }else if(state == 4)
+//        {
+//            if(index>5)
+//            {
+//                int columnIndex = index % 6;
+//                int rowIndex = index / 6;
+//                bounds = new Rectangle((columnIndex*71) + 371, 32 + (rowIndex*71), 64, 64);
+//            } else {
+//                bounds = new Rectangle((index * (64)) + (index * 7) + 371, 32, 64, 64);
+//            }
+//        }else if(state == 5)
+//        {
+//            bounds = new Rectangle(76+(index*(64+7)),666,64,64);
+//        }else if(state == 6)
+//        {
+//            if(item.getType()!=33)
+//            {
+//                if(index<3)
+//                {
+//                    bounds = new Rectangle(16+(index*(71)),66,64,64);
+//                }else
+//                {
+//                    int colIndex = index%3;
+//                    int rowIndex = index/3;
+//                    bounds = new Rectangle((colIndex * 64) + (colIndex * 7) + 16, (rowIndex*71)+66, 64, 64);
+//                }
+//            }else
+//            {
+//                bounds = new Rectangle(16,137,64,64);
+//            }
+//        }else if(state == 9)
+//        {
+//            
+//            if(index<3)
+//            {
+//                bounds = new Rectangle(16+(index*(71)),66,64,64);
+//            }else
+//            {
+//                int colIndex = index%3;
+//                int rowIndex = index/3;
+//                bounds = new Rectangle((colIndex * 64) + (colIndex * 7) + 16, (rowIndex*71)+66, 64, 64);
+//            }
+//            
+//        }
         
         fontSmall = res.disposableDroidBB20f;
         
@@ -136,145 +135,11 @@ public class ItemUI extends DescBox
         
     }
     
-    public void render(Graphics g,Input input,int state,int scroll1,int scroll2,int x,int y)
+    public void render(Graphics g,Input input,int x,int y)
     {
         if(!drag)
         {
-            if(state == 1)
-            {
-                if((index/9)-scroll1>=0&&(index/9)-scroll1<=4)
-                {
-                    if(index>8)
-                    {
-                        int columnIndex = index%9;
-                        int rowIndex = index/9;
-                        if(hover)
-                        {
-                            item.getTexture().draw((columnIndex*64)+(columnIndex*7)+16+x,32+((rowIndex-scroll1)*64)+((rowIndex-scroll1)*7)+y,64,64);
-                            if(item.isStackable())
-                            {
-                                fontSmall.drawString((columnIndex*64)+(columnIndex*7)+16+x,32+((rowIndex-scroll1)*64)+((rowIndex-scroll1)*7)+y,""+item.getStack());
-                            }
-                        }else
-                        {
-                            item.getTexture().draw((columnIndex*64)+(columnIndex*7)+16+x,32+((rowIndex-scroll1)*64)+((rowIndex-scroll1)*7)+y,64,64,Color.gray);
-                            if(item.isStackable())
-                            {
-                                fontSmall.drawString((columnIndex*64)+(columnIndex*7)+16+x,32+((rowIndex-scroll1)*64)+((rowIndex-scroll1)*7)+y,""+item.getStack());
-                            }
-                        }
-                    }else
-                    {
-                        if(hover)
-                        {
-                            item.getTexture().draw((index*(64))+(index*7)+16+x,32-(scroll1*64)-(scroll1*7)+y,64,64);
-                            if(item.isStackable())
-                            {
-                                fontSmall.drawString((index*(64))+(index*7)+16+x,32-(scroll1*64)-(scroll1*7)+y,""+item.getStack());
-                            }
-                        }else
-                        {
-                         
-                            item.getTexture().draw((index*(64))+(index*7)+16+x,32-(scroll1*64)-(scroll1*7)+y,64,64,Color.gray);
-                            if(item.isStackable())
-                            {
-                                fontSmall.drawString((index*(64))+(index*7)+16+x,32-(scroll1*64)-(scroll1*7)+y,""+item.getStack());
-                            }
-                        }
-                    }
-                }
-            }else if(state == 2)
-            {
-                if((index/4)-scroll1>=0&&(index/4)-scroll1<=4)
-                {
-                    if(index>3)
-                    {
-                        int columnIndex = index%4;
-                        int rowIndex = index/4;
-                        if(hover)
-                        {
-                            item.getTexture().draw((columnIndex*64)+(columnIndex*7)+16+x,32+((rowIndex-scroll1)*64)+((rowIndex-scroll1)*7)+y,64,64);
-                            if(item.isStackable())
-                            {
-                                
-                                fontSmall.drawString((columnIndex*64)+(columnIndex*7)+16+x,32+((rowIndex-scroll1)*64)+((rowIndex-scroll1)*7)+y,""+item.getStack());
-                            }
-                            
-                        }else
-                        {
-                            item.getTexture().draw((columnIndex*71)+16+x,32+((rowIndex-scroll1)*64)+((rowIndex-scroll1)*7)+y,64,64,Color.gray);
-                            if(item.isStackable())
-                            {
-                                
-                                fontSmall.drawString((columnIndex*64)+(columnIndex*7)+16+x,32+((rowIndex-scroll1)*64)+((rowIndex-scroll1)*7)+y,""+item.getStack());
-                            }
-                        }
-                    }else
-                    {
-                        if(hover)
-                        {
-                            item.getTexture().draw((index*(64))+(index*7)+16+x,32-(scroll1*64)-(scroll1*7)+y,64,64);
-                            if(item.isStackable())
-                            {
-                              
-                                fontSmall.drawString((index*(64))+(index*7)+16+x,32-(scroll1*64)-(scroll1*7)+y,""+item.getStack());
-                            }
-                        }else
-                        {
-                            item.getTexture().draw((index*(64))+(index*7)+16+x,32-(scroll1*64)-(scroll1*7)+y,64,64,Color.gray);
-                            if(item.isStackable())
-                            {
-                                
-                                fontSmall.drawString((index*(64))+(index*7)+16+x,32-(scroll1*64)-(scroll1*7)+y,""+item.getStack());
-                            }
-                        }
-                    }
-                }
-            }else if(state == 4)
-            {
-                if((index/4)-scroll2>=0&&(index/4)-scroll2<=4)
-                {
-                    if(index>3)
-                    {
-                        int columnIndex = index%4;
-                        int rowIndex = index/4;
-                        if(hover)
-                        {
-                            item.getTexture().draw((columnIndex*71)+371+x,32+((rowIndex-scroll2)*71)+y,64,64);
-                            if(item.isStackable())
-                            {
-                                fontSmall.drawString((columnIndex*71)+371+x,32+((rowIndex-scroll2)*71)+y,""+item.getStack());
-                            }
-                        }else
-                        {
-                            item.getTexture().draw((columnIndex*71)+371+x,32+((rowIndex-scroll2)*71)+y,64,64,Color.gray);
-                            if(item.isStackable())
-                            {
-                               
-                                fontSmall.drawString((columnIndex*71)+371+x,32+((rowIndex-scroll2)*71)+y,""+item.getStack());
-                            }
-                        }
-                    }else
-                    {
-                        if(hover)
-                        {
-                            item.getTexture().draw((index*(71))+371+x,32-(scroll2*71)+y,64,64);
-                            if(item.isStackable())
-                            {
-                                fontSmall.drawString((index*(71))+371+x,32-(scroll2*71)+y,""+item.getStack());
-                            }
-                        }else
-                        {
-                            item.getTexture().draw((index*(71))+371+x,32-(scroll2*71)+y,64,64,Color.gray);
-                            if(item.isStackable())
-                            {
-                                g.setColor(Color.white);
-                                fontSmall.drawString((index*(71))+371+x,32-(scroll2*71)+y,""+item.getStack());
-                            }
-                        }
-                    }
-                }
-            }else if(state == 5)
+            if(state == 5)
             {
                
                 item.getTexture().draw(76+(index*(64+7)),666,64,64);
@@ -327,134 +192,135 @@ public class ItemUI extends DescBox
     }
     
     
-    public void tick(boolean[] k,boolean[] m,Input input,World world,int state, int scroll1,int scroll2,InventoryUI ui,QuickItemBarUI quickItemBarUI,int x,int y)
+    public void tick(boolean[] k,boolean[] m,Input input,World world,int x,int y)
     {
         
-        if(!world.isDrag())
-   
-            if(state<=2)
-            {
-                if(bounds.contains(new Point(input.getMouseX()-x,input.getMouseY()+(scroll1*71)-y))&&ui.getPrimaryBounds().contains(new Point(input.getMouseX()-x,input.getMouseY()-y)))
-                {
-                    hover = true;
-                }else
-                {
-                    hover = false;
-                }
-            }else if(state == 4)
-            {
-                if(bounds.contains(new Point(input.getMouseX()-x,input.getMouseY()+(scroll2*71)-y)))
-                {
-                    
-                    hover = true;
-                }else
-                {
-                    hover = false;
-                }
-            }else if(state==5||state==6||state==9)
-            {
-                if(bounds.contains(new Point(input.getMouseX(),input.getMouseY())))
-                {
-                    hover = true;
-                    
-                }else
-                {
-                    hover = false;
-                }
-            }
-
-            if(state!=5&&state!=6)
-            {
-                if(m[1]&&hover)
-                {
-                    ui.spawnOptionTab(input.getMouseX(), input.getMouseY(), world.getWm().getCurrentLocalMap(), item,index,this.state,world.getItemLibrary());
-                }else if(input.isMouseButtonDown(0)&&hover&&!ui.isDrag()&&!world.isDrag())
-                {
-                    xofs = input.getMouseX()-x-bounds.x;
-                    if(state<=2)
-                    {
-                        yofs = input.getMouseY()-y-bounds.y+(scroll1*64+scroll1*7);
-                    }else if(state == 4)
-                    {
-                        yofs = input.getMouseY()-y-bounds.y+(scroll2*64+scroll2*7);
-                    }
-                    drag = true;
-                    ui.setDrag(true);
-                    world.setDrag(true);
-                }else if(m[0]&&drag)
-                {
-                    checkDrop(input,ui,world.getWm().getCurrentLocalMap(),scroll1,scroll2,x,y);
-                    drag = false;
-                    ui.setDrag(false);
-                    world.setDrag(false);
-
-                }
-            }else if(state == 5)
-            {
-                if(m[1]&&hover)
-                {
-                    quickItemBarUI.spawnOptionTab(input.getMouseX(), input.getMouseY(), world.getWm().getCurrentLocalMap(), item,index,this.state,world.getItemLibrary());
-                }else if(input.isMouseButtonDown(0)&&hover&&!quickItemBarUI.isDrag()&&!world.isDrag())
-                {
-                    xofs = input.getMouseX()-bounds.x;
-                    if(state<=2)
-                    {
-                        yofs = input.getMouseY()-bounds.y+(scroll1*64+scroll1*7);
-                    }else if(state == 4)
-                    {
-                        yofs = input.getMouseY()-bounds.y+(scroll2*64+scroll2*7);
-                    }
-                    drag = true;
-                    world.setDrag(true);
-                    quickItemBarUI.setDrag(true);
-                }else if(m[0]&&drag)
-                {
-                    checkQuickItemBarDrop(input,quickItemBarUI,world.getWm().getCurrentLocalMap());
-                    drag = false;
-                    quickItemBarUI.setDrag(false);
-                    world.setDrag(false);
-
-                }
-
-            }else if(state == 6 || state == 9)
-            {
-                if(m[1]&&hover)
-                {
-                    ui.spawnOptionTab(input.getMouseX(), input.getMouseY(), world.getWm().getCurrentLocalMap(), item,index,this.state,world.getItemLibrary());
-                }else if(input.isMouseButtonDown(0)&&hover&&!ui.isDrag()&&!world.isDrag())
-                {
-                    xofs = input.getMouseX()-bounds.x;
-                    if(state<=2)
-                    {
-                        yofs = input.getMouseY()-bounds.y+(scroll1*64+scroll1*7);
-                    }else if(state == 4)
-                    {
-                        yofs = input.getMouseY()-bounds.y+(scroll2*64+scroll2*7);
-                    }
-                    drag = true;
-                    world.setDrag(true);
-                    ui.setDrag(true);
-                }else if(m[0]&&drag)
-                {
-                    checkDrop(input,ui,world.getWm().getCurrentLocalMap(),scroll1,scroll2,x,y);
-                    drag = false;
-                    ui.setDrag(false);
-                    world.setDrag(false);
-
-                }
-            }
-            
-        if(hover&&state==5)
-        {
-            
-        }else if(hover&&ui.getItemOptionTab()==null)
-        {
-            tickDesc(true);
-            
-        }else
-        {
-            tickDesc(false);
-        }
+//        if(!world.isDrag())
+//   
+//            if(state<=2)
+//            {
+//                if(bounds.contains(new Point(input.getMouseX()-x,input.getMouseY()+(scroll1*71)-y))&&ui.getPrimaryBounds().contains(new Point(input.getMouseX()-x,input.getMouseY()-y)))
+//                {
+//                    hover = true;
+//                }else
+//                {
+//                    hover = false;
+//                }
+//            }else if(state == 4)
+//            {
+//                if(bounds.contains(new Point(input.getMouseX()-x,input.getMouseY()+(scroll2*71)-y)))
+//                {
+//                    
+//                    hover = true;
+//                }else
+//                {
+//                    hover = false;
+//                }
+//            }else if(state==5||state==6||state==9)
+//            {
+//                if(bounds.contains(new Point(input.getMouseX(),input.getMouseY())))
+//                {
+//                    hover = true;
+//                    
+//                }else
+//                {
+//                    hover = false;
+//                }
+//            }
+//
+//            if(state!=5&&state!=6)
+//            {
+//                if(m[1]&&hover)
+//                {
+//                    ui.spawnOptionTab(input.getMouseX(), input.getMouseY(), world.getWm().getCurrentLocalMap(), item,index,this.state,world.getItemLibrary());
+//                }else if(input.isMouseButtonDown(0)&&hover&&!ui.isDrag()&&!world.isDrag())
+//                {
+//                    xofs = input.getMouseX()-x-bounds.x;
+//                    if(state<=2)
+//                    {
+//                        yofs = input.getMouseY()-y-bounds.y+(scroll1*64+scroll1*7);
+//                    }else if(state == 4)
+//                    {
+//                        yofs = input.getMouseY()-y-bounds.y+(scroll2*64+scroll2*7);
+//                    }
+//                    drag = true;
+//                    ui.setDrag(true);
+//                    world.setDrag(true);
+//                }
+//                else if(m[0]&&drag)
+//                {
+//                    checkDrop(input,ui,world.getWm().getCurrentLocalMap(),scroll1,scroll2,x,y);
+//                    drag = false;
+//                    ui.setDrag(false);
+//                    world.setDrag(false);
+//
+//                }
+//            }else if(state == 5)
+//            {
+//                if(m[1]&&hover)
+//                {
+//                    quickItemBarUI.spawnOptionTab(input.getMouseX(), input.getMouseY(), world.getWm().getCurrentLocalMap(), item,index,this.state,world.getItemLibrary());
+//                }else if(input.isMouseButtonDown(0)&&hover&&!quickItemBarUI.isDrag()&&!world.isDrag())
+//                {
+//                    xofs = input.getMouseX()-bounds.x;
+//                    if(state<=2)
+//                    {
+//                        yofs = input.getMouseY()-bounds.y+(scroll1*64+scroll1*7);
+//                    }else if(state == 4)
+//                    {
+//                        yofs = input.getMouseY()-bounds.y+(scroll2*64+scroll2*7);
+//                    }
+//                    drag = true;
+//                    world.setDrag(true);
+//                    quickItemBarUI.setDrag(true);
+//                }else if(m[0]&&drag)
+//                {
+//                    checkQuickItemBarDrop(input,quickItemBarUI,world.getWm().getCurrentLocalMap());
+//                    drag = false;
+//                    quickItemBarUI.setDrag(false);
+//                    world.setDrag(false);
+//
+//                }
+//
+//            }else if(state == 6 || state == 9)
+//            {
+//                if(m[1]&&hover)
+//                {
+//                    ui.spawnOptionTab(input.getMouseX(), input.getMouseY(), world.getWm().getCurrentLocalMap(), item,index,this.state,world.getItemLibrary());
+//                }else if(input.isMouseButtonDown(0)&&hover&&!ui.isDrag()&&!world.isDrag())
+//                {
+//                    xofs = input.getMouseX()-bounds.x;
+//                    if(state<=2)
+//                    {
+//                        yofs = input.getMouseY()-bounds.y+(scroll1*64+scroll1*7);
+//                    }else if(state == 4)
+//                    {
+//                        yofs = input.getMouseY()-bounds.y+(scroll2*64+scroll2*7);
+//                    }
+//                    drag = true;
+//                    world.setDrag(true);
+//                    ui.setDrag(true);
+//                }else if(m[0]&&drag)
+//                {
+//                    checkDrop(input,ui,world.getWm().getCurrentLocalMap(),scroll1,scroll2,x,y);
+//                    drag = false;
+//                    ui.setDrag(false);
+//                    world.setDrag(false);
+//
+//                }
+//            }
+//            
+//        if(hover&&state==5)
+//        {
+//            
+//        }else if(hover&&ui.getItemOptionTab()==null)
+//        {
+//            tickDesc(true);
+//            
+//        }else
+//        {
+//            tickDesc(false);
+//        }
             
     }
     
@@ -486,7 +352,7 @@ public class ItemUI extends DescBox
         }
     }
     
-    public void checkDrop(Input input,InventoryUI ui,LocalMap lm,int scroll1,int scroll2,int x,int y)
+    public void checkDrop(Input input,World world,int x,int y)
     {
         ArrayList<Pair<Integer,Integer>> pixelIntersection = new ArrayList<Pair<Integer,Integer>>();
         int max = 0;
@@ -494,40 +360,40 @@ public class ItemUI extends DescBox
         
         if(drag)
         {
-            dropRect = new Rectangle(input.getMouseX()-xofs-x,input.getMouseY()-yofs+scroll1*(64+7)-y,64,64);
+            dropRect = new Rectangle(input.getMouseX()-xofs-x,input.getMouseY()-yofs+(64+7)-y,64,64);
 
             
 
-            if(state<=2)
-            {
-                if(dropRect.intersects(ui.getPrimaryBounds()))
-                {
-                    for(int i=0;i<ui.getPrimaryItemUI().size();i++)
-                    {
-                        if(ui.getPrimaryItemUI().get(i).getBounds().intersects(dropRect))
-                        {
-                            
-                            Collections.swap(ui.getPlayer_inventory().getItems(), i, index);
-                            ui.refreshInventoryUI(lm);
-                            return;
-                        }
-                    }
-                    
-                    
-                }else if(ui.getSecondaryBounds()!=null&&dropRect.intersects(ui.getSecondaryBounds()))
-                {
-                    if(dropRect.intersects(ui.getSecondaryBounds()))
-                    {
-                        ui.getPlayer_inventory().dropItem(lm.getPlayer().getX(), lm.getPlayer().getY(), index, lm,-1);
-                        ui.refreshInventoryUI(lm);
-                        return;
-                    }
-                }else
-                {
-                    ui.getPlayer_inventory().dropItem(lm.getPlayer().getX(), lm.getPlayer().getY(), index, lm,-1);
-                    ui.refreshInventoryUI(lm);
-                    return;
-                }
+//            if(state<=2)
+//            {
+//                if(dropRect.intersects(ui.getPrimaryBounds()))
+//                {
+//                    for(int i=0;i<ui.getPrimaryItemUI().size();i++)
+//                    {
+//                        if(ui.getPrimaryItemUI().get(i).getBounds().intersects(dropRect))
+//                        {
+//                            
+//                            Collections.swap(ui.getPlayer_inventory().getItems(), i, index);
+//                            ui.refreshInventoryUI(lm);
+//                            return;
+//                        }
+//                    }
+//                    
+//                    
+//                }else if(ui.getSecondaryBounds()!=null&&dropRect.intersects(ui.getSecondaryBounds()))
+//                {
+//                    if(dropRect.intersects(ui.getSecondaryBounds()))
+//                    {
+//                        ui.getPlayer_inventory().dropItem(lm.getPlayer().getX(), lm.getPlayer().getY(), index, lm,-1);
+//                        ui.refreshInventoryUI(lm);
+//                        return;
+//                    }
+//                }else
+//                {
+//                    ui.getPlayer_inventory().dropItem(lm.getPlayer().getX(), lm.getPlayer().getY(), index, lm,-1);
+//                    ui.refreshInventoryUI(lm);
+//                    return;
+//                }
                 
 ////                if(dropRect.intersects(ui.getPlayerEquipment().getMainBounds())&&lm.getWorld().getUiDisplay()==1)
 ////                {
@@ -564,46 +430,46 @@ public class ItemUI extends DescBox
               
                 
                 
-            }else if(state==4)
-            {
-                if(dropRect.intersects(ui.getPrimaryBounds()))
-                {
-                    lm.getItemPileAt(lm.getPlayer().getX(), lm.getPlayer().getY()).takeFrom(lm.getWm().getPlayerInventory(), index, lm,-1);
-                    
-                }else if(dropRect.intersects(ui.getSecondaryBounds()))
-                {
-                    
-                    for(int i=0;i<ui.getPrimaryItemUI().size();i++)
-                    {
-                        if(ui.getPrimaryItemUI().get(i).getBounds().intersects(dropRect))
-                        {
-                            
-                            Collections.swap(ui.getPlayer_inventory().getItems(), i, index);
-                            return;
-                        }
-                    }
-                }
-            }else if(state==6)
-            {
-                if(dropRect.intersects(ui.getPrimaryBounds()))
-                {
-                    ui.getPlayer_inventory().getEquipment().unequip(item.getType());
-                    lm.getWorld().moved();
-                }
-            }else if(state==9)
-            {
-                if(dropRect.intersects(ui.getPrimaryBounds()))
-                {
-//                    ui.getCraftingUI().getCrafting().removeIngridient(index);
-//                    ui.getCraftingUI().refreshUI(lm);
-                    ui.refreshInventoryUI(lm);
-                }
-            }
+//            }else if(state==4)
+//            {
+//                if(dropRect.intersects(ui.getPrimaryBounds()))
+//                {
+//                    lm.getItemPileAt(lm.getPlayer().getX(), lm.getPlayer().getY()).takeFrom(lm.getWm().getPlayerInventory(), index, lm,-1);
+//                    
+//                }else if(dropRect.intersects(ui.getSecondaryBounds()))
+//                {
+//                    
+//                    for(int i=0;i<ui.getPrimaryItemUI().size();i++)
+//                    {
+//                        if(ui.getPrimaryItemUI().get(i).getBounds().intersects(dropRect))
+//                        {
+//                            
+//                            Collections.swap(ui.getPlayer_inventory().getItems(), i, index);
+//                            return;
+//                        }
+//                    }
+//                }
+//            }else if(state==6)
+//            {
+//                if(dropRect.intersects(ui.getPrimaryBounds()))
+//                {
+//                    ui.getPlayer_inventory().getEquipment().unequip(item.getType());
+//                    lm.getWorld().moved();
+//                }
+//            }else if(state==9)
+//            {
+//                if(dropRect.intersects(ui.getPrimaryBounds()))
+//                {
+////                    ui.getCraftingUI().getCrafting().removeIngridient(index);
+////                    ui.getCraftingUI().refreshUI(lm);
+//                    ui.refreshInventoryUI(lm);
+//                }
+//            }
+//            
+//            ui.refreshInventoryUI(lm);
+//        }   
             
-            ui.refreshInventoryUI(lm);
-        }   
-            
-    }
+//    }
 
     public Item getItem() {
         return item;
@@ -635,14 +501,6 @@ public class ItemUI extends DescBox
 
     public void setHover(boolean hover) {
         this.hover = hover;
-    }
-
-    public int getState() {
-        return state;
-    }
-
-    public void setState(int state) {
-        this.state = state;
     }
 
     public boolean isDrag() {

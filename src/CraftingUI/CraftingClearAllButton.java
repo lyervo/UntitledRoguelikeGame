@@ -3,36 +3,36 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package InventoryUI;
+package CraftingUI;
 
+import InventoryUI.InventoryUI;
 import Item.Crafting;
 import UI.Button;
 import World.World;
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
-import org.newdawn.slick.TrueTypeFont;
 
 /**
  *
  * @author Timot
  */
-public class CraftingCraftButton extends Button
+public class CraftingClearAllButton extends Button
 {
 
-    private InventoryUI inventoryUI;
     private Crafting crafting;
+    private InventoryUI inventoryUI;
     
-    public CraftingCraftButton(int x, int y,Image texture,Crafting crafting,InventoryUI inventoryUI) {
+    public CraftingClearAllButton(int x, int y, Image texture,Crafting crafting,InventoryUI inventoryUI)
+    {
         super(x, y, texture);
         this.crafting = crafting;
         this.inventoryUI = inventoryUI;
     }
 
     @Override
-    public void onClick(boolean[] m, World world) 
+    public void onClick(boolean[] m, World world)
     {
-        crafting.craft();
+        crafting.clearAllIngridient();
         inventoryUI.refreshInventoryUI(world.getWm().getCurrentLocalMap());
     }
-
+    
 }

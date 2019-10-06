@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package InventoryUI;
+package EquipmentUI;
 
+import InventoryUI.ItemOptionTab;
+import InventoryUI.ItemUI;
 import Item.Equipment;
 import Item.Slot;
 import Res.Res;
@@ -29,7 +31,7 @@ public class EquipmentUI extends UIComponent
     private Res res;
     private int state;
     
-    private ArrayList<ItemUI> itemUI;
+    private ArrayList<EquipmentItemUI> itemUI;
     
     private ItemOptionTab itemOptionTab;
     
@@ -46,12 +48,12 @@ public class EquipmentUI extends UIComponent
         this.res = res;
         this.equipment = equipment;
         this.state = state;
-        itemUI = new ArrayList<ItemUI>();
+        itemUI = new ArrayList<EquipmentItemUI>();
         for(Slot s:equipment.getEquipments())
         {
             if(s.getItem()!=null)
             {
-                itemUI.add(new ItemUI(s.getItem(),s.getType()-21,6,res));
+                itemUI.add(new EquipmentItemUI(s.getItem(),s.getType()-21,res,this));
             }
         }
         
@@ -75,18 +77,27 @@ public class EquipmentUI extends UIComponent
         
     }
     
+    private boolean firstRun = true;
+    
     @Override
     public void tick(boolean[] k, boolean[] m, Input input, World world, int x, int y,UIWindow window) 
     {
-//        for(int i=itemUI.size()-1;i>=0;i--)
-//        {
-//            itemUI.get(i).tick(k, m, input, world, 0,0,0, null, null, x, y);
-//        }
+        if(firstRun)
+        {
+            equipment.equip(world.getItemLibrary().getItemByTrueName("Wooden Shield"));
+            refreshUI();
+            firstRun = false;
+        }
+        for(int i=itemUI.size()-1;i>=0;i--)
+        {
+            itemUI.get(i).tick(k, m, input, world,x, y);
+        }
     }
 
     @Override
-    public void dragRender(Graphics g, Input input) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void dragRender(Graphics g, Input input)
+    {
+        
     }
 
     @Override
@@ -108,19 +119,19 @@ public class EquipmentUI extends UIComponent
     {
         
         bg.draw(x,y);
-//        for(int i=0;i<itemUI.size();i++)
-//        {
-//            itemUI.get(i).render(g, input, state, 0, 0,x,y);
-//        }
-//        
-//        for(ItemUI i:itemUI)
-//        {
-//            if(i.isDrag())
-//            {
-//                i.dragRender(g, input);
-//            }
-//        }
-//        
+        for(int i=0;i<itemUI.size();i++)
+        {
+            itemUI.get(i).render(g, input,x,y);
+        }
+        
+        for(ItemUI i:itemUI)
+        {
+            if(i.isDrag())
+            {
+                i.dragRender(g, input);
+            }
+        }
+        
 //        g.setColor(Color.red);
 //        for(Pair<Integer,Rectangle> p: bounds)
 //        {
@@ -153,7 +164,21 @@ public class EquipmentUI extends UIComponent
         {
             if(s.getItem()!=null)
             {
-                itemUI.add(new ItemUI(s.getItem(),s.getType()-21,state,res));
+                itemUI.add(new EquipmentItemUI(s.getItem(),s.getType()-21,res,this));
+            }
+        }
+    }
+    
+    @Override
+    public void checkDrop(boolean[] k, boolean[] m, Input input, World world) {
+        for(int i=itemUI.size()-1;i>=0;i--)
+        {
+            if(itemUI.get(i).isDrag())
+            {
+                itemUI.get(i).checkDrop(input, world, 0, 0);
+                itemUI.get(i).setDrag(false);
+                drag = false;
+                world.setDrag(false);
             }
         }
     }
@@ -182,11 +207,11 @@ public class EquipmentUI extends UIComponent
         this.state = state;
     }
 
-    public ArrayList<ItemUI> getItemUI() {
+    public ArrayList<EquipmentItemUI> getItemUI() {
         return itemUI;
     }
 
-    public void setItemUI(ArrayList<ItemUI> itemUI) {
+    public void setItemUI(ArrayList<EquipmentItemUI> itemUI) {
         this.itemUI = itemUI;
     }
 
@@ -221,6 +246,8 @@ public class EquipmentUI extends UIComponent
     public void setBg(Image bg) {
         this.bg = bg;
     }
+
+    
 
     
     
