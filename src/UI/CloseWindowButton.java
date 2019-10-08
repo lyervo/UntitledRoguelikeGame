@@ -29,6 +29,8 @@ public class CloseWindowButton extends Button
         if(world.getZ()==window.getZ())
         {
             window.setDisplay();
+            world.setDrag(false);
+            window.setDrag(false);
         }
     }
     

@@ -9,6 +9,8 @@ package Game;
 
 import GameStates.InGame;
 import Res.Res;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
@@ -71,10 +73,12 @@ public class Game extends StateBasedGame
                 
             }
             
-            //Game is wraped in ScalableGame class to make it scale to screen size
+            //automatically gets screen dimension
+            
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
             
             AppGameContainer app = new AppGameContainer(new Game("Game"));
-            app.setDisplayMode(1920, 1080, false);
+            app.setDisplayMode((int)screenSize.getWidth(), (int)screenSize.getHeight(), false);
             app.setFullscreen(true);   
             app.start();
             

@@ -55,7 +55,7 @@ public class EquipmentUIWindow extends UIWindow
     {
         if(display)
         {
-            closeWindowButton.tick(m, input, world,x,y);
+            
             
             if(bounds.contains(new Point(input.getMouseX(),input.getMouseY())))
             {
@@ -77,7 +77,7 @@ public class EquipmentUIWindow extends UIWindow
                 dragHover = false;
             }
 
-            
+            closeWindowButton.tick(m, input, world,x,y);
             
             if((dragHover||hover)&&m[10]&&world.getZ()==z)
             {
@@ -91,7 +91,7 @@ public class EquipmentUIWindow extends UIWindow
             }
             
 
-            if(dragHover&&input.isMouseButtonDown(0)&&!drag&&!world.isDrag())
+            if(dragHover&&input.isMouseButtonDown(0)&&!drag&&!world.isDrag()&&world.getZ()==z)
             {
                 xofs = input.getMouseX()-dragBounds.x;
                 yofs = input.getMouseY()-dragBounds.y;

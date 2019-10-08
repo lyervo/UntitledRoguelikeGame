@@ -19,7 +19,7 @@
 		"desc":"Restores health and mend wounds when drank.",
 		"unidentified_desc":"A <color> potion, further examination is needed to identify the potion.",
 		"stack":"1",
-		"properties":[1,2],
+		"properties":[1,2,4],
 		"consumed":[{"name":"Empty Potion Bottle"}],
 		"baseValue":20,
         "effects":[{"type":"heal","duration":"1","value":"20"}]

@@ -10,6 +10,7 @@ import UI.UIComponent;
 import UI.UIWindow;
 import World.World;
 import java.awt.Point;
+import java.awt.Rectangle;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -25,12 +26,17 @@ public class InventoryUIWindow extends UIWindow
     private InventoryUI inventoryUI;
     private TrueTypeFont font;
     
+    private InventoryWindowSizeButton windowSizeButton;
+    
+    private boolean mode;
     
     public InventoryUIWindow(int x, int y,String name,InventoryUI inventoryUI,TrueTypeFont font,Res res) 
     {
         super(x, y, name, inventoryUI,res);
         this.inventoryUI = inventoryUI;
         this.font = font;
+        this.mode = false;
+        this.windowSizeButton = new InventoryWindowSizeButton((width-64),-32,res.minimize,res.maximize);
     }
     
     
@@ -76,12 +82,13 @@ public class InventoryUIWindow extends UIWindow
                 world.setHoveringWindow(true);
             }
             
+            windowSizeButton.tick(m, input, world,x,y);
             closeWindowButton.tick(m, input, world,x,y);
             
             
             
 
-            if(dragHover&&input.isMouseButtonDown(0)&&!drag&&!world.isDrag())
+            if(dragHover&&input.isMouseButtonDown(0)&&!drag&&!world.isDrag()&&world.getZ()==z)
             {
                 xofs = input.getMouseX()-dragBounds.x;
                 yofs = input.getMouseY()-dragBounds.y;
@@ -126,6 +133,7 @@ public class InventoryUIWindow extends UIWindow
             g.setFont(font);
             g.drawString(name, dragBounds.x+32, dragBounds.y-5);
             closeWindowButton.render(g,x,y);
+            windowSizeButton.render(g,x,y);
         }
         
     }
@@ -147,6 +155,41 @@ public class InventoryUIWindow extends UIWindow
         }
     }
 
+    public void setMode(World world)
+    {
+        mode = !mode;
+        inventoryUI.setMode(world);
+        this.width = inventoryUI.getUIWidth();
+        this.height = inventoryUI.getUIHeight();
+        
+        this.bounds = new Rectangle(x,y,width,height);
+        this.dragBounds = new Rectangle(x,y-32,inventoryUI.getUIWidth(),32);
+    }
+
+    public InventoryUI getInventoryUI() {
+        return inventoryUI;
+    }
+
+    public void setInventoryUI(InventoryUI inventoryUI) {
+        this.inventoryUI = inventoryUI;
+    }
+
+    public TrueTypeFont getFont() {
+        return font;
+    }
+
+    public void setFont(TrueTypeFont font) {
+        this.font = font;
+    }
+
+    public boolean isMode() {
+        return mode;
+    }
+
+    public void setMode(boolean mode) {
+        this.mode = mode;
+    }
+    
     
     
 }

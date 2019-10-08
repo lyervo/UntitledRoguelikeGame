@@ -18,7 +18,6 @@ import InventoryUI.InventoryButton;
 import InventoryUI.InventoryUI;
 import InventoryUI.InventoryUIWindow;
 import InventoryUI.ItemOptionTab;
-import InventoryUI.QuickItemBarUI;
 import InventoryUI.XItemTextField;
 import Item.Item;
 import UI.OptionTab;
@@ -65,7 +64,6 @@ public class World
     private EntityLibrary entityLibrary;
     
     
-    private QuickItemBarUI quickItemBarUI;
     private boolean quickItemBarUIDisplay;
 
     
@@ -115,7 +113,7 @@ public class World
         
         xItemTextFieldActive = false;
         
-        xItemTextField = new XItemTextField(container,res.disposableDroidBB,496-((res.disposableDroidBB.getWidth("00000")+5)/2),384-(res.disposableDroidBB.getHeight()/2),res.disposableDroidBB.getWidth("00000")+5,res.disposableDroidBB.getHeight(),res);
+        xItemTextField = new XItemTextField(container,res.disposableDroidBB,(container.getWidth()/2)-((res.disposableDroidBB.getWidth("00000")+5)/2),(container.getHeight()/2)-(res.disposableDroidBB.getHeight()/2),res.disposableDroidBB.getWidth("00000")+5,res.disposableDroidBB.getHeight(),res);
 
         
         
@@ -134,7 +132,7 @@ public class World
         mapTick = false;
         
         
-        inventory_ui = new InventoryUI(100,100,0,0,wm.getPlayerInventory(),res,quickItemBarUI,this,inventoryWindow);
+        inventory_ui = new InventoryUI(100,100,0,0,wm.getPlayerInventory(),res,this,inventoryWindow);
         inventoryWindow = new InventoryUIWindow(100,100,"Inventoy",inventory_ui,res.disposableDroidBB40f,res);
         
         equipment_ui = new EquipmentUI(wm.getPlayerInventory().getEquipment(),res,9,100,100,0,0,equipmentWindow);
@@ -165,6 +163,8 @@ public class World
         hoveringWindow = false;
         inventoryWindow.tick(k, m, input, this);
         equipmentWindow.tick(k, m, input, this);
+        
+        
         
         if(optionTab!=null)
         {
@@ -217,15 +217,15 @@ public class World
             inventoryWindow.setDisplay();
         }else if(k[Input.KEY_TAB]&&uiDisplay == 0)
         {
-//            deactivateXItemTextField();
-//            quickItemBarUIDisplay = !quickItemBarUIDisplay;
+            deactivateXItemTextField();
+            quickItemBarUIDisplay = !quickItemBarUIDisplay;
         }
         
         
         
         if(xItemTextFieldActive)
         {
-//            xItemTextField.tick(k,m, input, this,inventory_ui,quickItemBarUI);
+            xItemTextField.tick(k,m, input, this,inventory_ui);
         }
         
 
@@ -250,9 +250,17 @@ public class World
         
         if(moved)
         {
+            equipment_ui.refreshUI();
+            inventory_ui.refreshInventoryUI(wm.getCurrentLocalMap());
+        }
+        
+        if(moved)
+        {
            turn++;
            moved = false;
         }
+        
+        
         
     }
     
@@ -318,6 +326,8 @@ public class World
         }
         
     }
+    
+    
     
     public void moveWindowToTop(UIWindow window)
     {
@@ -507,14 +517,6 @@ public class World
 
     public void setItemLibrary(ItemLibrary itemLibrary) {
         this.itemLibrary = itemLibrary;
-    }
-
-    public QuickItemBarUI getQuickItemBarUI() {
-        return quickItemBarUI;
-    }
-
-    public void setQuickItemBarUI(QuickItemBarUI quickItemBarUI) {
-        this.quickItemBarUI = quickItemBarUI;
     }
 
     public boolean isQuickItemBarUIDisplay() {

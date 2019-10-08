@@ -25,7 +25,7 @@ public class XItemTextFieldConfirmButton extends Button
     @Override
     public void onClick(boolean[] m, World world)
     {
-        world.getxItemTextField().processInput(world, world.getInventory_ui(), world.getQuickItemBarUI());
+        world.getxItemTextField().processInput(world, world.getInventory_ui());
     }
     
 }

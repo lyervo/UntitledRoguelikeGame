@@ -72,14 +72,20 @@ public class Equipment
             return;
         }else if(item.getType()==26)//if item is an off-hand equipment
         {
-            if(equipments.get(3).getItem()!=null)
+            if(equipments.get(3).getItem()!=null)//if there is a main hand weapon
             {
-                if(equipments.get(3).getItem().getType()==33)//if item is a two hand weapon
+                if(equipments.get(3).getItem().getType()==33)//if main hand weapon is a two hand weapon
                 {
                     inventory.addItem(equipments.get(3).getItem());
                     equipments.get(3).setItem(null);
                 }
             }
+            
+            if(!equipments.get(5).isEmpty())
+            {
+                inventory.addItem(equipments.get(5).getItem());
+            }
+            
             equipments.get(5).setItem(item);
             inventory.removeItem(item);
             return;

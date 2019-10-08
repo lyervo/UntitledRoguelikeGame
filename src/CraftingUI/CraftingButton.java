@@ -24,8 +24,7 @@ public class CraftingButton extends Button
     @Override
     public void onClick(boolean[] m, World world)
     {
-       world.setUIDisplay(2);
-        world.deactivateXItemTextField();
+        
     }
     
 }

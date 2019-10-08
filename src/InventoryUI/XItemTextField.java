@@ -39,7 +39,7 @@ public class XItemTextField extends TextField
         exitButton = new XItemTextFieldExitButton(x-80,y-50,res.disposableDroidBB.getWidth("X")+10,res.disposableDroidBB.getWidth("X")+10,"X",Color.black,Color.decode("#757161"),Color.decode("#666355"),res.disposableDroidBB);
     }
     
-    public void tick(boolean[] k,boolean[] m,Input input,World world,InventoryUI inventoryUI,QuickItemBarUI quickItemBarUI)
+    public void tick(boolean[] k,boolean[] m,Input input,World world,InventoryUI inventoryUI)
     {
         
         setText(getText().replaceAll("[^0-9]", ""));
@@ -58,13 +58,13 @@ public class XItemTextField extends TextField
             setText("");
         }else if(k[Input.KEY_ENTER])
         {
-            processInput(world,inventoryUI,quickItemBarUI);
+            processInput(world,inventoryUI);
             world.moved();
         }
         
     }
     
-    public void processInput(World world,InventoryUI inventoryUI,QuickItemBarUI quickItemBarUI)
+    public void processInput(World world,InventoryUI inventoryUI)
     {
         if(getText()!="")
         {
@@ -77,7 +77,6 @@ public class XItemTextField extends TextField
             }
         }
         inventoryUI.refreshInventoryUI(world.getWm().getCurrentLocalMap());
-        quickItemBarUI.refreshUI();
         world.deactivateXItemTextField();
         setText("");
     }

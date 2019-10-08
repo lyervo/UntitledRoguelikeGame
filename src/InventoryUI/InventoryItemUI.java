@@ -10,6 +10,8 @@ import Res.Res;
 import World.World;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.Collections;
+import javafx.util.Pair;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -114,9 +116,52 @@ public class InventoryItemUI extends ItemUI
     {
         if(!drag)
         {
-            if(state == 1)
+            if(state == 1&&!ui.isMode())
             {
                 if((index/9)-ui.getScroll1()>=0&&(index/9)-ui.getScroll1()<=4)
+                {
+                    if(index>8)
+                    {
+                        int columnIndex = index%9;
+                        int rowIndex = index/9;
+                        if(hover)
+                        {
+                            item.getTexture().draw((columnIndex*64)+(columnIndex*7)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,64,64);
+                            if(item.isStackable())
+                            {
+                                fontSmall.drawString((columnIndex*64)+(columnIndex*7)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,""+item.getStack());
+                            }
+                        }else
+                        {
+                            item.getTexture().draw((columnIndex*64)+(columnIndex*7)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,64,64,Color.gray);
+                            if(item.isStackable())
+                            {
+                                fontSmall.drawString((columnIndex*64)+(columnIndex*7)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,""+item.getStack());
+                            }
+                        }
+                    }else
+                    {
+                        if(hover)
+                        {
+                            item.getTexture().draw((index*(64))+(index*7)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,64,64);
+                            if(item.isStackable())
+                            {
+                                fontSmall.drawString((index*(64))+(index*7)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,""+item.getStack());
+                            }
+                        }else
+                        {
+                         
+                            item.getTexture().draw((index*(64))+(index*7)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,64,64,Color.gray);
+                            if(item.isStackable())
+                            {
+                                fontSmall.drawString((index*(64))+(index*7)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,""+item.getStack());
+                            }
+                        }
+                    }
+                }
+            }else if(state == 1&&ui.isMode())
+            {
+                if((index/9)-ui.getScroll1()>=0&&(index/9)-ui.getScroll1()<=0)
                 {
                     if(index>8)
                     {
@@ -261,11 +306,41 @@ public class InventoryItemUI extends ItemUI
         
             dropRect = new Rectangle(input.getMouseX()-xofs-x,input.getMouseY()-yofs-y,64,64);
             
+            Rectangle dropRect2 = new Rectangle(input.getMouseX()-xofs-world.getEquipmentWindow().getX(),input.getMouseY()-yofs-world.getEquipmentWindow().getY(),64,64);
+            
             if(state<=2)
             {
+                System.out.println("item ui tun");
+                if(dropRect2.intersects(world.getEquipment_ui().getMainBounds())&&world.getZ()==world.getEquipmentWindow().getZ())
+                {
+                    System.out.println("equip attempt");
+                    if(item.getType()==33&&dropRect2.intersects(world.getEquipment_ui().getBounds().get(3).getValue()))
+                    {
+                        world.getEquipment_ui().getEquipment().equip(item);
+                        world.moved();
+                        ui.refreshInventoryUI(world.getWm().getCurrentLocalMap());
+                        world.getEquipment_ui().refreshUI();
+                        return;
+                    }
+                    
+                    System.out.println("size "+world.getEquipment_ui().getBounds().size());
+                    
+                    for(Pair<Integer,Rectangle> p:world.getEquipment_ui().getBounds())
+                    {
+                        System.out.println("loop");
+                        if(p.getKey()==item.getType()&&p.getValue().intersects(dropRect2))
+                        {
+                            world.getEquipment_ui().getEquipment().equip(item);
+                            ui.refreshInventoryUI(world.getWm().getCurrentLocalMap());
+                            world.getEquipment_ui().refreshUI();
+                            world.moved();
+                            return;
+                        }
+                    }
+                }
+                
                 if(!dropRect.intersects(world.getInventory_ui().getPrimaryBounds()))
                 {
-                    System.out.println("index"+index);
                     ui.getPlayer_inventory().dropItem(world.getWm().getPlayer().getX(), world.getWm().getPlayer().getY(), index, world.getWm().getCurrentLocalMap(), -1);
                     ui.refreshInventoryUI(world.getWm().getCurrentLocalMap());
                     return;
@@ -281,6 +356,25 @@ public class InventoryItemUI extends ItemUI
                         return;
                     }
                 }
+                
+                if(dropRect.intersects(ui.getPrimaryBounds()))
+                {
+                    for(int i=0;i<ui.getPrimaryItemUI().size();i++)
+                    {
+                        if(ui.getPrimaryItemUI().get(i).getBounds().intersects(dropRect))
+                        {
+                            
+                            Collections.swap(ui.getPlayer_inventory().getItems(), i, index);
+                            ui.refreshInventoryUI(world.getWm().getCurrentLocalMap());
+                            return;
+                        }
+                    }
+                    
+                    
+                }
+                
+                
+                
             }else if(state==4)
             {
                 if(dropRect.intersects(ui.getPrimaryBounds()))

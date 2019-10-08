@@ -5,9 +5,7 @@
  */
 package EquipmentUI;
 
-import InventoryUI.InventoryUI;
 import InventoryUI.ItemUI;
-import InventoryUI.QuickItemBarUI;
 import Item.Item;
 import Res.Res;
 import World.World;
@@ -86,7 +84,7 @@ public class EquipmentItemUI extends ItemUI
 
             if (m[1] && hover)
             {
-//                ui.spawnOptionTab(input.getMouseX(), input.getMouseY(), world.getWm().getCurrentLocalMap(), item, index, this.state, world.getItemLibrary());
+                world.spawnItemOptionTab(input.getMouseX(), input.getMouseY(), index, 6, item);
             } else if (input.isMouseButtonDown(0) && hover && !ui.isDrag() && !world.isDrag()) {
                 xofs = input.getMouseX() - x - bounds.x;
                 yofs = input.getMouseY() - y - bounds.y;
@@ -114,10 +112,24 @@ public class EquipmentItemUI extends ItemUI
         int max = 0;
         int maxIndex = -1;
         
-        if(drag)
+        
+        dropRect = new Rectangle(input.getMouseX()-xofs-x,input.getMouseY()-yofs-y,64,64);
+        
+        Rectangle dropRect2 = new Rectangle(input.getMouseX()-xofs,input.getMouseY()-yofs,64,64);
+        
+        if(dropRect2.intersects(world.getInventoryWindow().getBounds())&&world.getZ()==world.getInventoryWindow().getZ())
         {
-            dropRect = new Rectangle(input.getMouseX()-xofs-x,input.getMouseY()-yofs+(64+7)-y,64,64);
+            ui.getEquipment().unequip(item.getType());
+            ui.refreshUI();
+            world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
+            return;
+        }else if(dropRect.intersects(ui.getMainBounds()))
+        {
+            
         }
+        
+        
+        
     }
     
 }

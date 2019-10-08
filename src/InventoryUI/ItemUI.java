@@ -139,38 +139,38 @@ public class ItemUI extends DescBox
     {
         if(!drag)
         {
-            if(state == 5)
-            {
-               
-                item.getTexture().draw(76+(index*(64+7)),666,64,64);
-                if(item.isStackable())
-                {
-                    fontSmall.drawString(76+(index*(64+7)),666,""+item.getStack());
-                }
-            }else if(state == 6)
-            {
-                if(item.getType()!=33)
-                {
-                    int colIndex = index%3;
-                    int rowIndex = index/3;
-                    item.getTexture().draw((colIndex * 64) + (colIndex * 7) + 16, (rowIndex*71)+66, 64, 64);
-                }else
-                {
-                    item.getTexture().draw(16,137, 64, 64);
-                }
-            }else if(state == 9)
-            {
-                int colIndex = index%3;
-                int rowIndex = index/3;
-                
-                item.getTexture().draw((colIndex * 64) + (colIndex * 7) + 16, (rowIndex*71)+66, 64, 64);
-                
-                if(item.isStackable())
-                {
-                    font.drawString((colIndex * 64) + (colIndex * 7) + 16, (rowIndex*71)+66,item.getStack()+"");
-                }
-                
-            }
+//            if(state == 5)
+//            {
+//               
+//                item.getTexture().draw(76+(index*(64+7)),666,64,64);
+//                if(item.isStackable())
+//                {
+//                    fontSmall.drawString(76+(index*(64+7)),666,""+item.getStack());
+//                }
+//            }else if(state == 6)
+//            {
+//                if(item.getType()!=33)
+//                {
+//                    int colIndex = index%3;
+//                    int rowIndex = index/3;
+//                    item.getTexture().draw((colIndex * 64) + (colIndex * 7) + 16, (rowIndex*71)+66, 64, 64);
+//                }else
+//                {
+//                    item.getTexture().draw(16,137, 64, 64);
+//                }
+//            }else if(state == 9)
+//            {
+//                int colIndex = index%3;
+//                int rowIndex = index/3;
+//                
+//                item.getTexture().draw((colIndex * 64) + (colIndex * 7) + 16, (rowIndex*71)+66, 64, 64);
+//                
+//                if(item.isStackable())
+//                {
+//                    font.drawString((colIndex * 64) + (colIndex * 7) + 16, (rowIndex*71)+66,item.getStack()+"");
+//                }
+//                
+//            }
         }
         
     }
@@ -324,33 +324,7 @@ public class ItemUI extends DescBox
             
     }
     
-    public void checkQuickItemBarDrop(Input input,QuickItemBarUI ui,LocalMap lm)
-    {
-        if(drag)
-        {
-            dropRect = new Rectangle(input.getMouseX()-xofs,input.getMouseY()-yofs,64,64);
-            if(!dropRect.intersects(ui.getBounds()))
-            {
-                lm.getWm().getPlayerInventory().dropItem(lm.getPlayer().getX(),lm.getPlayer().getY(), index, lm, -1);
-                lm.getWorld().moved();
-            }else
-            {
-                for(int i=0;i<ui.getItemUI().size();i++)
-                    {
-                        if(ui.getItemUI().get(i).getBounds().intersects(dropRect))
-                        {
-                            
-                            Collections.swap(lm.getWm().getPlayerInventory().getItems(), i, index);
-                            ui.refreshUI();
-                            ui.setLastDrag(5);
-                            return;
-                        }
-                    }
-            }
-            ui.setLastDrag(5);
-            ui.refreshUI();
-        }
-    }
+    
     
     public void checkDrop(Input input,World world,int x,int y)
     {
@@ -470,7 +444,9 @@ public class ItemUI extends DescBox
 //        }   
             
 //    }
-
+        }
+    }
+    
     public Item getItem() {
         return item;
     }

@@ -59,7 +59,7 @@ public class EquipmentUI extends UIComponent
         
         int type = 21;
         
-        mainBounds = new Rectangle(16,66,205,280);
+        mainBounds = new Rectangle(16,66+32,205,280);
         
         bounds = new ArrayList<Pair<Integer,Rectangle>>();
         
@@ -67,7 +67,7 @@ public class EquipmentUI extends UIComponent
         {
             for(int j=0;j<3;j++)
             {
-                bounds.add(new Pair(type,new Rectangle((j * 64) + (j * 7) + 16, ((i) * 64) + ((i) * 7)+66, 64, 64)));
+                bounds.add(new Pair(type,new Rectangle((j * 64) + (j * 7) + 16, ((i) * 64) + ((i) * 7)+66+32, 64, 64)));
                 type++;
             }
         }
@@ -132,12 +132,15 @@ public class EquipmentUI extends UIComponent
             }
         }
         
-//        g.setColor(Color.red);
-//        for(Pair<Integer,Rectangle> p: bounds)
-//        {
-//            g.drawRect(p.getValue().x, p.getValue().y, p.getValue().width, p.getValue().height);
-//            g.drawString(p.getKey()+"", p.getValue().x+10, p.getValue().y+10);
-//        }
+        g.setColor(Color.cyan);
+        g.drawRect(mainBounds.x, mainBounds.y, mainBounds.width, mainBounds.height);
+        
+        g.setColor(Color.red);
+        for(Pair<Integer,Rectangle> p: bounds)
+        {
+            g.drawRect(p.getValue().x, p.getValue().y, p.getValue().width, p.getValue().height);
+            g.drawString(p.getKey()+"", p.getValue().x+10, p.getValue().y+10);
+        }
         
     }
     
@@ -175,10 +178,11 @@ public class EquipmentUI extends UIComponent
         {
             if(itemUI.get(i).isDrag())
             {
-                itemUI.get(i).checkDrop(input, world, 0, 0);
                 itemUI.get(i).setDrag(false);
                 drag = false;
                 world.setDrag(false);
+                itemUI.get(i).checkDrop(input, world, x, y);
+                
             }
         }
     }

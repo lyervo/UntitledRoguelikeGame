@@ -32,6 +32,7 @@ public class InventoryUI extends UIComponent
     private Inventory player_inventory,interacting_inventory;
     
     private Image bg1,bg2;
+    private Image bg_bar;
     //screen resolution
     private int width,height;
     
@@ -60,11 +61,11 @@ public class InventoryUI extends UIComponent
     
     private int secondaryMaxScroll,primaryMaxScroll,primary_height,secondary_height;
     
+    private boolean mode;
     
     
     
-    
-    public InventoryUI(int x,int y,int xofs,int yofs,Inventory player_inventory,Res res,QuickItemBarUI quickItemBarUI,World world,UIWindow window)
+    public InventoryUI(int x,int y,int xofs,int yofs,Inventory player_inventory,Res res,World world,UIWindow window)
     {
         super(x,y,xofs,yofs,window);
         this.player_inventory = player_inventory;
@@ -77,10 +78,11 @@ public class InventoryUI extends UIComponent
         this.res = res;
         this.bg1 = res.inventory_bg_1;
         this.bg2 = res.inventory_bg_2;
+        this.bg_bar = res.inventory_bg_bar;
         primaryItemUI = new ArrayList<InventoryItemUI>();
         secondaryItemUI = new ArrayList<InventoryItemUI>();
         
-        
+        mode = false;
         
         for(int i=0;i<player_inventory.getItems().size();i++)
         {
@@ -103,13 +105,18 @@ public class InventoryUI extends UIComponent
     @Override
     public void render(Graphics g,Input input,int x,int y)
     {
-        
-        if(state == 1)
+        if(!mode)
         {
-            bg1.draw(x,y);
-        }else if(state == 2)
+            if(state == 1)
+            {
+                bg1.draw(x,y);
+            }else if(state == 2)
+            {
+                bg2.draw(x,y);
+            }
+        }else
         {
-            bg2.draw(x,y);
+            bg_bar.draw(x,y);
         }
         
         
@@ -299,9 +306,13 @@ public class InventoryUI extends UIComponent
             {
                 primaryItemUI.get(i).tick(k, m, input, world,x,y);
             }
-            for(int i=secondaryItemUI.size()-1;i>=0;i--)
+            
+            if(!mode)
             {
-                secondaryItemUI.get(i).tick(k, m, input, world,x,y);
+                for(int i=secondaryItemUI.size()-1;i>=0;i--)
+                {
+                    secondaryItemUI.get(i).tick(k, m, input, world,x,y);
+                }
             }
         }
         
@@ -342,12 +353,15 @@ public class InventoryUI extends UIComponent
             }
         }
         
-        for(ItemUI i:secondaryItemUI)
+        if(!mode)
         {
-            if(i.isDrag())
+            for(ItemUI i:secondaryItemUI)
             {
-                i.dragRender(g, input);
-                return;
+                if(i.isDrag())
+                {
+                    i.dragRender(g, input);
+                    return;
+                }
             }
         }
 
@@ -360,15 +374,31 @@ public class InventoryUI extends UIComponent
 
     }
     
+    public void setMode(World world)
+    {
+        if(mode)
+        {
+            mode = false;
+           
+        }else
+        {
+            mode = true;
+            
+        }
+        refreshInventoryUI(world.getWm().getCurrentLocalMap());
+    }
+    
 
     
     public void refreshInventoryUI(LocalMap lm)
     {
+        
         refreshSecondaryInventoryUI(lm);
+        
         refreshPrimaryInventoryUI();
         
         
-        if(state == 1)
+        if(state == 1&&!mode)
         {
             primaryMaxScroll = (player_inventory.getItems().size()/9)+1-4;
             primary_height = 284/primaryMaxScroll;
@@ -379,6 +409,12 @@ public class InventoryUI extends UIComponent
             {
                 scroll1 = (primaryItemUI.size()/8)-4;
             }
+        }else if(mode)
+        {
+            primaryMaxScroll = (player_inventory.getItems().size()/9)+1;
+            primary_height = 284/primaryMaxScroll;
+            scroll1 = 0;
+            
         }else if(state == 2)
         {
             primaryMaxScroll = (player_inventory.getItems().size()/6)+1-4;
@@ -424,10 +460,20 @@ public class InventoryUI extends UIComponent
     {
         
         primaryItemUI.clear();
-        for(int i=0;i<player_inventory.getItems().size();i++)
+        if(!mode)
         {
-            
-            primaryItemUI.add(new InventoryItemUI(player_inventory.getItems().get(i),i,res,this,state));
+            for(int i=0;i<player_inventory.getItems().size();i++)
+            {
+
+                primaryItemUI.add(new InventoryItemUI(player_inventory.getItems().get(i),i,res,this,state));
+            }
+        }else
+        {
+            for(int i=0;i<player_inventory.getItems().size();i++)
+            {
+
+                primaryItemUI.add(new InventoryItemUI(player_inventory.getItems().get(i),i,res,this,1));
+            }
         }
         
     }
@@ -437,39 +483,53 @@ public class InventoryUI extends UIComponent
     {
         secondaryItemUI.clear();
         
-        if(lm.getItemPileAt(lm.getPlayer().getX(), lm.getPlayer().getY())!=null)
+        if(!mode)
         {
-            
-            state = 2;
-            interacting_inventory =
-                    new Inventory(lm.getItemPileAt(lm.getPlayer().getX(), lm.getPlayer().getY()),
-                                  lm.getItemPileAt(lm.getPlayer().getX(), lm.getPlayer().getY()).getItems());
-            
-            for (int i = 0; i < interacting_inventory.getItems().size(); i++)
+            if(lm.getItemPileAt(lm.getPlayer().getX(), lm.getPlayer().getY())!=null)
             {
-                secondaryItemUI.add(new InventoryItemUI(interacting_inventory.getItems().get(i),i,res,this,4));
+
+                state = 2;
+                interacting_inventory =
+                        new Inventory(lm.getItemPileAt(lm.getPlayer().getX(), lm.getPlayer().getY()),
+                                      lm.getItemPileAt(lm.getPlayer().getX(), lm.getPlayer().getY()).getItems());
+
+                for (int i = 0; i < interacting_inventory.getItems().size(); i++)
+                {
+                    secondaryItemUI.add(new InventoryItemUI(interacting_inventory.getItems().get(i),i,res,this,4));
+                }
+
+                primaryBounds = new Rectangle(16,32,277,348);
+                secondaryBounds = new Rectangle(371,32,277,348);
+
+                primaryUp.setX(300);
+                primaryDown.setX(300);
+                primaryDown.setY(352);
+                secondaryUp.setDisplay(true);
+                secondaryDown.setDisplay(true);
+
+
+
+            }else
+            {
+
+                state = 1;
+                primaryBounds = new Rectangle(21,32,628,348);
+                secondaryBounds = null;
+                primaryUp.setX(655);
+                primaryDown.setX(655);
+                primaryDown.setY(352);
+                secondaryUp.setDisplay(false);
+                secondaryDown.setDisplay(false);    
             }
-            
-            primaryBounds = new Rectangle(16,32,277,348);
-            secondaryBounds = new Rectangle(371,32,277,348);
-            
-            primaryUp.setX(300);
-            primaryDown.setX(300);
-            secondaryUp.setDisplay(true);
-            secondaryDown.setDisplay(true);
-            
-            
-            
         }else
         {
-            
-            state = 1;
-            primaryBounds = new Rectangle(21,32,628,348);
+            primaryBounds = new Rectangle(21,32,628,64);
             secondaryBounds = null;
             primaryUp.setX(655);
             primaryDown.setX(655);
+            primaryDown.setY(64);
             secondaryUp.setDisplay(false);
-            secondaryDown.setDisplay(false);    
+            secondaryDown.setDisplay(false);  
         }
     }
     
@@ -487,10 +547,22 @@ public class InventoryUI extends UIComponent
     public void primaryScrollDown()
     {
         
-        if(state == 1)
+        if(state == 1&&!mode)
         {
             
-            if(primaryItemUI.size()<=65||4==(primaryItemUI.size()/13)-scroll1)
+            if(primaryItemUI.size()<=45||4==(primaryItemUI.size()/9)-scroll1)
+            {
+
+                return;
+            }else
+            {
+
+                scroll1++;
+            }
+        }else if(mode)
+        {
+            
+            if(primaryItemUI.size()<=9||0==(primaryItemUI.size()/9)-scroll1)
             {
 
                 return;
@@ -554,13 +626,59 @@ public class InventoryUI extends UIComponent
     }
 
     public int getUIWidth() {
-        return bg1.getWidth();
+        if(mode)
+        {
+            return bg_bar.getWidth();
+        }else
+        {
+            return bg1.getWidth();
+        }
     }
     
     public int getUIHeight()
     {
-        return bg1.getHeight();
+        if(mode)
+        {
+            return bg_bar.getHeight();
+        }else
+        {
+            return bg1.getHeight();
+        }
     }
+
+    public Image getBg1() {
+        return bg1;
+    }
+
+    public void setBg1(Image bg1) {
+        this.bg1 = bg1;
+    }
+
+    public Image getBg2() {
+        return bg2;
+    }
+
+    public void setBg2(Image bg2) {
+        this.bg2 = bg2;
+    }
+
+    public Image getBg_bar() {
+        return bg_bar;
+    }
+
+    public void setBg_bar(Image bg_bar) {
+        this.bg_bar = bg_bar;
+    }
+
+    public boolean isMode() {
+        return mode;
+    }
+
+    public void setMode(boolean mode) {
+        this.mode = mode;
+    }
+    
+    
 
     public void setWidth(int width) {
         this.width = width;
