@@ -8,6 +8,8 @@ package World;
 import Camera.Camera;
 import Entity.EntityLibrary;
 import CraftingUI.CraftingButton;
+import CraftingUI.CraftingUI;
+import CraftingUI.CraftingUIWindow;
 import EquipmentUI.EquipmentButton;
 import EquipmentUI.EquipmentUI;
 import EquipmentUI.EquipmentUIWindow;
@@ -75,19 +77,24 @@ public class World
     
     private InventoryUIWindow inventoryWindow;
     private EquipmentUIWindow equipmentWindow;
+    private CraftingUIWindow craftingWindow;
     
     
     private InventoryUI inventory_ui;
     private EquipmentUI equipment_ui;
+    private CraftingUI crafting_ui;
     
     private boolean drag;
     
     private InventoryButton inventoryButton;
     private EquipmentButton equipmentButton;
+    private CraftingButton craftingButton;
+    
     
     private int z;
     
     private OptionTab optionTab;
+    
     
     
     public World(Res res,GameContainer container,Input input)
@@ -132,18 +139,21 @@ public class World
         mapTick = false;
         
         
-        inventory_ui = new InventoryUI(100,100,0,0,wm.getPlayerInventory(),res,this,inventoryWindow);
+        inventory_ui = new InventoryUI(100,100,wm.getPlayerInventory(),res,this);
         inventoryWindow = new InventoryUIWindow(100,100,"Inventoy",inventory_ui,res.disposableDroidBB40f,res);
         
-        equipment_ui = new EquipmentUI(wm.getPlayerInventory().getEquipment(),res,9,100,100,0,0,equipmentWindow);
+        equipment_ui = new EquipmentUI(100,100,wm.getPlayerInventory().getEquipment(),res,9);
         equipmentWindow = new EquipmentUIWindow(100,100,"Equipment",equipment_ui,res);
         
         
         
+        crafting_ui = new CraftingUI(200,200,wm.getPlayerInventory().getCrafting(),res,inventory_ui,itemLibrary,this);
+        craftingWindow = new CraftingUIWindow(200,200,"Crafting",crafting_ui,res);
+        
         uis = new ArrayList<UIWindow>();
         uis.add(equipmentWindow);
         uis.add(inventoryWindow);
-        
+        uis.add(craftingWindow);
         
         for(int i=0;i<uis.size();i++)
         {
@@ -152,6 +162,8 @@ public class World
         
         inventoryButton = new InventoryButton(10,container.getHeight()-64,res.inventory_icon);
         equipmentButton = new EquipmentButton(84,container.getHeight()-64,res.inventory_icon);
+        craftingButton = new CraftingButton(158,container.getHeight()-64,res.inventory_icon);
+        
         
         
         
@@ -159,11 +171,14 @@ public class World
     
     public void tick(boolean[] k,boolean[] m,Input input)
     {
-        
+        if(xItemTextFieldActive)
+        {
+            xItemTextField.tick(k,m, input, this,inventory_ui);
+        }
         hoveringWindow = false;
         inventoryWindow.tick(k, m, input, this);
         equipmentWindow.tick(k, m, input, this);
-        
+        craftingWindow.tick(k, m, input, this);
         
         
         if(optionTab!=null)
@@ -209,7 +224,7 @@ public class World
         
         inventoryButton.tick(m, input, this);
         equipmentButton.tick(m, input, this);
-        
+        craftingButton.tick(m, input, this);
         
         if(k[Input.KEY_I])
         {
@@ -223,28 +238,11 @@ public class World
         
         
         
-        if(xItemTextFieldActive)
-        {
-            xItemTextField.tick(k,m, input, this,inventory_ui);
-        }
+        
         
 
         
-        switch(uiDisplay)
-        {
-            case 0:
-                if(quickItemBarUIDisplay)
-                {
-//                    quickItemBarUI.tick(k, m, input, this);
-                }
-                break;
-//            case 1:
-//                inventory_ui.tick(k,m, input, this,uiDisplay);
-//                break;
-//            case 2:
-//                inventory_ui.tick(k, m, input, this,uiDisplay);
-//                break;
-        }
+        
         
         wm.tick(k,m,input,this);
         
@@ -252,6 +250,7 @@ public class World
         {
             equipment_ui.refreshUI();
             inventory_ui.refreshInventoryUI(wm.getCurrentLocalMap());
+            crafting_ui.refreshUI(wm.getCurrentLocalMap());
         }
         
         if(moved)
@@ -269,6 +268,7 @@ public class World
 
         inventoryButton.render(g);
         equipmentButton.render(g);
+        craftingButton.render(g);
         wm.render(g, animate);
 
         
@@ -278,12 +278,6 @@ public class World
             g.fillRect(1018, 50, (int)wm.getPlayer().getHp().getValue(), 50);
         }
         
-        if(xItemTextFieldActive)
-        {
-            xItemTextField.renderBackground(g);
-            g.setColor(Color.white);
-            xItemTextField.render(container, g);
-        }
         
         for(int i=0;i<uis.size();i++)
         {
@@ -320,6 +314,14 @@ public class World
             
         }
         
+        if(xItemTextFieldActive)
+        {
+            xItemTextField.renderBackground(g);
+            g.setColor(Color.white);
+            xItemTextField.render(container, g);
+        }
+        
+        
         if(optionTab!=null)
         {
             optionTab.render(g);
@@ -331,14 +333,17 @@ public class World
     
     public void moveWindowToTop(UIWindow window)
     {
+        if(uis.indexOf(window)==uis.size()-1)
+        {
+            return;
+        }
+        
         for(int i=uis.size()-1;i>=0;i--)
         {
             if(uis.get(i).equals(window))
             {
-                
-                
-                Collections.swap(uis, i, uis.size()-1);
-
+                uis.remove(i);
+                uis.add(window);
                 resetZ();
                 return;
                 
@@ -631,6 +636,38 @@ public class World
 
     public void setEquipmentButton(EquipmentButton equipmentButton) {
         this.equipmentButton = equipmentButton;
+    }
+
+    public CraftingUIWindow getCraftingWindow() {
+        return craftingWindow;
+    }
+
+    public void setCraftingWindow(CraftingUIWindow craftingWindow) {
+        this.craftingWindow = craftingWindow;
+    }
+
+    public CraftingUI getCrafting_ui() {
+        return crafting_ui;
+    }
+
+    public void setCrafting_ui(CraftingUI crafting_ui) {
+        this.crafting_ui = crafting_ui;
+    }
+
+    public CraftingButton getCraftingButton() {
+        return craftingButton;
+    }
+
+    public void setCraftingButton(CraftingButton craftingButton) {
+        this.craftingButton = craftingButton;
+    }
+
+    public OptionTab getOptionTab() {
+        return optionTab;
+    }
+
+    public void setOptionTab(OptionTab optionTab) {
+        this.optionTab = optionTab;
     }
     
     

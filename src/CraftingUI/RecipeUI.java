@@ -58,7 +58,7 @@ public class RecipeUI extends DescBox
         req = new ArrayList<RecipeRequirementUI>();
 
         
-        bounds = new Rectangle(231,66+(index*71),700,64);
+        bounds = new Rectangle(231,66+(index*71),500,50);
         
         textureBounds = new Rectangle(241,66+(index*71),64,64);
         
@@ -87,11 +87,11 @@ public class RecipeUI extends DescBox
         
     }
     
-    public void tick(boolean[] k,boolean[] m,Input input,World world,int index,int scroll,Crafting crafting)
+    public void tick(boolean[] k,boolean[] m,Input input,World world,int index,int scroll,Crafting crafting,int x,int y)
     {
         if(bounds.y-(scroll*71)>=66&&bounds.y-(scroll*71)<=344)
         {
-            if(bounds.contains(new Point(input.getMouseX(),input.getMouseY()+(scroll*71))))
+            if(bounds.contains(new Point(input.getMouseX()-x,input.getMouseY()+(scroll*71)-y)))
             {
                 hover = true;
             }else
@@ -99,12 +99,12 @@ public class RecipeUI extends DescBox
                 hover = false;
             }
 
-            tickDesc((hover&&textureBounds.contains(new Point(input.getMouseX(),input.getMouseY()+(scroll*71)))));
+            tickDesc((hover&&textureBounds.contains(new Point(input.getMouseX()-x,input.getMouseY()+(scroll*71)-y))&&world.getZ()==world.getCraftingWindow().getZ()));
             
                 
                 
 
-            if(hover&&m[0])
+            if(hover&&m[10]&&world.getZ()==world.getCraftingWindow().getZ())
             {
                 crafting.setSelectIndex(recipe.getId());
                 
@@ -112,12 +112,12 @@ public class RecipeUI extends DescBox
 
             for(int i=0;i<req.size();i++)
             {
-                req.get(i).tick(k,m,input,world,scroll);
+                req.get(i).tick(k,m,input,world,scroll,x,y);
             }
         }
     }
     
-    public void render(Graphics g,Input input,int index,int scroll,Crafting crafting)
+    public void render(Graphics g,Input input,int index,int scroll,Crafting crafting,int x,int y)
     {
         if(bounds.y-(scroll*71)>=66&&bounds.y-(scroll*71)<=344)
         {
@@ -128,16 +128,16 @@ public class RecipeUI extends DescBox
             {
                 g.setColor(Color.decode("#757161"));
             }
-            g.fillRect(bounds.x, bounds.y-(scroll*71), bounds.width, bounds.height);
+            g.fillRect(bounds.x+x, bounds.y-(scroll*71)+y, bounds.width, bounds.height);
             g.setColor(Color.black);
-            g.drawRect(bounds.x, bounds.y-(scroll*71), bounds.width, bounds.height);
+            g.drawRect(bounds.x+x, bounds.y-(scroll*71)+y, bounds.width, bounds.height);
 
 
 
-            texture.draw(241,66+(index*71)-(scroll*71),64,64);
+            texture.draw(241+x,66+(index*71)-(scroll*71)+y,64,64);
             for(int i=0;i<req.size();i++)
             {
-                req.get(i).render(g,input,index,i,scroll);
+                req.get(i).render(g,input,index,i,scroll,x,y);
             }
         }
         

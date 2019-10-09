@@ -16,20 +16,15 @@ import org.newdawn.slick.Input;
 public abstract class UIComponent
 {
 
-    protected int x,y,xofs,yofs;
+    protected int x,y;
     
     protected boolean drag;
     
-    protected UIWindow window;
-    
-    public UIComponent(int x,int y,int xofs,int yofs,UIWindow window)
+    public UIComponent(int x,int y)
     {
         this.x = x;
         this.y = y;
-        this.xofs = xofs;
-        this.yofs = yofs;
         this.drag = false;
-        this.window = window;
     }
     
     public abstract void checkDrop(boolean[] k,boolean[] m,Input input,World world);
@@ -60,22 +55,6 @@ public abstract class UIComponent
         this.y = y;
     }
 
-    public int getXofs() {
-        return xofs;
-    }
-
-    public void setXofs(int xofs) {
-        this.xofs = xofs;
-    }
-
-    public int getYofs() {
-        return yofs;
-    }
-
-    public void setYofs(int yofs) {
-        this.yofs = yofs;
-    }
-
     public boolean isDrag() {
         return drag;
     }
@@ -84,14 +63,6 @@ public abstract class UIComponent
         this.drag = drag;
     }
 
-    public UIWindow getWindow() {
-        return window;
-    }
-
-    public void setWindow(UIWindow window) {
-        this.window = window;
-    }
-    
     
     
     

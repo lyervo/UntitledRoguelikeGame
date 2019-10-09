@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.util.Scanner;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.ScalableGame;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.GameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -78,7 +77,8 @@ public class Game extends StateBasedGame
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
             
             AppGameContainer app = new AppGameContainer(new Game("Game"));
-            app.setDisplayMode((int)screenSize.getWidth(), (int)screenSize.getHeight(), false);
+//            app.setDisplayMode((int)screenSize.getWidth(), (int)screenSize.getHeight(), false);
+            app.setDisplayMode(1280, 720, false);
             app.setFullscreen(true);   
             app.start();
             

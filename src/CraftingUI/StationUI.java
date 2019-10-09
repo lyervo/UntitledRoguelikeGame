@@ -44,13 +44,13 @@ public class StationUI extends DescBox
         this.bounds = new Rectangle(16+(35*index),29,32,32);
     }
     
-    public void render(Graphics g,Input input)
+    public void render(Graphics g,Input input,int x,int y)
     {
-        texture.draw(16+(35*index),29);
+        texture.draw(16+(35*index)+x,29+y);
     }
     
-    public void tick(boolean[] k,boolean[] m,Input input,World world)
+    public void tick(boolean[] k,boolean[] m,Input input,World world,int x,int y)
     {
-        tickDesc(bounds.contains(new Point(input.getMouseX(),input.getMouseY())));
+        tickDesc(bounds.contains(new Point(input.getMouseX()+x,input.getMouseY()+y))&&world.getZ()==world.getCraftingWindow().getZ());
     }
 }

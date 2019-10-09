@@ -7,6 +7,8 @@ package InventoryUI;
 
 import Res.Res;
 import World.World;
+import java.awt.Point;
+import java.awt.Rectangle;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Font;
 import org.newdawn.slick.Graphics;
@@ -28,6 +30,8 @@ public class XItemTextField extends TextField
     
     private TrueTypeFont font;
     
+    private Rectangle bounds;
+    private boolean hover;
     
     public XItemTextField(GUIContext container, Font font, int x, int y, int width, int height,Res res)
     {
@@ -37,10 +41,12 @@ public class XItemTextField extends TextField
         this.font = res.disposableDroidBB;
         confirmButton = new XItemTextFieldConfirmButton(x-(((res.disposableDroidBB.getWidth("Confirm")+20)-width)/2),y+res.disposableDroidBB.getHeight()+5,res.disposableDroidBB.getWidth("Confirm")+20,res.disposableDroidBB.getHeight()+10,"Confirm",Color.black,Color.decode("#757161"),Color.decode("#666355"),res.disposableDroidBB);
         exitButton = new XItemTextFieldExitButton(x-80,y-50,res.disposableDroidBB.getWidth("X")+10,res.disposableDroidBB.getWidth("X")+10,"X",Color.black,Color.decode("#757161"),Color.decode("#666355"),res.disposableDroidBB);
+        bounds = new Rectangle(x,y,width,height);
     }
     
     public void tick(boolean[] k,boolean[] m,Input input,World world,InventoryUI inventoryUI)
     {
+        
         
         setText(getText().replaceAll("[^0-9]", ""));
         
@@ -48,6 +54,21 @@ public class XItemTextField extends TextField
         {
             setText(getText().substring(0, 9));
         }
+        
+        if(bounds.contains(new Point(input.getMouseX(),input.getMouseY())))
+        {
+            hover = true;
+        }else
+        {
+            hover = false;
+        }
+        
+//        if(m[10]&&!hover&&world.isxItemTextFieldActive())
+//        {
+//            world.deactivateXItemTextField();
+//            setText("");
+//            return;
+//        }
         
         exitButton.tick(m, input, world);
         confirmButton.tick(m, input, world);

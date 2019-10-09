@@ -81,15 +81,15 @@ public class RecipeRequirementUI extends DescBox
     
   
     
-    public void tick(boolean[] k,boolean[] m,Input input,World world,int scroll)
+    public void tick(boolean[] k,boolean[] m,Input input,World world,int scroll,int x,int y)
     {
-        tickDesc(bounds.contains(new Point(input.getMouseX(),input.getMouseY()+(scroll*71))));
+        tickDesc(bounds.contains(new Point(input.getMouseX()-x,input.getMouseY()+(scroll*71)-y))&&world.getZ()==world.getCraftingWindow().getZ());
         
     }
     
-    public void render(Graphics g, Input input, int index, int reqIndex , int scroll)
+    public void render(Graphics g, Input input, int index, int reqIndex , int scroll, int x,int y)
     {
-        texture.draw(311+(reqIndex*71),64+(index*71)-(scroll*71),64,64);
+        texture.draw(311+(reqIndex*71)+x,64+(index*71)-(scroll*71)+y,40,40);
     }
 
     public String getName() {

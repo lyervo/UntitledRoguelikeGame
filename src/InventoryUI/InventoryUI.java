@@ -65,9 +65,9 @@ public class InventoryUI extends UIComponent
     
     
     
-    public InventoryUI(int x,int y,int xofs,int yofs,Inventory player_inventory,Res res,World world,UIWindow window)
+    public InventoryUI(int x,int y,Inventory player_inventory,Res res,World world)
     {
-        super(x,y,xofs,yofs,window);
+        super(x,y);
         this.player_inventory = player_inventory;
         
         this.display = false;

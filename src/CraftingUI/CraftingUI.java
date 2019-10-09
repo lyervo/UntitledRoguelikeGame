@@ -12,22 +12,25 @@ import Item.Crafting;
 import Item.ItemLibrary;
 import Item.Recipe;
 import Res.Res;
+import UI.UIComponent;
+import UI.UIWindow;
 import World.LocalMap;
 import World.World;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 
 /**
  *
  * @author Timot
  */
-public class CraftingUI
+public class CraftingUI extends UIComponent
 {
     private Rectangle bounds,recipeBounds;
-    private ArrayList<ItemUI> itemUI;
+    private ArrayList<CraftingItemUI> itemUI;
     
     private Crafting crafting;
     
@@ -52,15 +55,20 @@ public class CraftingUI
     //2 = show learnt and craftable
     //3 = show learnt and relevant name
     
+    private Image texture;
     
-    public CraftingUI(Crafting crafting,Res res,InventoryUI inventoryUI,ItemLibrary itemLibrary,World world)
+    
+    public CraftingUI(int x,int y,Crafting crafting,Res res,InventoryUI inventoryUI,ItemLibrary itemLibrary,World world)
     {
+        super(x,y);
+        
+        this.texture = res.crafting_bg_1;
         
         this.crafting = crafting;
         this.res = res;
         this.inventoryUI = inventoryUI;
         bounds = new Rectangle(16,66,205,205);
-        itemUI = new ArrayList<ItemUI>();
+        itemUI = new ArrayList<CraftingItemUI>();
         craftingClearAllButton = new CraftingClearAllButton(16,279,res.crafting_clear_all,crafting,inventoryUI);
         craftingCraftButton = new CraftingCraftButton(85,279,res.crafting_craft,crafting,inventoryUI);
         craftingFilterButton = new CraftingFilterButton(154,279,res.crafting_filter_by_learnt,res.crafting_filter_by_learnt_and_craftable,this);
@@ -89,22 +97,23 @@ public class CraftingUI
         
     }
     
-    public void render(Graphics g,Input input)
+    @Override
+    public void render(Graphics g,Input input,int x,int y)
     {
-        craftingClearAllButton.render(g);
-        craftingCraftButton.render(g);
-        craftingFilterButton.render(g);
-        recipeScrollUpButton.render(g);
-        recipeScrollDownButton.render(g);
+        craftingClearAllButton.render(g,x,y);
+        craftingCraftButton.render(g,x,y);
+        craftingFilterButton.render(g,x,y);
+        recipeScrollUpButton.render(g,x,y);
+        recipeScrollDownButton.render(g,x,y);
         
         for(ItemUI i:itemUI)
         {
-            i.render(g, input, 9, 0, 0);
+            i.render(g, input, x,y);
         }
         
         for(int i=0;i<recipes.size();i++)
         {
-            recipes.get(i).render(g, input, i, scroll,crafting);
+            recipes.get(i).render(g, input, i, scroll,crafting,x,y);
         }
         
         for(ItemUI i:itemUI)
@@ -119,7 +128,7 @@ public class CraftingUI
         
         for(StationUI s:stations)
         {
-            s.render(g, input);
+            s.render(g, input,x,y);
         }
         
         for(int i=0;i<recipes.size();i++)
@@ -157,15 +166,15 @@ public class CraftingUI
         
     }
     
-    
-    public void tick(boolean[] k,boolean[] m,Input input,World world)
+    @Override
+    public void tick(boolean[] k,boolean[] m,Input input,World world,int x,int y,UIWindow window)
     {
-        craftingClearAllButton.tick(m, input, world);
-        craftingCraftButton.tick(m, input, world);
-        craftingFilterButton.tick(m, input, world);
-        recipeScrollUpButton.tick(m, input, world);
-        recipeScrollDownButton.tick(m, input, world);
-        if(recipeBounds.contains(new Point(input.getMouseX(),input.getMouseY())))
+        craftingClearAllButton.tick(m, input, world,x,y);
+        craftingCraftButton.tick(m, input, world,x,y);
+        craftingFilterButton.tick(m, input, world,x,y);
+        recipeScrollUpButton.tick(m, input, world,x,y);
+        recipeScrollDownButton.tick(m, input, world,x,y);
+        if(recipeBounds.contains(new Point(input.getMouseX()-x,input.getMouseY()-y)))
         {
             if(m[16])
             {
@@ -178,15 +187,15 @@ public class CraftingUI
         
         for(int i=itemUI.size()-1;i>=0;i--)
         {
-            itemUI.get(i).tick(k, m, input, world, 9, 0, 0, inventoryUI,null);
+            itemUI.get(i).tick(k, m, input, world, x, y);
         }
         for(int i=0;i<recipes.size();i++)
         {
-            recipes.get(i).tick(k,m, input,world, i,scroll, crafting);
+            recipes.get(i).tick(k,m, input,world, i,scroll, crafting,x,y);
         }
         for(StationUI s:stations)
         {
-            s.tick(k, m, input, world);
+            s.tick(k, m, input, world,x,y);
         }
     }
     
@@ -230,7 +239,7 @@ public class CraftingUI
         
         for(int i=0;i<crafting.getItems().size();i++)
         {
-            itemUI.add(new ItemUI(crafting.getItems().get(i),i,9,res));
+            itemUI.add(new CraftingItemUI(crafting.getItems().get(i),i,res,this));
         }
         
         recipes.clear();
@@ -265,11 +274,11 @@ public class CraftingUI
         this.bounds = bounds;
     }
 
-    public ArrayList<ItemUI> getItemUI() {
+    public ArrayList<CraftingItemUI> getItemUI() {
         return itemUI;
     }
 
-    public void setItemUI(ArrayList<ItemUI> itemUI) {
+    public void setItemUI(ArrayList<CraftingItemUI> itemUI) {
         this.itemUI = itemUI;
     }
 
@@ -367,6 +376,44 @@ public class CraftingUI
 
     public void setFilter(int filter) {
         this.filter = filter;
+    }
+
+    @Override
+    public int getUIWidth()
+    {
+        return texture.getWidth();
+    }
+
+    @Override
+    public int getUIHeight()
+    {
+        return texture.getHeight();
+    }
+
+    @Override
+    public void checkDrop(boolean[] k, boolean[] m, Input input, World world) {
+      
+    }
+
+    @Override
+    public void dragRender(Graphics g, Input input) {
+      
+    }
+
+    public CraftingFilterButton getCraftingFilterButton() {
+        return craftingFilterButton;
+    }
+
+    public void setCraftingFilterButton(CraftingFilterButton craftingFilterButton) {
+        this.craftingFilterButton = craftingFilterButton;
+    }
+
+    public Image getTexture() {
+        return texture;
+    }
+
+    public void setTexture(Image texture) {
+        this.texture = texture;
     }
     
     

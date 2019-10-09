@@ -41,10 +41,10 @@ public class EquipmentUI extends UIComponent
     
     private Image bg;
     
-    public EquipmentUI(Equipment equipment,Res res,int state,int x,int y,int xofs,int yofs,UIWindow window)
+    public EquipmentUI(int x,int y,Equipment equipment,Res res,int state)
     {
         
-        super(x,y,xofs,yofs,window);
+        super(x,y);
         this.res = res;
         this.equipment = equipment;
         this.state = state;

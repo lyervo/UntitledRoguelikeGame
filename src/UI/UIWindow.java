@@ -65,7 +65,7 @@ public abstract class UIWindow
     
     public void render(Graphics g,Input input)
     {
-        if(!drag)
+        if(!drag&&display)
         {
             g.setColor(Color.blue);
             g.fillRect(dragBounds.x, dragBounds.y, dragBounds.width, dragBounds.height);
@@ -85,44 +85,45 @@ public abstract class UIWindow
     
     public void tick(boolean[] k,boolean[] m,Input input,World world)
     {
-        
-        if(world.getZ()<z)
+        if(display)
         {
-            world.setZ(z);
-            world.setHoveringWindow(true);
+            if(world.getZ()<z)
+            {
+                world.setZ(z);
+                world.setHoveringWindow(true);
+            }
+
+            if(bounds.contains(new Point(input.getMouseX(),input.getMouseY())))
+            {
+                hover = true;
+            }else
+            {
+                hover = false;
+            }
+
+            if(dragBounds.contains(new Point(input.getMouseX(),input.getMouseY())))
+            {
+                dragHover = true;
+
+            }else
+            {
+                dragHover = false;
+            }
+
+
+            if(dragHover&&input.isMouseButtonDown(0)&&!drag)
+            {
+                xofs = input.getMouseX()-dragBounds.x;
+                yofs = input.getMouseY()-dragBounds.y;
+                drag = true;
+            }
+
+            if(m[0]&&drag)
+            {
+                drag = false;
+                setWindowLocation(input,world.getContainer());
+            }   
         }
-        
-        if(bounds.contains(new Point(input.getMouseX(),input.getMouseY())))
-        {
-            hover = true;
-        }else
-        {
-            hover = false;
-        }
-        
-        if(dragBounds.contains(new Point(input.getMouseX(),input.getMouseY())))
-        {
-            dragHover = true;
-            
-        }else
-        {
-            dragHover = false;
-        }
-        
-        
-        if(dragHover&&input.isMouseButtonDown(0)&&!drag)
-        {
-            xofs = input.getMouseX()-dragBounds.x;
-            yofs = input.getMouseY()-dragBounds.y;
-            drag = true;
-        }
-        
-        if(m[0]&&drag)
-        {
-            drag = false;
-            setWindowLocation(input,world.getContainer());
-        }
-        
         
         
     }

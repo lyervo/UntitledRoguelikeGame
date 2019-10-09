@@ -24,7 +24,7 @@ public class CraftingButton extends Button
     @Override
     public void onClick(boolean[] m, World world)
     {
-        
+        world.getCraftingWindow().setDisplay();
     }
     
 }
