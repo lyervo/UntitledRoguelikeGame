@@ -77,8 +77,8 @@ public class Game extends StateBasedGame
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
             
             AppGameContainer app = new AppGameContainer(new Game("Game"));
-//            app.setDisplayMode((int)screenSize.getWidth(), (int)screenSize.getHeight(), false);
-            app.setDisplayMode(1280, 720, false);
+            app.setDisplayMode((int)screenSize.getWidth(), (int)screenSize.getHeight(), false);
+//            app.setDisplayMode(1280, 720, false);
             app.setFullscreen(true);   
             app.start();
             

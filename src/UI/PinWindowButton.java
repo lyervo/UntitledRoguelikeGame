@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package InventoryUI;
+package UI;
 
-import UI.Button;
 import World.World;
 import org.newdawn.slick.Image;
 
@@ -13,34 +12,31 @@ import org.newdawn.slick.Image;
  *
  * @author Timot
  */
-public class InventoryWindowSizeButton extends Button
+public class PinWindowButton extends Button
 {
-
+    
     private Image texture1,texture2;
+    private UIWindow window;
 
-    public InventoryWindowSizeButton(int x, int y, Image texture1,Image texture2) {
+    public PinWindowButton(int x, int y,UIWindow window, Image texture1,Image texture2)
+    {
         super(x, y, texture1);
         this.texture1 = texture1;
         this.texture2 = texture2;
+        this.window = window;
         
     }
-    
-    
 
     @Override
     public void onClick(boolean[] m, World world)
     {
-        if(world.getZ()==world.getInventoryWindow().getZ())
+        window.setPin();
+        if(window.isPin())
         {
-            if(world.getInventoryWindow().isMode())
-            {
-                setTexture(texture2);
-            }else
-            {
-                setTexture(texture1);
-            }
-
-            world.getInventoryWindow().setMode(world);
+            setTexture(texture1);
+        }else
+        {
+            setTexture(texture2);
         }
     }
     

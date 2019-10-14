@@ -45,11 +45,15 @@ public class Res
     //crafting UI
     public Image crafting_icon,crafting_clear_all,crafting_craft,crafting_filter_by_learnt,crafting_filter_by_learnt_and_craftable;
     
+    public Image furniture_inventory,furniture_inventory_fuelable;
+    
+    
+    
     public Image minimize,maximize;
     
     public Image up_indicator,down_indicator;
     
-    public Image close_icon;
+    public Image close_icon,pin_icon,unpin_icon;
     
     public TrueTypeFont pixelCowboy,disposableDroidBB,disposableDroidBB20f,disposableDroidBB40f;
     
@@ -118,7 +122,13 @@ public class Res
         minimize = new Image("res/texture/ui/icon/minimize.png");
         
         
+        furniture_inventory = new Image("res/texture/ui/background/furniture_inventory.png");
+        furniture_inventory_fuelable = new Image("res/texture/ui/background/furniture_inventory_fuelable.png");
+        
+        
         close_icon = new Image("res/texture/ui/icon/close_icon.png");
+        pin_icon = new Image("res/texture/ui/icon/pin_button.png");
+        unpin_icon = new Image("res/texture/ui/icon/unpin_button.png");
         
         quick_item_bg = new Image("res/texture/ui/inventory/quick_item_bar.png");
         

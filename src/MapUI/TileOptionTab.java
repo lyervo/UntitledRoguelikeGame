@@ -33,8 +33,8 @@ public class TileOptionTab extends OptionTab
     
     private Furniture furniture;
     
-    public TileOptionTab(int x, int y, Tile t, LocalMap lm, TrueTypeFont font,Res res) {
-        super(x, y, lm, font,res);
+    public TileOptionTab(int x, int y, GameContainer container, LocalMap lm, TrueTypeFont font,Res res,Tile t) {
+        super(x, y, lm, container,font,res);
         this.t = t;
         p = lm.getPawnAt(t.getX(),t.getY());
         ip = lm.getItemPileAt(t.getX(), t.getY());
@@ -84,6 +84,12 @@ public class TileOptionTab extends OptionTab
                 lm.getPlayer().grabItemAt(t.getX(), t.getY(), id, itemIndex);
                 
                 break;
+            case 3:
+                if(furniture.withinDistance(1, lm.getPlayer()))
+                {
+                    lm.getWorld().spawnFurnitureInventoryWindow(furniture, 100, 100);
+                }
+                break;
         }
     }
 
@@ -111,9 +117,9 @@ public class TileOptionTab extends OptionTab
         
         if(furniture!=null)
         {
-            if(furniture.isFuelable())
+            if(furniture.isFuelable()&&furniture.withinDistance(1, lm.getPlayer()))
             {
-                options.add(new Pair("Add Fuel",3));
+                options.add(new Pair("Interact",3));
             }
         }
         

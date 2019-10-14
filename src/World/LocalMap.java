@@ -284,7 +284,7 @@ public class LocalMap implements TileBasedMap, ILosBoard
     
     public void spawnOptionTab(Tile t)
     {
-        optionTab = new TileOptionTab(input.getMouseX(),input.getMouseY(),t,this,res.disposableDroidBB,res);
+        optionTab = new TileOptionTab(input.getMouseX(),input.getMouseY(),container,this,res.disposableDroidBB,res,t);
     }
 
     @Override

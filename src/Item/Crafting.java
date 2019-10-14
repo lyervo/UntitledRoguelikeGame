@@ -52,6 +52,12 @@ public class Crafting
     
     public void addIngredient(int index)
     {
+        
+        if(items.size()>=9)
+        {
+            return;
+        }
+        
         if(inventory.getItems().get(index).isMetalMaterial())
         {
             for(int i=items.size()-1;i>=0;i--)
@@ -154,6 +160,7 @@ public class Crafting
                 
                 removeIngredients(recipe);
                 
+                
             }
             
         }
@@ -176,8 +183,9 @@ public class Crafting
                         
                             items.get(j).addStack(-1);
                             
-                            if(items.get(j).getStack()==0)
+                            if(items.get(j).getStack()<=0)
                             {
+       
                                 items.remove(j);
                             }
                         
@@ -197,10 +205,11 @@ public class Crafting
                         {
                         
                             items.get(j).addStack(-1);
-                            
-                            if(items.get(j).getStack()==0)
+                            System.out.println("remove "+j);
+                            if(items.get(j).getStack()<=0)
                             {
                                 items.remove(j);
+                                System.out.println("remove "+j);
                             }
                         
                         }else
@@ -210,6 +219,7 @@ public class Crafting
                         break;
                     }
                 }
+                
                 
                 
                 

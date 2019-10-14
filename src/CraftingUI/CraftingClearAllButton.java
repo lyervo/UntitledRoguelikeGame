@@ -32,7 +32,8 @@ public class CraftingClearAllButton extends Button
     public void onClick(boolean[] m, World world)
     {
         crafting.clearAllIngridient();
-        inventoryUI.refreshInventoryUI(world.getWm().getCurrentLocalMap());
+        world.getCrafting_ui().refreshUI(world.getWm().getCurrentLocalMap());
+        world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
     }
     
 }

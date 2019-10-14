@@ -16,7 +16,6 @@ import World.World;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import javafx.util.Pair;
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
@@ -132,15 +131,7 @@ public class EquipmentUI extends UIComponent
             }
         }
         
-        g.setColor(Color.cyan);
-        g.drawRect(mainBounds.x, mainBounds.y, mainBounds.width, mainBounds.height);
         
-        g.setColor(Color.red);
-        for(Pair<Integer,Rectangle> p: bounds)
-        {
-            g.drawRect(p.getValue().x, p.getValue().y, p.getValue().width, p.getValue().height);
-            g.drawString(p.getKey()+"", p.getValue().x+10, p.getValue().y+10);
-        }
         
     }
     

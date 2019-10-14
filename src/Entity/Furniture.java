@@ -6,6 +6,7 @@
 package Entity;
 
 import Camera.Camera;
+import Item.Inventory;
 import Item.Item;
 import World.LocalMap;
 import World.World;
@@ -32,12 +33,15 @@ public class Furniture extends Entity
     
     private int fuelAnim;
     
+    private ArrayList<Item> items;
+    
     public Furniture(int id,int x,int y,FurnitureTemplate ft)
     {
         super(id,x,y,ft.getTexture());
         this.properties = new ArrayList<Integer>(ft.getProperties());
         this.name = ft.getName();
         this.desc = ft.getDesc();
+        items = new ArrayList<Item>();
         initFurniture();
     }
     
@@ -47,6 +51,7 @@ public class Furniture extends Entity
         this.properties = new ArrayList<Integer>(ft.getProperties());
         this.name = ft.getName();
         this.desc = ft.getDesc();
+        items = new ArrayList<Item>();
         initFurniture();
     }
     
@@ -139,6 +144,12 @@ public class Furniture extends Entity
         }
         return -1;
     }
+    
+    public void addItem(int index,Inventory inventory)
+    {
+        items.add(new Item(inventory.getItems().get(index)));
+        inventory.getItems().remove(index);
+    }
 
     public int getFuel() {
         return fuel;
@@ -175,6 +186,22 @@ public class Furniture extends Entity
     public boolean isFuelable()
     {
         return properties.contains(1);
+    }
+
+    public int getFuelAnim() {
+        return fuelAnim;
+    }
+
+    public void setFuelAnim(int fuelAnim) {
+        this.fuelAnim = fuelAnim;
+    }
+
+    public ArrayList<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(ArrayList<Item> items) {
+        this.items = items;
     }
     
     

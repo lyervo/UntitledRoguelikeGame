@@ -17,11 +17,9 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
-import org.newdawn.slick.gui.TextField;
 
 /**
  *
@@ -33,6 +31,7 @@ public class InventoryUI extends UIComponent
     
     private Image bg1,bg2;
     private Image bg_bar;
+    
     //screen resolution
     private int width,height;
     
@@ -152,45 +151,45 @@ public class InventoryUI extends UIComponent
         {
             itemOptionTab.render(g);
         }
-//        
-//        
-//        
-//        if(!drag)
-//        {
-//            for(ItemUI i:primaryItemUI)
-//            {
-//                if(i.isDisplay())
-//                {
-//                    i.renderDesc(g, input);
-//                }
-//            }
-//            
-//            for(ItemUI i:secondaryItemUI)
-//            {
-//                if(i.isDisplay())
-//                {
-//                    i.renderDesc(g, input);
-//                }
-//            }
-//            
-//        }else
-//        {
-//            for(ItemUI i:primaryItemUI)
-//            {
-//                if(i.isDrag())
-//                {
-//                    i.dragRender(g, input);
-//                }
-//            }
-//
-//            for(ItemUI i:secondaryItemUI)
-//            {
-//                if(i.isDrag())
-//                {
-//                    i.dragRender(g, input);
-//                }
-//            }
-//        }
+        
+        
+        
+        if(!drag)
+        {
+            for(ItemUI i:primaryItemUI)
+            {
+                if(i.isDisplay())
+                {
+                    i.renderDesc(g, input);
+                }
+            }
+            
+            for(ItemUI i:secondaryItemUI)
+            {
+                if(i.isDisplay())
+                {
+                    i.renderDesc(g, input);
+                }
+            }
+            
+        }else
+        {
+            for(ItemUI i:primaryItemUI)
+            {
+                if(i.isDrag())
+                {
+                    i.dragRender(g, input);
+                }
+            }
+
+            for(ItemUI i:secondaryItemUI)
+            {
+                if(i.isDrag())
+                {
+                    i.dragRender(g, input);
+                }
+            }
+        }
         
 
     }
@@ -268,10 +267,10 @@ public class InventoryUI extends UIComponent
     {
         if(window.getZ()==world.getZ())
         {
-            primaryUp.tick(m, input, world,x,y);
-            primaryDown.tick(m, input, world,x,y);
-            secondaryUp.tick(m, input, world,x,y);
-            secondaryDown.tick(m, input, world,x,y);
+            primaryUp.tick(m, input, world,x,y,window.getZ());
+            primaryDown.tick(m, input, world,x,y,window.getZ());
+            secondaryUp.tick(m, input, world,x,y,window.getZ());
+            secondaryDown.tick(m, input, world,x,y,window.getZ());
 
 
         
@@ -316,28 +315,6 @@ public class InventoryUI extends UIComponent
             }
         }
         
-//        
-//        
-//        if(m[0]&&itemOptionTab!=null)
-//        {
-//            itemOptionTab.runOption(world.getWm().getCurrentLocalMap());
-//            itemOptionTab = null;
-//            refreshInventoryUI(world.getWm().getCurrentLocalMap());
-//        }else if(k[255])
-//        {
-//            itemOptionTab = null;
-//        }
-//        
-//        if(itemOptionTab!=null)
-//        {
-//            itemOptionTab.tick(k, m, input, world.getWm().getCurrentLocalMap());
-//        }
-//        
-//        if(m[0])
-//        {
-//            refreshInventoryUI(world.getWm().getCurrentLocalMap());
-//        }
-
         
     }
     

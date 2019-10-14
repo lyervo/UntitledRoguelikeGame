@@ -25,6 +25,7 @@ public class CraftingButton extends Button
     public void onClick(boolean[] m, World world)
     {
         world.getCraftingWindow().setDisplay();
+        world.getCrafting_ui().refreshUI(world.getWm().getCurrentLocalMap());
     }
     
 }

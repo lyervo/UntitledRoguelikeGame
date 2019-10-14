@@ -5,14 +5,17 @@
  */
 package UI;
 
+import FurnitureUI.FurnitureUIWindow;
 import Res.Res;
 import World.World;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.ArrayList;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
+import org.newdawn.slick.TrueTypeFont;
 
 /**
  *
@@ -28,13 +31,15 @@ public abstract class UIWindow
     
     private UIComponent uiComponent;
 
-    protected boolean drag,hover,dragHover,display;
+    protected boolean drag,pin,hover,dragHover,display;
     
     protected int xofs,yofs;
     
-    protected CloseWindowButton closeWindowButton;
     
     
+    protected ArrayList<Button> windowButtons;
+    
+    private TrueTypeFont font;
    
     
     public UIWindow(int x,int y,String name,UIComponent uiComponent,Res res)
@@ -55,51 +60,78 @@ public abstract class UIWindow
         this.z = -1;
         this.display = false;
         
-        closeWindowButton = new CloseWindowButton((width-32),-32,res.close_icon,this);
-        
+        this.windowButtons = new ArrayList<Button>();
+        this.windowButtons.add(new CloseWindowButton((width-32),-32,res.close_icon,this));
+        this.windowButtons.add(new PinWindowButton((width-64),-32,this,res.pin_icon,res.unpin_icon));
+
+        this.pin = false;
+        this.font = res.disposableDroidBB40f;
         
     }
     
     
-    public abstract void itemUICheckDrop(boolean[] k,boolean[] m,Input input,World world);
+    public void itemUICheckDrop(boolean[] k,boolean[] m,Input input,World world)
+    {
+        uiComponent.checkDrop(k, m, input, world);
+    }
     
     public void render(Graphics g,Input input)
     {
-        if(!drag&&display)
+        if(display&&!drag)
         {
             g.setColor(Color.blue);
-            g.fillRect(dragBounds.x, dragBounds.y, dragBounds.width, dragBounds.height);
+            g.drawRect(x, y-32, dragBounds.width, dragBounds.height);
             g.setColor(Color.yellow);
-            g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+            g.drawRect(x, y, width, height);
+            uiComponent.render(g, input, x, y);
+            g.setColor(Color.white);
+            g.setFont(font);
+            g.drawString(name, x+32, y-37);
+            for(Button b:windowButtons)
+            {
+                b.render(g, x, y);
+            }
+            
         }
     }
     
     public void dragRender(Graphics g,Input input)
     {
-        g.setColor(Color.blue);
-        g.fillRect(input.getMouseX()-xofs, input.getMouseY()-yofs, dragBounds.width, dragBounds.height);
-        g.setColor(Color.yellow);
-        g.fillRect(input.getMouseX()-xofs, input.getMouseY()+(32-yofs), bounds.width, bounds.height);
+        if(display)
+        {
+            g.setColor(Color.blue);
+            g.drawRect(input.getMouseX()-xofs, input.getMouseY()-yofs, dragBounds.width, dragBounds.height);
+            g.setColor(Color.yellow);
+            g.drawRect(input.getMouseX()-xofs, input.getMouseY()-yofs+32, width, height);
+            uiComponent.render(g, input, input.getMouseX()-xofs, input.getMouseY()-yofs+32);
+            g.setColor(Color.white);
+            g.setFont(font);
+            g.drawString(name, input.getMouseX()-xofs+32, input.getMouseY()-yofs-5);
+            for(Button b: windowButtons)
+            {
+                b.render(g,input.getMouseX()-xofs,input.getMouseY()-yofs+32);
+            }
+        }
        
     }
     
     public void tick(boolean[] k,boolean[] m,Input input,World world)
     {
+ 
         if(display)
         {
-            if(world.getZ()<z)
-            {
-                world.setZ(z);
-                world.setHoveringWindow(true);
-            }
-
             if(bounds.contains(new Point(input.getMouseX(),input.getMouseY())))
             {
+
                 hover = true;
+                
             }else
             {
                 hover = false;
             }
+            
+            
+
 
             if(dragBounds.contains(new Point(input.getMouseX(),input.getMouseY())))
             {
@@ -109,20 +141,52 @@ public abstract class UIWindow
             {
                 dragHover = false;
             }
+            
 
+            
+            
+            if((dragHover||hover)&&m[10]&&world.getZ()==z)
+            {
+                world.moveWindowToTop(this);
+            }
+            
+            if(world.getZ()<=z&&(hover||dragHover))
+            {
+                world.setZ(z);
+                world.setHoveringWindow(true);
+            }
 
-            if(dragHover&&input.isMouseButtonDown(0)&&!drag)
+            if(!drag)
+            {
+                for(Button b:windowButtons)
+                {
+                    b.tick(m, input, world,x,y,z);
+                }
+            }
+            
+            
+            
+
+            if(dragHover&&input.isMouseButtonDown(0)&&!drag&&!world.isDrag()&&world.getZ()==z&&!pin)
             {
                 xofs = input.getMouseX()-dragBounds.x;
                 yofs = input.getMouseY()-dragBounds.y;
                 drag = true;
+                world.setDrag(true);
             }
 
-            if(m[0]&&drag)
+            if(m[0]&&drag&&world.isDrag())
             {
+
                 drag = false;
                 setWindowLocation(input,world.getContainer());
-            }   
+                world.setDrag(false);
+            }
+
+            if(!drag)
+            {
+                uiComponent.tick(k, m, input, world,x,y,this);
+            }
         }
         
         
@@ -295,8 +359,48 @@ public abstract class UIWindow
         this.display = !display;
         this.drag = false;
         this.dragHover = false;
-        this.closeWindowButton.setHover(false);
+        for(Button b:windowButtons)
+        {
+            b.setHover(false);
+        }
     }
+    
+    public void setPin()
+    {
+        this.pin = !pin;
+        this.drag = false;
+        this.dragHover = false;
+        for(Button b:windowButtons)
+        {
+            b.setHover(false);
+        }
+    }
+
+    public boolean isPin() {
+        return pin;
+    }
+
+    public void setPin(boolean pin) {
+        this.pin = pin;
+    }
+
+    public ArrayList<Button> getWindowButtons() {
+        return windowButtons;
+    }
+
+    public void setWindowButtons(ArrayList<Button> windowButtons) {
+        this.windowButtons = windowButtons;
+    }
+
+    public TrueTypeFont getFont() {
+        return font;
+    }
+
+    public void setFont(TrueTypeFont font) {
+        this.font = font;
+    }
+    
+    
     
     
 }

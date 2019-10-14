@@ -84,6 +84,11 @@ public abstract class Entity
         
     }
     
+    public boolean withinDistance(int distance,Entity entity)
+    {
+        return ((Math.abs(this.x-entity.getX()))<=distance&&(Math.abs(this.y-entity.getY()))<=distance);
+    }
+    
     public void setPos(int x,int y)
     {
         this.x = x;

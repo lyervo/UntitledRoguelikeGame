@@ -119,13 +119,13 @@ public abstract class Button
         
     }
     
-    public void tick(boolean[] m,Input input,World world,int x,int y)
+    public void tick(boolean[] m,Input input,World world,int x,int y,int z)
     {
         if(display)
         {
             if(texture == null)
             {
-                if(bounds.contains(new Point(input.getMouseX()-x,input.getMouseY()-y)))
+                if(bounds.contains(new Point(input.getMouseX()-x,input.getMouseY()-y))&&world.getZ()==z)
                 {
                     hover = true;
                 }else
@@ -135,7 +135,7 @@ public abstract class Button
             }else
             {
 
-                if(bounds.contains(new Point(input.getMouseX()-x,input.getMouseY()-y)))
+                if(bounds.contains(new Point(input.getMouseX()-x,input.getMouseY()-y))&&world.getZ()==z)
                 {
                     if(texture.getColor(input.getAbsoluteMouseX()-this.x-x, input.getMouseY()-this.y-y).a == 0)
                     {

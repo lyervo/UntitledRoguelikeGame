@@ -43,17 +43,18 @@ public class CraftingItemUI extends ItemUI
     @Override
     public void render(Graphics g,Input input,int x,int y)
     {
-        
-        int colIndex = index % 3;
-        int rowIndex = index / 3;
-
-        item.getTexture().draw((colIndex * 64) + (colIndex * 7) + 16, (rowIndex * 71) + 66, 64, 64);
-
-        if (item.isStackable())
+        if(!drag)
         {
-            font.drawString((colIndex * 64) + (colIndex * 7) + 16, (rowIndex * 71) + 66, item.getStack() + "");
-        }
-                
+            int colIndex = index % 3;
+            int rowIndex = index / 3;
+
+            item.getTexture().draw((colIndex * 64) + (colIndex * 7) + 16+x, (rowIndex * 71) + 66+y, 64, 64);
+
+            if (item.isStackable())
+            {
+                font.drawString((colIndex * 64) + (colIndex * 7) + 16+x, (rowIndex * 71) + 66+y, item.getStack() + "");
+            }
+        }       
             
         
     }
@@ -65,17 +66,25 @@ public class CraftingItemUI extends ItemUI
         
         if(!world.isDrag())
         {
+            if (bounds.contains(new Point(input.getMouseX()-x, input.getMouseY()-y)))
+            {
+                hover = true;
+
+            } else {
+                hover = false;
+            }
+
             if (m[1] && hover)
             {
-                world.spawnItemOptionTab(input.getMouseX(), input.getMouseY(),index,9,item);
-            } else if (input.isMouseButtonDown(0) && hover && !ui.isDrag() && !world.isDrag())
-            {
-                xofs = input.getMouseX() - bounds.x;
-                yofs = input.getMouseY() - bounds.y;
+                world.spawnItemOptionTab(input.getMouseX(), input.getMouseY(), index, 9, item);
+            } else if (input.isMouseButtonDown(0) && hover && !ui.isDrag() && !world.isDrag()) {
+                xofs = input.getMouseX() - x - bounds.x;
+                yofs = input.getMouseY() - y - bounds.y;
                 drag = true;
                 world.setDrag(true);
                 ui.setDrag(true);
             }
+
         }
             
     }
@@ -84,7 +93,14 @@ public class CraftingItemUI extends ItemUI
     public void checkDrop(Input input,World world,int x,int y)
     {
         
+        dropRect = new Rectangle(input.getMouseX()-xofs,input.getMouseY()-yofs,64,64);
         
+        if(world.getZ()!=world.getCraftingWindow().getZ()||!dropRect.intersects(world.getCraftingWindow().getBounds()))
+        {
+            world.getCrafting_ui().getCrafting().removeIngridient(index);
+            world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
+            world.getCrafting_ui().refreshUI(world.getWm().getCurrentLocalMap());
+        }
         
         
     }

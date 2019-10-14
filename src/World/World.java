@@ -10,9 +10,12 @@ import Entity.EntityLibrary;
 import CraftingUI.CraftingButton;
 import CraftingUI.CraftingUI;
 import CraftingUI.CraftingUIWindow;
+import Entity.Furniture;
 import EquipmentUI.EquipmentButton;
 import EquipmentUI.EquipmentUI;
 import EquipmentUI.EquipmentUIWindow;
+import FurnitureUI.FurnitureUI;
+import FurnitureUI.FurnitureUIWindow;
 import Item.ItemLibrary;
 import Narrator.Narrator;
 import Res.Res;
@@ -166,6 +169,7 @@ public class World
         
         
         
+
         
     }
     
@@ -176,10 +180,12 @@ public class World
             xItemTextField.tick(k,m, input, this,inventory_ui);
         }
         hoveringWindow = false;
-        inventoryWindow.tick(k, m, input, this);
-        equipmentWindow.tick(k, m, input, this);
-        craftingWindow.tick(k, m, input, this);
         
+        
+        for(int i=uis.size()-1;i>=0;i--)
+        {
+            uis.get(i).tick(k, m, input, this);
+        }
         
         if(optionTab!=null)
         {
@@ -211,9 +217,7 @@ public class World
         {
             for(UIWindow ui:uis)
             {
-               
                 ui.itemUICheckDrop(k, m, input, this);
-                
             }
         }
         
@@ -251,6 +255,16 @@ public class World
             equipment_ui.refreshUI();
             inventory_ui.refreshInventoryUI(wm.getCurrentLocalMap());
             crafting_ui.refreshUI(wm.getCurrentLocalMap());
+            for(int i=uis.size()-1;i>=0;i--)
+            {
+                if(uis.get(i) instanceof FurnitureUIWindow)
+                {
+                    if(!((FurnitureUI)uis.get(i).getUiComponent()).getFurniture().withinDistance(1, wm.getPlayer()))
+                    {
+                        uis.remove(i);
+                    }
+                }
+            }
         }
         
         if(moved)
@@ -263,6 +277,8 @@ public class World
         
     }
     
+   
+    
     public void render(Graphics g,boolean animate)
     {
 
@@ -272,11 +288,11 @@ public class World
         wm.render(g, animate);
 
         
-        if(wm.getPlayer()!=null)
-        {
-            g.setColor(Color.red);
-            g.fillRect(1018, 50, (int)wm.getPlayer().getHp().getValue(), 50);
-        }
+//        if(wm.getPlayer()!=null)
+//        {
+//            g.setColor(Color.red);
+//            g.fillRect(1018, 50, (int)wm.getPlayer().getHp().getValue(), 50);
+//        }
         
         
         for(int i=0;i<uis.size();i++)
@@ -292,20 +308,7 @@ public class World
         {
             if(ui.isDrag())
             {
-                switch(ui.getName())
-                {
-                    case "Inventory":
-                        ((InventoryUIWindow)ui).dragRender(g, input);
-                        break;
-                    
-                    case "Equipment":
-                        ((EquipmentUIWindow)ui).dragRender(g, input);
-                        break;
-                    
-                    default:
-                        ui.dragRender(g, input);
-                        break;
-                }
+                ui.dragRender(g, input);
             }else if(ui.getUiComponent().isDrag())
             {
                 ui.getUiComponent().dragRender(g, input);
@@ -359,6 +362,9 @@ public class World
         }
     }
     
+    
+    
+    
     public void activateXItemTextField(int index,int state)
     {
         xItemTextFieldActive = true;
@@ -372,11 +378,20 @@ public class World
         xItemTextField.setText("");
     
     }
+
+    public void spawnFurnitureInventoryWindow(Furniture f,int x,int y)
+    {
+        uis.add(new FurnitureUIWindow(x,y,f.getName(),new FurnitureUI(x,y,f,res),res));
+        uis.get(uis.size()-1).setWindowLocation(input, container);
+        uis.get(uis.size()-1).setDisplay(true);
+        drag = false;
+        resetZ();
+    }
     
     
     public void spawnItemOptionTab(int x,int y,int index,int state,Item item)
     {
-        optionTab = new ItemOptionTab(x,y,wm.getCurrentLocalMap(),res,wm.getPlayerInventory(),inventory_ui,item, index,state,itemLibrary);
+        optionTab = new ItemOptionTab(x,y,wm.getCurrentLocalMap(),container,res,wm.getPlayerInventory(),inventory_ui,item, index,state,itemLibrary);
     }
     
     

@@ -12,6 +12,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import javafx.util.Pair;
 import org.newdawn.slick.Color;
+import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
@@ -41,7 +42,9 @@ public abstract class OptionTab
     
     protected Image up_indicator,down_indicator;
     
-    public OptionTab(int x,int y,LocalMap lm,TrueTypeFont font,Res res)
+    private GameContainer container;
+    
+    public OptionTab(int x,int y,LocalMap lm,GameContainer container,TrueTypeFont font,Res res)
     {
         hoveringIndex = -1;
         optionFont = font;
@@ -51,6 +54,7 @@ public abstract class OptionTab
         this.up_indicator = res.up_indicator;
         this.down_indicator = res.down_indicator;
         
+        this.container = container;
         
         this.lm = lm;
         
@@ -64,20 +68,20 @@ public abstract class OptionTab
     
     public void initOptionTab()
     {
-        int xoffset = 1360-(x+optionFont.getWidth(options.get(longestIndex).getKey()));
+        int xoffset = container.getWidth()-(x+optionFont.getWidth(options.get(longestIndex).getKey()));
         if(xoffset>0)
         {
             
             xoffset = 0;
         }
-        int yoffset = 768-(y+(options.size()*optionFont.getHeight()));
+        int yoffset = container.getHeight()-(y+(options.size()*optionFont.getHeight()));
        
         if(yoffset>0)
         {
             yoffset = 0;
         }
         this.x = x+xoffset;
-        if(options.size()*optionFont.getHeight()>768)
+        if(options.size()*optionFont.getHeight()>container.getHeight())
         {
             
         }else

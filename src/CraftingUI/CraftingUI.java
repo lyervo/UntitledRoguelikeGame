@@ -5,12 +5,9 @@
  */
 package CraftingUI;
 
-import Entity.Furniture;
 import InventoryUI.InventoryUI;
-import InventoryUI.ItemUI;
 import Item.Crafting;
 import Item.ItemLibrary;
-import Item.Recipe;
 import Res.Res;
 import UI.UIComponent;
 import UI.UIWindow;
@@ -76,15 +73,12 @@ public class CraftingUI extends UIComponent
         recipeBounds = new Rectangle(231,66,700,284);
         
         
-        recipeScrollUpButton = new RecipeScrollUpButton(940,66,res.inventory_scroll_up,this);
-        recipeScrollDownButton = new RecipeScrollDownButton(940,312,res.inventory_scroll_down,this);
+        recipeScrollUpButton = new RecipeScrollUpButton(860,66,res.inventory_scroll_up,this);
+        recipeScrollDownButton = new RecipeScrollDownButton(860,300,res.inventory_scroll_down,this);
         
         recipes = new ArrayList<RecipeUI>();
         
-        for(int i=0;i<itemLibrary.getRecipes().size();i++)
-        {
-            recipes.add(new RecipeUI(itemLibrary.getRecipes().get(i),itemLibrary,world.getEntityLibrary(),i,res.disposableDroidBB));
-        }
+       
         
         stations = new ArrayList<StationUI>();
         crafting.getNearbyStations(world.getWm().getCurrentLocalMap());
@@ -94,19 +88,20 @@ public class CraftingUI extends UIComponent
         }
         
         filter = 0;
-        
+               
     }
     
     @Override
     public void render(Graphics g,Input input,int x,int y)
     {
+        texture.draw(x,y);
         craftingClearAllButton.render(g,x,y);
         craftingCraftButton.render(g,x,y);
         craftingFilterButton.render(g,x,y);
         recipeScrollUpButton.render(g,x,y);
         recipeScrollDownButton.render(g,x,y);
         
-        for(ItemUI i:itemUI)
+        for(CraftingItemUI i:itemUI)
         {
             i.render(g, input, x,y);
         }
@@ -116,7 +111,7 @@ public class CraftingUI extends UIComponent
             recipes.get(i).render(g, input, i, scroll,crafting,x,y);
         }
         
-        for(ItemUI i:itemUI)
+        for(CraftingItemUI i:itemUI)
         {
             if(i.isDrag())
             {
@@ -154,7 +149,7 @@ public class CraftingUI extends UIComponent
             }
         }
         
-        for(ItemUI i:itemUI)
+        for(CraftingItemUI i:itemUI)
         {
             if(i.isDisplay())
             {
@@ -162,6 +157,7 @@ public class CraftingUI extends UIComponent
             }
         }
         
+
         
         
     }
@@ -169,11 +165,11 @@ public class CraftingUI extends UIComponent
     @Override
     public void tick(boolean[] k,boolean[] m,Input input,World world,int x,int y,UIWindow window)
     {
-        craftingClearAllButton.tick(m, input, world,x,y);
-        craftingCraftButton.tick(m, input, world,x,y);
-        craftingFilterButton.tick(m, input, world,x,y);
-        recipeScrollUpButton.tick(m, input, world,x,y);
-        recipeScrollDownButton.tick(m, input, world,x,y);
+        craftingClearAllButton.tick(m, input, world,x,y,window.getZ());
+        craftingCraftButton.tick(m, input, world,x,y,window.getZ());
+        craftingFilterButton.tick(m, input, world,x,y,window.getZ());
+        recipeScrollUpButton.tick(m, input, world,x,y,window.getZ());
+        recipeScrollDownButton.tick(m, input, world,x,y,window.getZ());
         if(recipeBounds.contains(new Point(input.getMouseX()-x,input.getMouseY()-y)))
         {
             if(m[16])
@@ -261,6 +257,10 @@ public class CraftingUI extends UIComponent
                 
             }else if(filter==0)
             {
+                if(lm.getWorld().getEntityLibrary() == null)
+                {
+                    System.out.println("is null");
+                }
                 recipes.add(new RecipeUI(crafting.getItemLibrary().getRecipes().get(i),crafting.getItemLibrary(),lm.getWorld().getEntityLibrary(),i,res.disposableDroidBB));
             }
         }
@@ -392,7 +392,16 @@ public class CraftingUI extends UIComponent
 
     @Override
     public void checkDrop(boolean[] k, boolean[] m, Input input, World world) {
-      
+        for(int i=itemUI.size()-1;i>=0;i--)
+        {
+            if(itemUI.get(i).isDrag())
+            {
+                itemUI.get(i).setDrag(false);
+                drag = false;
+                world.setDrag(false);
+                itemUI.get(i).checkDrop(input, world, x, y);
+            }
+        }
     }
 
     @Override

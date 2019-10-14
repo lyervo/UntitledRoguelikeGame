@@ -5,6 +5,8 @@
  */
 package InventoryUI;
 
+import FurnitureUI.FurnitureUI;
+import FurnitureUI.FurnitureUIWindow;
 import Item.Item;
 import Res.Res;
 import World.World;
@@ -308,12 +310,30 @@ public class InventoryItemUI extends ItemUI
             
             Rectangle dropRect2 = new Rectangle(input.getMouseX()-xofs-world.getEquipmentWindow().getX(),input.getMouseY()-yofs-world.getEquipmentWindow().getY(),64,64);
             
+            Rectangle dropRect3 = new Rectangle(input.getMouseX()-xofs-world.getCraftingWindow().getX(),input.getMouseY()-yofs-world.getCraftingWindow().getY(),64,64);
+            
+            for(int i=0;i<world.getUis().size();i++)
+            {
+                if(world.getUis().get(i) instanceof FurnitureUIWindow)
+                {
+                    Rectangle rect = new Rectangle(input.getMouseX()-xofs-world.getUis().get(i).getX(),input.getMouseY()-yofs-world.getUis().get(i).getY(),64,64);
+                    
+                    if(rect.intersects(((FurnitureUI)world.getUis().get(i).getUiComponent()).getBounds()))
+                    {
+                        ((FurnitureUI)world.getUis().get(i).getUiComponent()).getFurniture().addItem(index, ui.getPlayer_inventory());
+                        ((FurnitureUI)world.getUis().get(i).getUiComponent()).refreshUI();
+                        ui.refreshInventoryUI(world.getWm().getCurrentLocalMap());
+                        return;
+                    }
+                    
+                    
+                }
+            }
+            
             if(state<=2)
             {
-                System.out.println("item ui tun");
                 if(dropRect2.intersects(world.getEquipment_ui().getMainBounds())&&world.getZ()==world.getEquipmentWindow().getZ())
                 {
-                    System.out.println("equip attempt");
                     if(item.getType()==33&&dropRect2.intersects(world.getEquipment_ui().getBounds().get(3).getValue()))
                     {
                         world.getEquipment_ui().getEquipment().equip(item);
@@ -322,8 +342,6 @@ public class InventoryItemUI extends ItemUI
                         world.getEquipment_ui().refreshUI();
                         return;
                     }
-                    
-                    System.out.println("size "+world.getEquipment_ui().getBounds().size());
                     
                     for(Pair<Integer,Rectangle> p:world.getEquipment_ui().getBounds())
                     {
@@ -339,7 +357,15 @@ public class InventoryItemUI extends ItemUI
                     }
                 }
                 
-                if(!dropRect.intersects(world.getInventory_ui().getPrimaryBounds()))
+                if(dropRect3.intersects(world.getCrafting_ui().getBounds())&&world.getZ()==world.getCraftingWindow().getZ())
+                {
+                    world.getCrafting_ui().getCrafting().addIngredient(index);
+                    ui.refreshInventoryUI(world.getWm().getCurrentLocalMap());
+                    world.getCrafting_ui().refreshUI(world.getWm().getCurrentLocalMap());
+                    return;
+                }
+                
+                if(!dropRect.intersects(world.getInventory_ui().getPrimaryBounds())&&world.getZ()==0)
                 {
                     ui.getPlayer_inventory().dropItem(world.getWm().getPlayer().getX(), world.getWm().getPlayer().getY(), index, world.getWm().getCurrentLocalMap(), -1);
                     ui.refreshInventoryUI(world.getWm().getCurrentLocalMap());

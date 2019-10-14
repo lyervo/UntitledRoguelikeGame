@@ -5,6 +5,7 @@
  */
 package UI;
 
+import FurnitureUI.FurnitureUIWindow;
 import World.World;
 import org.newdawn.slick.Image;
 
@@ -26,11 +27,17 @@ public class CloseWindowButton extends Button
     @Override
     public void onClick(boolean[] m, World world)
     {
-        if(world.getZ()==window.getZ())
+        if(window instanceof FurnitureUIWindow)
         {
-            window.setDisplay();
-            world.setDrag(false);
-            window.setDrag(false);
+            world.getUis().remove(window);
+        }else
+        {
+            if(world.getZ()==window.getZ())
+            {
+                window.setDisplay();
+                world.setDrag(false);
+                window.setDrag(false);
+            }
         }
     }
     

@@ -38,9 +38,9 @@ public class ItemOptionTab extends OptionTab
     private int state;
     private Res res;
     
-    public ItemOptionTab(int x, int y, LocalMap lm,Res res, Inventory inventory,InventoryUI ui,Item item,int index,int state,ItemLibrary itemLibrary)
+    public ItemOptionTab(int x, int y,LocalMap lm,GameContainer container,Res res, Inventory inventory,InventoryUI ui,Item item,int index,int state,ItemLibrary itemLibrary)
     {
-        super(x, y, lm, res.disposableDroidBB,res);
+        super(x, y,lm,container, res.disposableDroidBB,res);
         this.item = item;
         this.index = index;
         this.inventory = inventory;
