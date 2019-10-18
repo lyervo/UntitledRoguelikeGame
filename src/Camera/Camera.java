@@ -87,6 +87,7 @@ public class Camera
         {
          
             xofs = (width-(w*tile_size))/2;
+            mxofs=(int)(xofs);
         }else
         {
             if(target!=null)
@@ -109,11 +110,14 @@ public class Camera
             
             
         }
+        
+        
    
         
         if(h<=(height/tile_size))
         {
             yofs = (height-(h*tile_size))/2;
+            myofs = (int)(yofs);
         }else
         {
             if(target!=null)
@@ -133,6 +137,7 @@ public class Camera
                 }
             }
         }
+        
         
         
     }

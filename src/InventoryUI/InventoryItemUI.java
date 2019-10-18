@@ -97,6 +97,14 @@ public class InventoryItemUI extends ItemUI
             }
         }
         
+        if(state<=2)
+        {
+            tickDesc((hover&&world.getZ()==world.getInventoryWindow().getZ()));
+        }else if(state==4)
+        {
+            tickDesc((hover&&world.getZ()==world.getInventoryWindow().getZ()));
+        
+        }
         if (m[1] && hover)
         {
             world.spawnItemOptionTab(input.getMouseX(), input.getMouseY(), index, state,item);
@@ -128,35 +136,35 @@ public class InventoryItemUI extends ItemUI
                         int rowIndex = index/9;
                         if(hover)
                         {
-                            item.getTexture().draw((columnIndex*64)+(columnIndex*7)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,64,64);
+                            item.getTexture().draw((columnIndex*71)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,64,64);
                             if(item.isStackable())
                             {
-                                fontSmall.drawString((columnIndex*64)+(columnIndex*7)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,""+item.getStack());
+                                fontSmall.drawString((columnIndex*71)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,""+item.getStack());
                             }
                         }else
                         {
-                            item.getTexture().draw((columnIndex*64)+(columnIndex*7)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,64,64,Color.gray);
+                            item.getTexture().draw((columnIndex*71)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,64,64,Color.gray);
                             if(item.isStackable())
                             {
-                                fontSmall.drawString((columnIndex*64)+(columnIndex*7)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,""+item.getStack());
+                                fontSmall.drawString((columnIndex*71)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,""+item.getStack());
                             }
                         }
                     }else
                     {
                         if(hover)
                         {
-                            item.getTexture().draw((index*(64))+(index*7)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,64,64);
+                            item.getTexture().draw((index*71)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,64,64);
                             if(item.isStackable())
                             {
-                                fontSmall.drawString((index*(64))+(index*7)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,""+item.getStack());
+                                fontSmall.drawString((index*71)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,""+item.getStack());
                             }
                         }else
                         {
                          
-                            item.getTexture().draw((index*(64))+(index*7)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,64,64,Color.gray);
+                            item.getTexture().draw((index*71)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,64,64,Color.gray);
                             if(item.isStackable())
                             {
-                                fontSmall.drawString((index*(64))+(index*7)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,""+item.getStack());
+                                fontSmall.drawString((index*71)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,""+item.getStack());
                             }
                         }
                     }
@@ -171,35 +179,35 @@ public class InventoryItemUI extends ItemUI
                         int rowIndex = index/9;
                         if(hover)
                         {
-                            item.getTexture().draw((columnIndex*64)+(columnIndex*7)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,64,64);
+                            item.getTexture().draw((columnIndex*71)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,64,64);
                             if(item.isStackable())
                             {
-                                fontSmall.drawString((columnIndex*64)+(columnIndex*7)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,""+item.getStack());
+                                fontSmall.drawString((columnIndex*71)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,""+item.getStack());
                             }
                         }else
                         {
-                            item.getTexture().draw((columnIndex*64)+(columnIndex*7)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,64,64,Color.gray);
+                            item.getTexture().draw((columnIndex*71)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,64,64,Color.gray);
                             if(item.isStackable())
                             {
-                                fontSmall.drawString((columnIndex*64)+(columnIndex*7)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,""+item.getStack());
+                                fontSmall.drawString((columnIndex*71)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,""+item.getStack());
                             }
                         }
                     }else
                     {
                         if(hover)
                         {
-                            item.getTexture().draw((index*(64))+(index*7)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,64,64);
+                            item.getTexture().draw((index*71)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,64,64);
                             if(item.isStackable())
                             {
-                                fontSmall.drawString((index*(64))+(index*7)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,""+item.getStack());
+                                fontSmall.drawString((index*71)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,""+item.getStack());
                             }
                         }else
                         {
                          
-                            item.getTexture().draw((index*(64))+(index*7)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,64,64,Color.gray);
+                            item.getTexture().draw((index*71)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,64,64,Color.gray);
                             if(item.isStackable())
                             {
-                                fontSmall.drawString((index*(64))+(index*7)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,""+item.getStack());
+                                fontSmall.drawString((index*71)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,""+item.getStack());
                             }
                         }
                     }
@@ -214,11 +222,11 @@ public class InventoryItemUI extends ItemUI
                         int rowIndex = index/4;
                         if(hover)
                         {
-                            item.getTexture().draw((columnIndex*64)+(columnIndex*7)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,64,64);
+                            item.getTexture().draw((columnIndex*71)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,64,64);
                             if(item.isStackable())
                             {
                                 
-                                fontSmall.drawString((columnIndex*64)+(columnIndex*7)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,""+item.getStack());
+                                fontSmall.drawString((columnIndex*71)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,""+item.getStack());
                             }
                             
                         }else
@@ -227,26 +235,26 @@ public class InventoryItemUI extends ItemUI
                             if(item.isStackable())
                             {
                                 
-                                fontSmall.drawString((columnIndex*64)+(columnIndex*7)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,""+item.getStack());
+                                fontSmall.drawString((columnIndex*71)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,""+item.getStack());
                             }
                         }
                     }else
                     {
                         if(hover)
                         {
-                            item.getTexture().draw((index*(64))+(index*7)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,64,64);
+                            item.getTexture().draw((index*71)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,64,64);
                             if(item.isStackable())
                             {
                               
-                                fontSmall.drawString((index*(64))+(index*7)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,""+item.getStack());
+                                fontSmall.drawString((index*71)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,""+item.getStack());
                             }
                         }else
                         {
-                            item.getTexture().draw((index*(64))+(index*7)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,64,64,Color.gray);
+                            item.getTexture().draw((index*71)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,64,64,Color.gray);
                             if(item.isStackable())
                             {
                                 
-                                fontSmall.drawString((index*(64))+(index*7)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,""+item.getStack());
+                                fontSmall.drawString((index*71)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,""+item.getStack());
                             }
                         }
                     }
@@ -310,7 +318,7 @@ public class InventoryItemUI extends ItemUI
             
             Rectangle dropRect2 = new Rectangle(input.getMouseX()-xofs-world.getEquipmentWindow().getX(),input.getMouseY()-yofs-world.getEquipmentWindow().getY(),64,64);
             
-            Rectangle dropRect3 = new Rectangle(input.getMouseX()-xofs-world.getCraftingWindow().getX(),input.getMouseY()-yofs-world.getCraftingWindow().getY(),64,64);
+         
             
             for(int i=0;i<world.getUis().size();i++)
             {
@@ -357,13 +365,7 @@ public class InventoryItemUI extends ItemUI
                     }
                 }
                 
-                if(dropRect3.intersects(world.getCrafting_ui().getBounds())&&world.getZ()==world.getCraftingWindow().getZ())
-                {
-                    world.getCrafting_ui().getCrafting().addIngredient(index);
-                    ui.refreshInventoryUI(world.getWm().getCurrentLocalMap());
-                    world.getCrafting_ui().refreshUI(world.getWm().getCurrentLocalMap());
-                    return;
-                }
+                
                 
                 if(!dropRect.intersects(world.getInventory_ui().getPrimaryBounds())&&world.getZ()==0)
                 {

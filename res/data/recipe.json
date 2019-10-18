@@ -22,19 +22,11 @@
 		"template_texture":null,
 		"amount":"1",
 		"by_product":[],
-		"ingredients":[{"name":"Wood","consumed":"1"},{"name":"Wood","consumed":"1"},{"name":"Wooden Shield","consumed":"1"}],
+		"ingredients":[{"name":"Wood","consumed":"1"},{"name":"Wood","consumed":"1"},{"name":"Wood","consumed":"1"},{"name":"Wood","consumed":"1"},{"name":"Wood","consumed":"1"},{"name":"Wooden Shield","consumed":"1"}],
 		"station":[],
 		"skill":[]
-	},
-	{
-		"name":"Reinforced Wooden Shield",
-		"template_texture":null,
-		"amount":"1",
-		"by_product":[],
-		"ingredients":[{"name":"Wood","consumed":"1"},{"name":"Wood","consumed":"1"},{"name":"Wooden Shield","consumed":"1"}],
-		"station":[],
-		"skill":[]
-	},
+	}
+	,
 	{
 		"name":"<metal> Sword",
 		"template_texture":"sword_template",

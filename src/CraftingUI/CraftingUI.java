@@ -26,8 +26,8 @@ import org.newdawn.slick.Input;
  */
 public class CraftingUI extends UIComponent
 {
-    private Rectangle bounds,recipeBounds;
-    private ArrayList<CraftingItemUI> itemUI;
+    private Rectangle recipeBounds;
+//    private ArrayList<CraftingItemUI> itemUI;
     
     private Crafting crafting;
     
@@ -55,6 +55,7 @@ public class CraftingUI extends UIComponent
     private Image texture;
     
     
+    
     public CraftingUI(int x,int y,Crafting crafting,Res res,InventoryUI inventoryUI,ItemLibrary itemLibrary,World world)
     {
         super(x,y);
@@ -64,8 +65,8 @@ public class CraftingUI extends UIComponent
         this.crafting = crafting;
         this.res = res;
         this.inventoryUI = inventoryUI;
-        bounds = new Rectangle(16,66,205,205);
-        itemUI = new ArrayList<CraftingItemUI>();
+
+//        itemUI = new ArrayList<CraftingItemUI>();
         craftingClearAllButton = new CraftingClearAllButton(16,279,res.crafting_clear_all,crafting,inventoryUI);
         craftingCraftButton = new CraftingCraftButton(85,279,res.crafting_craft,crafting,inventoryUI);
         craftingFilterButton = new CraftingFilterButton(154,279,res.crafting_filter_by_learnt,res.crafting_filter_by_learnt_and_craftable,this);
@@ -87,6 +88,8 @@ public class CraftingUI extends UIComponent
             stations.add(new StationUI(crafting.getStations().get(i),i,res));
         }
         
+        
+        
         filter = 0;
                
     }
@@ -101,23 +104,23 @@ public class CraftingUI extends UIComponent
         recipeScrollUpButton.render(g,x,y);
         recipeScrollDownButton.render(g,x,y);
         
-        for(CraftingItemUI i:itemUI)
-        {
-            i.render(g, input, x,y);
-        }
+//        for(CraftingItemUI i:itemUI)
+//        {
+//            i.render(g, input, x,y);
+//        }
         
         for(int i=0;i<recipes.size();i++)
         {
             recipes.get(i).render(g, input, i, scroll,crafting,x,y);
         }
         
-        for(CraftingItemUI i:itemUI)
-        {
-            if(i.isDrag())
-            {
-                i.dragRender(g, input);
-            }
-        }
+//        for(CraftingItemUI i:itemUI)
+//        {
+//            if(i.isDrag())
+//            {
+//                i.dragRender(g, input);
+//            }
+//        }
         
         
         
@@ -126,6 +129,12 @@ public class CraftingUI extends UIComponent
             s.render(g, input,x,y);
         }
         
+            
+        
+    }
+    
+    public void renderDesc(Graphics g,Input input)
+    {
         for(int i=0;i<recipes.size();i++)
         {
             if(recipes.get(i).isDisplay())
@@ -140,26 +149,6 @@ public class CraftingUI extends UIComponent
                 }
             }
         }
-        
-        for(StationUI s:stations)
-        {
-            if(s.isDisplay())
-            {
-                s.renderDesc(g, input);
-            }
-        }
-        
-        for(CraftingItemUI i:itemUI)
-        {
-            if(i.isDisplay())
-            {
-                i.renderDesc(g, input);
-            }
-        }
-        
-
-        
-        
     }
     
     @Override
@@ -181,10 +170,10 @@ public class CraftingUI extends UIComponent
             }
         }
         
-        for(int i=itemUI.size()-1;i>=0;i--)
-        {
-            itemUI.get(i).tick(k, m, input, world, x, y);
-        }
+//        for(int i=itemUI.size()-1;i>=0;i--)
+//        {
+//            itemUI.get(i).tick(k, m, input, world, x, y);
+//        }
         for(int i=0;i<recipes.size();i++)
         {
             recipes.get(i).tick(k,m, input,world, i,scroll, crafting,x,y);
@@ -231,56 +220,42 @@ public class CraftingUI extends UIComponent
         }
         
         
-        itemUI.clear();
-        
-        for(int i=0;i<crafting.getItems().size();i++)
-        {
-            itemUI.add(new CraftingItemUI(crafting.getItems().get(i),i,res,this));
-        }
-        
         recipes.clear();
         
         int index = 0;
+        
+        
+        
         for(int i=0;i<crafting.getItemLibrary().getRecipes().size();i++)
         {
             
             if(filter==1&&crafting.getItemLibrary().getLearntRecipe()[i])
             {
-                recipes.add(new RecipeUI(crafting.getItemLibrary().getRecipes().get(i),crafting.getItemLibrary(),lm.getWorld().getEntityLibrary(),index,res.disposableDroidBB));
+                recipes.add(new RecipeUI(crafting.getItemLibrary().getRecipes().get(i),crafting.getItemLibrary(),lm.getWorld().getEntityLibrary(),index,res.disposableDroidBB,res.disposableDroidBB40f));
                 index++;
             }
             if(filter==2&&crafting.checkCraftingRecipe(crafting.getItemLibrary().getRecipes().get(i))&&crafting.getItemLibrary().getLearntRecipe()[i])
             {
 
-                recipes.add(new RecipeUI(crafting.getItemLibrary().getRecipes().get(i),crafting.getItemLibrary(),lm.getWorld().getEntityLibrary(),index,res.disposableDroidBB));
+                recipes.add(new RecipeUI(crafting.getItemLibrary().getRecipes().get(i),crafting.getItemLibrary(),lm.getWorld().getEntityLibrary(),index,res.disposableDroidBB,res.disposableDroidBB40f));
                 index++;
                 
             }else if(filter==0)
             {
-                if(lm.getWorld().getEntityLibrary() == null)
-                {
-                    System.out.println("is null");
-                }
-                recipes.add(new RecipeUI(crafting.getItemLibrary().getRecipes().get(i),crafting.getItemLibrary(),lm.getWorld().getEntityLibrary(),i,res.disposableDroidBB));
+                recipes.add(new RecipeUI(crafting.getItemLibrary().getRecipes().get(i),crafting.getItemLibrary(),lm.getWorld().getEntityLibrary(),i,res.disposableDroidBB,res.disposableDroidBB40f));
             }
         }
     }
 
-    public Rectangle getBounds() {
-        return bounds;
-    }
 
-    public void setBounds(Rectangle bounds) {
-        this.bounds = bounds;
-    }
 
-    public ArrayList<CraftingItemUI> getItemUI() {
-        return itemUI;
-    }
-
-    public void setItemUI(ArrayList<CraftingItemUI> itemUI) {
-        this.itemUI = itemUI;
-    }
+//    public ArrayList<CraftingItemUI> getItemUI() {
+//        return itemUI;
+//    }
+//
+//    public void setItemUI(ArrayList<CraftingItemUI> itemUI) {
+//        this.itemUI = itemUI;
+//    }
 
     public Crafting getCrafting() {
         return crafting;
@@ -392,16 +367,16 @@ public class CraftingUI extends UIComponent
 
     @Override
     public void checkDrop(boolean[] k, boolean[] m, Input input, World world) {
-        for(int i=itemUI.size()-1;i>=0;i--)
-        {
-            if(itemUI.get(i).isDrag())
-            {
-                itemUI.get(i).setDrag(false);
-                drag = false;
-                world.setDrag(false);
-                itemUI.get(i).checkDrop(input, world, x, y);
-            }
-        }
+//        for(int i=itemUI.size()-1;i>=0;i--)
+//        {
+//            if(itemUI.get(i).isDrag())
+//            {
+//                itemUI.get(i).setDrag(false);
+//                drag = false;
+//                world.setDrag(false);
+//                itemUI.get(i).checkDrop(input, world, x, y);
+//            }
+//        }
     }
 
     @Override

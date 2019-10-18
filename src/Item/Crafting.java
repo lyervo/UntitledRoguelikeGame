@@ -32,8 +32,8 @@ public class Crafting
     {
         this.inventory = inventory;
         this.itemLibrary = itemLibrary;
-        this.items = new ArrayList<Item>();
-        this.selectIndex = -1;
+        this.items = inventory.getItems();
+        this.selectIndex = 1;
         this.stations = new ArrayList<Furniture>();
        
     }

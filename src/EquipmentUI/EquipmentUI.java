@@ -135,6 +135,17 @@ public class EquipmentUI extends UIComponent
         
     }
     
+    public void renderDesc(Graphics g,Input input)
+    {
+        for(ItemUI i:itemUI)
+        {
+            if(i.isDisplay())
+            {
+                i.renderDesc(g, input);
+            }
+        }
+    }
+    
     
     //Equipment properties, stats of an equipment is represented by it's effects
     //20 - Equipable item

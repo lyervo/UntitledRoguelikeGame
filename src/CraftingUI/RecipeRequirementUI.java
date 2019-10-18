@@ -41,13 +41,25 @@ public class RecipeRequirementUI extends DescBox
     private ArrayList<String> desc_lines;
     private TrueTypeFont font;
     
+    private int columnIndex,rowIndex;
+    
     public RecipeRequirementUI(Item item, TrueTypeFont font,int index,int reqIndex)
     {
         super(item.getTrueName(),item.getDesc(),font);
         this.name = item.getTrueName();
         this.texture = item.getTexture();
         this.description = item.getDesc();
-        this.bounds = new Rectangle(311+(reqIndex*71),64+(index*71),64,64);
+        if(reqIndex<3)
+        {
+            columnIndex = reqIndex;
+            rowIndex = 0;
+            this.bounds = new Rectangle(16+(columnIndex*71),66,64,64);
+        }else
+        {
+            columnIndex = reqIndex%3;
+            rowIndex = reqIndex/3;
+            this.bounds = new Rectangle(16+(columnIndex*71),66+(rowIndex*71),64,64);
+        }
         this.renderDesc = false;
         this.desc_lines = new ArrayList<String>();
         this.font = font;
@@ -58,9 +70,19 @@ public class RecipeRequirementUI extends DescBox
         super(itemType.getName(),itemType.getDesc(),font);
         this.name = itemType.getName();
         this.description = itemType.getDesc();
+        if(reqIndex<3)
+        {
+            columnIndex = reqIndex;
+            rowIndex = 0;
+            this.bounds = new Rectangle(16+(columnIndex*71),66,64,64);
+        }else
+        {
+            columnIndex = reqIndex%3;
+            rowIndex = reqIndex/3;
+            this.bounds = new Rectangle(16+(columnIndex*71),66+(rowIndex*71),64,64);
+        }
         this.texture = itemType.getTexture();
         this.type = itemType.getType();
-        this.bounds = new Rectangle(311+(reqIndex*71),64+(index*71),64,64);
         this.renderDesc = false;
         this.desc_lines = new ArrayList<String>();
         this.font = font;
@@ -71,9 +93,19 @@ public class RecipeRequirementUI extends DescBox
         super(furniture.getName(),furniture.getDesc(),font);
         this.name = furniture.getName();
         this.description = furniture.getDesc();
+        if(reqIndex<3)
+        {
+            columnIndex = reqIndex;
+            rowIndex = 0;
+            this.bounds = new Rectangle(16+(columnIndex*71),66,64,64);
+        }else
+        {
+            columnIndex = reqIndex%3;
+            rowIndex = reqIndex/3;
+            this.bounds = new Rectangle(16+(columnIndex*71),66+(rowIndex*71),64,64);
+        }
         this.texture = furniture.getTexture();
         this.type = furniture.getStationType();
-        this.bounds = new Rectangle(311+(reqIndex*71),64+(index*71),64,64);
         this.renderDesc = false;
         this.desc_lines = new ArrayList<String>();
         this.font = font;
@@ -83,13 +115,13 @@ public class RecipeRequirementUI extends DescBox
     
     public void tick(boolean[] k,boolean[] m,Input input,World world,int scroll,int x,int y)
     {
-        tickDesc(bounds.contains(new Point(input.getMouseX()-x,input.getMouseY()+(scroll*71)-y))&&world.getZ()==world.getCraftingWindow().getZ());
+        tickDesc(bounds.contains(new Point(input.getMouseX()-x,input.getMouseY()-y))&&world.getZ()==world.getCraftingWindow().getZ());
         
     }
     
     public void render(Graphics g, Input input, int index, int reqIndex , int scroll, int x,int y)
     {
-        texture.draw(311+(reqIndex*71)+x,64+(index*71)-(scroll*71)+y,40,40);
+        texture.draw(16+(columnIndex*71)+x,66+(rowIndex*71)+y,64,64);
     }
 
     public String getName() {

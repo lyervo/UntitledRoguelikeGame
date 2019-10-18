@@ -42,15 +42,20 @@ public class RecipeUI extends DescBox
     
     private boolean renderDesc;
     
-    private TrueTypeFont font;
+    private TrueTypeFont font,nameFont;
     
     private ArrayList<String> desc_lines;
     
-    public RecipeUI(Recipe recipe,ItemLibrary itemLibrary,EntityLibrary entityLibrary,int index,TrueTypeFont font)
+    private int index;
+    
+    
+    
+    public RecipeUI(Recipe recipe,ItemLibrary itemLibrary,EntityLibrary entityLibrary,int index,TrueTypeFont font,TrueTypeFont nameFont)
     {
         super(recipe.getName(),itemLibrary.getItemByTrueName(recipe.getName()).getDescTrue(),font);
         this.recipe = recipe;
         this.font = font;
+        this.nameFont = nameFont;
         this.texture = recipe.getTexture();
         
         this.desc = itemLibrary.getItemByTrueName(recipe.getName()).getDescTrue();
@@ -84,6 +89,8 @@ public class RecipeUI extends DescBox
             req.add(new RecipeRequirementUI(entityLibrary.getFurnitureTemplateByStationType(recipe.getStations().get(i)),font,index,i+recipe.getIngredients().size()));
         }
         
+        this.index = index;
+        
         
     }
     
@@ -110,9 +117,12 @@ public class RecipeUI extends DescBox
                 
             }
 
-            for(int i=0;i<req.size();i++)
+            if(crafting.getSelectIndex()==index)
             {
-                req.get(i).tick(k,m,input,world,scroll,x,y);
+                for(int i=0;i<req.size();i++)
+                {
+                    req.get(i).tick(k,m,input,world,scroll,x,y);
+                }
             }
         }
     }
@@ -131,15 +141,23 @@ public class RecipeUI extends DescBox
             g.fillRect(bounds.x+x, bounds.y-(scroll*71)+y, bounds.width, bounds.height);
             g.setColor(Color.black);
             g.drawRect(bounds.x+x, bounds.y-(scroll*71)+y, bounds.width, bounds.height);
-
+            g.setFont(font);
+            g.setColor(Color.white);
+            g.drawString(name, bounds.x+x+75, bounds.y+y-(scroll*71));
 
 
             texture.draw(241+x,66+(index*71)-(scroll*71)+y,64,64);
-            for(int i=0;i<req.size();i++)
-            {
-                req.get(i).render(g,input,index,i,scroll,x,y);
-            }
+            
         }
+        if(crafting.getSelectIndex()==index)
+            {
+                
+            
+                for(int i=0;i<req.size();i++)
+                {
+                    req.get(i).render(g,input,index,i,scroll,x,y);
+                }
+            }
         
         
         

@@ -95,6 +95,11 @@ public abstract class UIWindow
         }
     }
     
+    public void renderDesc(Graphics g,Input input)
+    {
+        uiComponent.renderDesc(g, input);
+    }
+    
     public void dragRender(Graphics g,Input input)
     {
         if(display)

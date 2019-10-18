@@ -29,48 +29,46 @@ public class Game extends StateBasedGame
     public static void main(String[] args) throws IOException, SlickException
     {
        
-        int screenHeight = 0;
-        int screenWidth = 0;
-        boolean fullScreen = false;
-        
-        
-        int lineCount = 1;
-        
-        try
-        {
-            File config = new File("config.cfg");
-            Scanner configReader = new Scanner(config);
-            while(configReader.hasNext())
-            {
-                String configLine = configReader.nextLine();
-                
-                String[] separator = configLine.split("=");
-                switch(separator[0])
-                {
-                    case "ScreenHeight":
-                        screenHeight = Integer.parseInt(separator[1]);
-                        break;
-                    case "ScreenWidth":
-                        screenWidth = Integer.parseInt(separator[1]);
-                        break;
-                    case "FullScreen":
-                        if(separator[1].equals("0"))
-                        {
-                            fullScreen = false;
-                        }else
-                        {
-                            fullScreen = true;
-                        }
-                        break;
-                        
-                    default:
-                        System.out.println("UNKNOWN CONFIG LINE IN config.cfg LINE "+lineCount);
-                        break;
-                }
-                
-                lineCount++;
-                
-            }
+//        int screenHeight = 0;
+//        int screenWidth = 0;
+//        boolean fullScreen = false;
+//        int lineCount = 1;
+//        
+//        try
+//        {
+//            File config = new File("config.cfg");
+//            Scanner configReader = new Scanner(config);
+//            while(configReader.hasNext())
+//            {
+//                String configLine = configReader.nextLine();
+//                
+//                String[] separator = configLine.split("=");
+//                switch(separator[0])
+//                {
+//                    case "ScreenHeight":
+//                        screenHeight = Integer.parseInt(separator[1]);
+//                        break;
+//                    case "ScreenWidth":
+//                        screenWidth = Integer.parseInt(separator[1]);
+//                        break;
+//                    case "FullScreen":
+//                        if(separator[1].equals("0"))
+//                        {
+//                            fullScreen = false;
+//                        }else
+//                        {
+//                            fullScreen = true;
+//                        }
+//                        break;
+//                        
+//                    default:
+//                        System.out.println("UNKNOWN CONFIG LINE IN config.cfg LINE "+lineCount);
+//                        break;
+//                }
+//                
+//                lineCount++;
+//                
+//            }
             
             //automatically gets screen dimension
             
@@ -82,10 +80,10 @@ public class Game extends StateBasedGame
             app.setFullscreen(true);   
             app.start();
             
-        }catch(IOException e)
-        {
-            
-        }
+//        }catch(IOException e)
+//        {
+//            
+//        }
         
 
     }

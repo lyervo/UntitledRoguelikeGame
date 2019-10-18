@@ -317,6 +317,8 @@ public class World
             
         }
         
+        
+        
         if(xItemTextFieldActive)
         {
             xItemTextField.renderBackground(g);
@@ -324,6 +326,10 @@ public class World
             xItemTextField.render(container, g);
         }
         
+        for(UIWindow ui:uis)
+        {
+            ui.renderDesc(g, input);
+        }
         
         if(optionTab!=null)
         {

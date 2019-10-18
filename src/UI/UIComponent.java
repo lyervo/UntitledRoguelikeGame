@@ -39,6 +39,8 @@ public abstract class UIComponent
     
     public abstract int getUIHeight();
     
+    public abstract void renderDesc(Graphics g,Input input);
+    
     public int getX() {
         return x;
     }

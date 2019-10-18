@@ -153,27 +153,9 @@ public class InventoryUI extends UIComponent
         }
         
         
+        if(drag)
+        {
         
-        if(!drag)
-        {
-            for(ItemUI i:primaryItemUI)
-            {
-                if(i.isDisplay())
-                {
-                    i.renderDesc(g, input);
-                }
-            }
-            
-            for(ItemUI i:secondaryItemUI)
-            {
-                if(i.isDisplay())
-                {
-                    i.renderDesc(g, input);
-                }
-            }
-            
-        }else
-        {
             for(ItemUI i:primaryItemUI)
             {
                 if(i.isDrag())
@@ -192,6 +174,29 @@ public class InventoryUI extends UIComponent
         }
         
 
+    }
+    
+    public void renderDesc(Graphics g,Input input)
+    {
+        if(!drag)
+        {
+            for(ItemUI i:primaryItemUI)
+            {
+                if(i.isDisplay())
+                {
+                    i.renderDesc(g, input);
+                }
+            }
+            
+            for(ItemUI i:secondaryItemUI)
+            {
+                if(i.isDisplay())
+                {
+                    i.renderDesc(g, input);
+                }
+            }
+            
+        }
     }
     
     @Override

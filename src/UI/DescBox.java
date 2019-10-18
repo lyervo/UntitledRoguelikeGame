@@ -18,7 +18,7 @@ import org.newdawn.slick.TrueTypeFont;
  */
 public abstract class DescBox
 {
-    private String name;
+    protected String name;
     private ArrayList<String> desc_lines;
     private TrueTypeFont font;
     
@@ -93,7 +93,8 @@ public abstract class DescBox
                 display = true;
 
             }
-        } else {
+        } else
+        {
             display = false;
             desc_hover = 0;
             last_desc_hover = 0;

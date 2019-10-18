@@ -103,6 +103,11 @@ public class FurnitureUI extends UIComponent{
         }
         
     }
+    
+    public void renderDesc(Graphics g,Input input)
+    {
+        
+    }
 
     @Override
     public void tick(boolean[] k, boolean[] m, Input input, World world, int x, int y, UIWindow window)

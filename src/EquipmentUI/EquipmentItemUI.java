@@ -57,10 +57,23 @@ public class EquipmentItemUI extends ItemUI
             {
                 int colIndex = index%3;
                 int rowIndex = index/3;
-                item.getTexture().draw((colIndex * 64) + (colIndex * 7) + 16+x, (rowIndex*71)+66+y, 64, 64);
+                if(hover)
+                {
+                    item.getTexture().draw((colIndex * 64) + (colIndex * 7) + 16+x, (rowIndex*71)+66+y, 64, 64);
+                }else
+                {
+                    item.getTexture().draw((colIndex * 64) + (colIndex * 7) + 16+x, (rowIndex*71)+66+y, 64, 64,Color.gray);
+                }
             }else
             {
-                item.getTexture().draw(16+x,137+y, 64, 64);
+                if(hover)
+                {
+                    item.getTexture().draw(16+x,137+y, 64, 64);
+                }else
+                {
+                    item.getTexture().draw(16+x,137+y, 64, 64,Color.gray);
+                }
+                    
             }
             
         }
@@ -81,6 +94,9 @@ public class EquipmentItemUI extends ItemUI
             } else {
                 hover = false;
             }
+            
+            
+            tickDesc((hover&&world.getZ()==world.getEquipmentWindow().getZ()));
 
             if (m[1] && hover)
             {
