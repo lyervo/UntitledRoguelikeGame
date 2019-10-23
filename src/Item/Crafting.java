@@ -38,46 +38,46 @@ public class Crafting
        
     }
     
-    public void clearAllIngridient()
-    {
-        if(!items.isEmpty())
-        {
-            for(int i=items.size()-1;i>=0;i--)
-            {
-                inventory.addItem(new Item(items.get(i)));
-                items.remove(i);
-            }
-        }
-    }
-    
-    public void addIngredient(int index)
-    {
-        
-        if(items.size()>=9)
-        {
-            return;
-        }
-        
-        if(inventory.getItems().get(index).isMetalMaterial())
-        {
-            for(int i=items.size()-1;i>=0;i--)
-            {
-                if(items.get(i).isMetalMaterial())
-                {
-                    inventory.addItem(items.get(i));
-                    items.remove(i);
-                }
-            }
-            items.add(new Item(inventory.getItems().get(index)));
-        }else
-        {
-            items.add(new Item(inventory.getItems().get(index)));
-        }
-            
-        inventory.removeItem(inventory.getItems().get(index),-1);
-        
-        
-    }
+//    public void clearAllIngridient()
+//    {
+//        if(!items.isEmpty())
+//        {
+//            for(int i=items.size()-1;i>=0;i--)
+//            {
+//                inventory.addItem(new Item(items.get(i)));
+//                items.remove(i);
+//            }
+//        }
+//    }
+//    
+//    public void addIngredient(int index)
+//    {
+//        
+//        if(items.size()>=9)
+//        {
+//            return;
+//        }
+//        
+//        if(inventory.getItems().get(index).isMetalMaterial())
+//        {
+//            for(int i=items.size()-1;i>=0;i--)
+//            {
+//                if(items.get(i).isMetalMaterial())
+//                {
+//                    inventory.addItem(items.get(i));
+//                    items.remove(i);
+//                }
+//            }
+//            items.add(new Item(inventory.getItems().get(index)));
+//        }else
+//        {
+//            items.add(new Item(inventory.getItems().get(index)));
+//        }
+//            
+//        inventory.removeItem(inventory.getItems().get(index),-1);
+//        
+//        
+//    }
     
     public void getNearbyStations(LocalMap lm)
     {
@@ -115,8 +115,10 @@ public class Crafting
                     
                     for(int i=items.size()-1;i>=0;i--)
                     {
-                        if(items.get(i).getProperties().contains(52))//is a metal material
+                        System.out.println("noirs");
+                        if(items.get(i).getProperties().contains(52)&&items.get(i).getName().equals(recipe.getIngredientByGenericType(52).getItem()))//is a metal material
                         {
+                            System.out.println("Insdjkns");
                             String[] splitter = items.get(i).getName().split(" ");
                             String template_name = "";
                             for(int z=1;z<splitter.length;z++)
@@ -174,9 +176,10 @@ public class Crafting
             for(int j=items.size()-1;j>=0;j--)
             {
                 
-                if(recipe.getIngredients().get(i).getKey().startsWith("<"))
+                if(recipe.getIngredients().get(i).getItem().startsWith("<"))
                 {
-                    if(items.get(j).getProperties().contains(itemLibrary.getItemTypeByName(recipe.getIngredients().get(i).getKey()).getType())&&recipe.getIngredients().get(i).getValue()==1)
+                   
+                    if(items.get(j).getProperties().contains(itemLibrary.getItemTypeByName(recipe.getIngredients().get(i).getItem()).getType())&&recipe.getIngredients().get(i).getConsume()==1)
                     {
                         if(items.get(j).isStackable())
                         {
@@ -198,8 +201,11 @@ public class Crafting
                     }
                 }else
                 {
-                    if(items.get(j).getTrueName().equals(recipe.getIngredients().get(i).getKey())&&recipe.getIngredients().get(i).getValue()==1)
+                    
+                    if(items.get(j).getTrueName().equals(recipe.getIngredients().get(i).getItem())&&recipe.getIngredients().get(i).getConsume()==1)
                     {
+                        
+                        System.out.println(items.get(j).getName());
                 
                         if(items.get(j).isStackable())
                         {
@@ -245,9 +251,9 @@ public class Crafting
             for(int j=recipeItems.size()-1;j>=0;j--)
             {
                 
-                if(recipe.getIngredients().get(i).getKey().startsWith("<"))
+                if(recipe.getIngredients().get(i).getItem().startsWith("<"))
                 {
-                    if(recipeItems.get(j).getProperties().contains(itemLibrary.getItemTypeByName(recipe.getIngredients().get(i).getKey()).getType())&&notFound)
+                    if(recipeItems.get(j).getProperties().contains(itemLibrary.getItemTypeByName(recipe.getIngredients().get(i).getItem()).getType())&&notFound)
                     {
                    
                         if(recipeItems.get(j).isStackable())
@@ -268,7 +274,7 @@ public class Crafting
                     }
                 }else
                 {
-                    if(recipeItems.get(j).getTrueName().equals(recipe.getIngredients().get(i).getKey())&&notFound)
+                    if(recipeItems.get(j).getTrueName().equals(recipe.getIngredients().get(i).getItem())&&notFound)
                     {
                         
                         if(recipeItems.get(j).isStackable())

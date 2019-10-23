@@ -130,10 +130,7 @@ public class ItemOptionTab extends OptionTab
                 inventory.getEquipment().unequip(item.getType());
                 lm.getWorld().moved();
                 break;
-            case 25:
-                inventory.getCrafting().addIngredient(index);
-//                lm.getWorld().getInventory_ui().refreshInventoryUI(lm);
-                break;
+                
         }
         
         if(inventoryUI!=null)
@@ -160,10 +157,6 @@ public class ItemOptionTab extends OptionTab
                 options.add(new Pair("Drop X",3));
             }
             
-            if(getLm().getWorld().getUiDisplay()==2)
-            {
-                options.add(new Pair("Add Ingridient",25));
-            }
                 
             for(Integer i:item.getProperties())
             {

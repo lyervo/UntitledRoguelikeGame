@@ -39,7 +39,7 @@ public class Res
     
     //Inventory UI
     public Image inventory_icon;
-    public Image inventory_bg_1,inventory_bg_2,crafting_bg_1,crafting_bg_2,equipment_bg,inventory_bg_bar;
+    public Image inventory_bg_1,inventory_bg_2,crafting_bg_1,equipment_bg,inventory_bg_bar;
     public Image inventory_scroll_up,inventory_scroll_down;
     public Image quick_item_bg;
     //crafting UI
@@ -67,7 +67,7 @@ public class Res
     
     public Image wooden_sword,iron_sword,zweihander,wooden_shield,dagger;
     
-    public Image metal_bar;
+    public Image metal_bar,metal_bar_2;
     
     
     public Image table;
@@ -112,7 +112,7 @@ public class Res
         
         crafting_icon = new Image("res/texture/ui/icon/crafting_icon.png");
         crafting_bg_1 = new Image("res/texture/ui/background/crafting_bg_1.png");
-        crafting_bg_2 = new Image("res/texture/ui/background/crafting_bg_2.png");
+        
         crafting_clear_all = new Image("res/texture/ui/icon/crafting_clear_all.png");
         crafting_craft = new Image("res/texture/ui/icon/crafting_craft.png");
         crafting_filter_by_learnt = new Image("res/texture/ui/icon/crafting_filter_by_learnt.png");
@@ -153,6 +153,7 @@ public class Res
         wooden_shaft = new Image("res/texture/items/wooden_shaft.png");
         
         metal_bar = new Image("res/texture/items/metal_bar.png");
+        metal_bar_2 = new Image("res/texture/items/metal_bar_2.png");
         
         dagger = new Image("res/texture/items/dagger.png");
         wooden_sword = new Image("res/texture/items/wooden_sword.png");
@@ -191,6 +192,7 @@ public class Res
         images.add(new Pair("wood_shavings",wood_shavings));
         images.add(new Pair("table",table));
         images.add(new Pair("metal_bar",metal_bar));
+        images.add(new Pair("metal_bar_2",metal_bar_2));
         
         
         sprites.add(new Pair("camp_fire",camp_fire));

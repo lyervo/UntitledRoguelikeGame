@@ -279,6 +279,17 @@ public class Item
         return -1;
     }
     
+    public Integer getGenericType()
+    {
+        for(Integer i:properties)
+        {
+            if(i>=50&&i<=100)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
     
     public String getDesc() {
         if(unidentified_desc==null)

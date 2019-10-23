@@ -8,8 +8,10 @@ package CraftingUI;
 import UI.DescBox;
 import Entity.EntityLibrary;
 import Item.Crafting;
+import Item.Inventory;
 import Item.ItemLibrary;
 import Item.Recipe;
+import Res.Res;
 import World.World;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -48,9 +50,12 @@ public class RecipeUI extends DescBox
     
     private int index;
     
+    private ArrayList<MaterialUI> materials;
     
+    private EntityLibrary entityLibrary;
+    private ItemLibrary itemLibrary;
     
-    public RecipeUI(Recipe recipe,ItemLibrary itemLibrary,EntityLibrary entityLibrary,int index,TrueTypeFont font,TrueTypeFont nameFont)
+    public RecipeUI(Recipe recipe,ItemLibrary itemLibrary,EntityLibrary entityLibrary,int index,TrueTypeFont font,TrueTypeFont nameFont,Inventory inventory,Res res)
     {
         super(recipe.getName(),itemLibrary.getItemByTrueName(recipe.getName()).getDescTrue(),font);
         this.recipe = recipe;
@@ -63,24 +68,39 @@ public class RecipeUI extends DescBox
         req = new ArrayList<RecipeRequirementUI>();
 
         
-        bounds = new Rectangle(231,66+(index*71),500,50);
+        bounds = new Rectangle(231,66+(index*48),500,48);
         
-        textureBounds = new Rectangle(241,66+(index*71),64,64);
+        textureBounds = new Rectangle(241,66+(index*48),48,48);
         
         descHover = 0;
         lastDescHover = 0;
         
         desc_lines = new ArrayList<String>();
         
+        materials = new ArrayList<MaterialUI>();
+        
+        int column = 0;
+        this.index = index;
+        this.itemLibrary = itemLibrary;
+        
+        this.entityLibrary = entityLibrary;
+        
         for(int i=0;i<recipe.getIngredients().size();i++)
         {
-            if(recipe.getIngredients().get(i).getKey().startsWith("<"))
+            if(recipe.getIngredients().get(i).getItem().startsWith("<"))
             {
-                req.add(new RecipeRequirementUI(itemLibrary.getItemTypeByName(recipe.getIngredients().get(i).getKey()),font,index,i));
+                req.add(new RecipeRequirementUI(itemLibrary.getItemTypeByName(recipe.getIngredients().get(i).getItem()),font,index,i));
+                materials.add(new MaterialUI(recipe,inventory,res,column,itemLibrary.getItemTypeByName(recipe.getIngredients().get(i).getItem()).getType(),index,itemLibrary,this));
+                column++;
             }
             else
             {
-                req.add(new RecipeRequirementUI(itemLibrary.getItemByTrueName(recipe.getIngredients().get(i).getKey()),font,index,i));
+                req.add(new RecipeRequirementUI(itemLibrary.getItemByTrueName(recipe.getIngredients().get(i).getItem()),font,index,i));
+                if(itemLibrary.getItemByTrueName(recipe.getIngredients().get(i).getItem()).getGenericType()!=-1)
+                {
+                    materials.add(new MaterialUI(recipe,inventory,res,column,itemLibrary.getItemByTrueName(recipe.getIngredients().get(i).getItem()).getGenericType(),index,itemLibrary,this));
+                    column++;
+                }
             }
         }
         
@@ -89,16 +109,14 @@ public class RecipeUI extends DescBox
             req.add(new RecipeRequirementUI(entityLibrary.getFurnitureTemplateByStationType(recipe.getStations().get(i)),font,index,i+recipe.getIngredients().size()));
         }
         
-        this.index = index;
-        
-        
+
     }
     
     public void tick(boolean[] k,boolean[] m,Input input,World world,int index,int scroll,Crafting crafting,int x,int y)
     {
-        if(bounds.y-(scroll*71)>=66&&bounds.y-(scroll*71)<=344)
+        if(bounds.y-(scroll*48)>=66&&bounds.y-(scroll*48)<=344)
         {
-            if(bounds.contains(new Point(input.getMouseX()-x,input.getMouseY()+(scroll*71)-y)))
+            if(bounds.contains(new Point(input.getMouseX()-x,input.getMouseY()+(scroll*48)-y)))
             {
                 hover = true;
             }else
@@ -106,8 +124,13 @@ public class RecipeUI extends DescBox
                 hover = false;
             }
 
-            tickDesc((hover&&textureBounds.contains(new Point(input.getMouseX()-x,input.getMouseY()+(scroll*71)-y))&&world.getZ()==world.getCraftingWindow().getZ()));
+            tickDesc((hover&&textureBounds.contains(new Point(input.getMouseX()-x,input.getMouseY()+(scroll*48)-y))&&world.getZ()==world.getCraftingWindow().getZ()));
             
+            
+            for(MaterialUI ui:materials)
+            {
+                ui.tick(k, m, input, world, x, y, scroll,this);
+            }
                 
                 
 
@@ -127,9 +150,34 @@ public class RecipeUI extends DescBox
         }
     }
     
+    public void refreshRequirement()
+    {
+        req.clear();
+        for(int i=0;i<recipe.getIngredients().size();i++)
+        {
+           
+            if(recipe.getIngredients().get(i).getItem().startsWith("<"))
+            {
+                req.add(new RecipeRequirementUI(itemLibrary.getItemTypeByName(recipe.getIngredients().get(i).getItem()),font,index,i));
+                
+            }
+            else
+            {
+                req.add(new RecipeRequirementUI(itemLibrary.getItemByTrueName(recipe.getIngredients().get(i).getItem()),font,index,i));
+                
+            }
+        }
+        for(int i=0;i<recipe.getStations().size();i++)
+        {
+            System.out.println("loop a loop");
+            req.add(new RecipeRequirementUI(entityLibrary.getFurnitureTemplateByStationType(recipe.getStations().get(i)),font,index,i+recipe.getIngredients().size()));
+        }
+    }
+    
+    
     public void render(Graphics g,Input input,int index,int scroll,Crafting crafting,int x,int y)
     {
-        if(bounds.y-(scroll*71)>=66&&bounds.y-(scroll*71)<=344)
+        if(bounds.y-(scroll*48)>=66&&bounds.y-(scroll*48)<=344)
         {
             if(crafting.getSelectIndex()==recipe.getId())
             {
@@ -138,15 +186,21 @@ public class RecipeUI extends DescBox
             {
                 g.setColor(Color.decode("#757161"));
             }
-            g.fillRect(bounds.x+x, bounds.y-(scroll*71)+y, bounds.width, bounds.height);
+            g.fillRect(bounds.x+x, bounds.y-(scroll*48)+y, bounds.width, bounds.height);
             g.setColor(Color.black);
-            g.drawRect(bounds.x+x, bounds.y-(scroll*71)+y, bounds.width, bounds.height);
+            g.drawRect(bounds.x+x, bounds.y-(scroll*48)+y, bounds.width, bounds.height);
             g.setFont(font);
             g.setColor(Color.white);
-            g.drawString(name, bounds.x+x+75, bounds.y+y-(scroll*71));
+            g.drawString(name, bounds.x+x+75, bounds.y+y-(scroll*48));
 
 
-            texture.draw(241+x,66+(index*71)-(scroll*71)+y,64,64);
+            texture.draw(241+x,63+(index*48)-(scroll*48)+y,48,48);
+            
+            for(MaterialUI ui :materials)
+            {
+                ui.render(g, input, x, y,scroll);
+            }
+            
             
         }
         if(crafting.getSelectIndex()==index)

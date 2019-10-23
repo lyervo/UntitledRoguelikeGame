@@ -19,7 +19,7 @@ public class Recipe
 {
     private String name;
     private int amount;
-    private ArrayList<Pair<String,Integer>> ingredients;
+    private ArrayList<IngredientRequirement> ingredients;
     private ArrayList<Integer> stations;
     private ArrayList<Pair<String,Integer>> requirements;
     private boolean learnt;
@@ -34,7 +34,7 @@ public class Recipe
     public Recipe(JSONObject jsonObj,ItemLibrary itemLibrary,int id)
     {
         this.id = id;
-        ingredients = new ArrayList<Pair<String,Integer>>();
+        ingredients = new ArrayList<IngredientRequirement>();
         stations = new ArrayList<Integer>();
         requirements = new ArrayList<Pair<String,Integer>>();
         
@@ -49,7 +49,7 @@ public class Recipe
             {
                 JSONObject ingObj = (JSONObject)ingArr.get(i);
               
-                ingredients.add(new Pair((String)ingObj.get("name"),Integer.parseInt((String)ingObj.get("consumed"))));
+                ingredients.add(new IngredientRequirement((String)ingObj.get("name"),Integer.parseInt((String)ingObj.get("consumed"))));
             }
         }
         
@@ -96,6 +96,43 @@ public class Recipe
         learnt = true;
         
     }
+    
+    public void setRecipeGeneric(Item item,ItemLibrary itemLibrary)
+    {
+        
+        for(int i=0;i<ingredients.size();i++)
+        {
+            if(ingredients.get(i).getItem().startsWith("<"))
+            {
+                if(itemLibrary.getItemTypeByType(item.getGenericType()).getName().equals(ingredients.get(i).getItem()))
+                {
+                    ingredients.get(i).setItem(item.getName());
+                    ingredients.get(i).setGenericType(item.getGenericType());
+                }
+            }else
+            {
+                if(itemLibrary.getItemByTrueName(ingredients.get(i).getItem()).getGenericType()==item.getGenericType())
+                {
+                    ingredients.get(i).setItem(item.getName());
+                    ingredients.get(i).setGenericType(item.getGenericType());
+                }
+            }
+        }
+        
+    }
+    
+    public IngredientRequirement getIngredientByGenericType(int type)
+    {
+        for(int i=0;i<ingredients.size();i++)
+        {
+            if(ingredients.get(i).getGenericType() == type)
+            {
+                return ingredients.get(i);
+            }
+        }
+        return null;
+    }
+    
 
     public String getName() {
         return name;
@@ -113,11 +150,11 @@ public class Recipe
         this.amount = amount;
     }
 
-    public ArrayList<Pair<String, Integer>> getIngredients() {
+    public ArrayList<IngredientRequirement> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(ArrayList<Pair<String, Integer>> ingredients) {
+    public void setIngredients(ArrayList<IngredientRequirement> ingredients) {
         this.ingredients = ingredients;
     }
 

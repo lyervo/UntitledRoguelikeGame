@@ -51,6 +51,6 @@ public class StationUI extends DescBox
     
     public void tick(boolean[] k,boolean[] m,Input input,World world,int x,int y)
     {
-        tickDesc(bounds.contains(new Point(input.getMouseX()+x,input.getMouseY()+y))&&world.getZ()==world.getCraftingWindow().getZ());
+        tickDesc(bounds.contains(new Point(input.getMouseX()-x,input.getMouseY()-y))&&world.getZ()==world.getCraftingWindow().getZ());
     }
 }

@@ -450,6 +450,19 @@ public class ItemLibrary
         }
         return null;
     }
+    
+    public ItemType getItemTypeByType(int type)
+    {
+        for(ItemType i:types)
+        {
+            if(i.getType()==type)
+            {
+                return i;
+            }
+        }
+        return null;
+    }
+    
 
     public String getSeed() {
         return seed;

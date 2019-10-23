@@ -34,7 +34,7 @@ public class CraftingUI extends UIComponent
     private InventoryUI inventoryUI;
     private Res res;
     
-    private CraftingClearAllButton craftingClearAllButton;
+//    private CraftingClearAllButton craftingClearAllButton;
     private CraftingCraftButton craftingCraftButton;
     private CraftingFilterButton craftingFilterButton;
     private RecipeScrollUpButton recipeScrollUpButton;
@@ -67,7 +67,7 @@ public class CraftingUI extends UIComponent
         this.inventoryUI = inventoryUI;
 
 //        itemUI = new ArrayList<CraftingItemUI>();
-        craftingClearAllButton = new CraftingClearAllButton(16,279,res.crafting_clear_all,crafting,inventoryUI);
+//        craftingClearAllButton = new CraftingClearAllButton(16,279,res.crafting_clear_all,crafting,inventoryUI);
         craftingCraftButton = new CraftingCraftButton(85,279,res.crafting_craft,crafting,inventoryUI);
         craftingFilterButton = new CraftingFilterButton(154,279,res.crafting_filter_by_learnt,res.crafting_filter_by_learnt_and_craftable,this);
         
@@ -98,7 +98,7 @@ public class CraftingUI extends UIComponent
     public void render(Graphics g,Input input,int x,int y)
     {
         texture.draw(x,y);
-        craftingClearAllButton.render(g,x,y);
+//        craftingClearAllButton.render(g,x,y);
         craftingCraftButton.render(g,x,y);
         craftingFilterButton.render(g,x,y);
         recipeScrollUpButton.render(g,x,y);
@@ -148,13 +148,20 @@ public class CraftingUI extends UIComponent
                     r.renderDesc(g, input);
                 }
             }
+            for(StationUI s:stations)
+            {
+                if(s.isDisplay())
+                {
+                    s.renderDesc(g, input);
+                }
+            }
         }
     }
     
     @Override
     public void tick(boolean[] k,boolean[] m,Input input,World world,int x,int y,UIWindow window)
     {
-        craftingClearAllButton.tick(m, input, world,x,y,window.getZ());
+//        craftingClearAllButton.tick(m, input, world,x,y,window.getZ());
         craftingCraftButton.tick(m, input, world,x,y,window.getZ());
         craftingFilterButton.tick(m, input, world,x,y,window.getZ());
         recipeScrollUpButton.tick(m, input, world,x,y,window.getZ());
@@ -199,7 +206,7 @@ public class CraftingUI extends UIComponent
     {
         if(recipes.size()>4)
         {
-            if(recipes.size()-scroll>4)
+            if(recipes.size()-scroll>5)
             {
                 scroll++;
             }
@@ -231,18 +238,18 @@ public class CraftingUI extends UIComponent
             
             if(filter==1&&crafting.getItemLibrary().getLearntRecipe()[i])
             {
-                recipes.add(new RecipeUI(crafting.getItemLibrary().getRecipes().get(i),crafting.getItemLibrary(),lm.getWorld().getEntityLibrary(),index,res.disposableDroidBB,res.disposableDroidBB40f));
+                recipes.add(new RecipeUI(crafting.getItemLibrary().getRecipes().get(i),crafting.getItemLibrary(),lm.getWorld().getEntityLibrary(),index,res.disposableDroidBB,res.disposableDroidBB40f,inventoryUI.getPlayer_inventory(),res));
                 index++;
             }
             if(filter==2&&crafting.checkCraftingRecipe(crafting.getItemLibrary().getRecipes().get(i))&&crafting.getItemLibrary().getLearntRecipe()[i])
             {
 
-                recipes.add(new RecipeUI(crafting.getItemLibrary().getRecipes().get(i),crafting.getItemLibrary(),lm.getWorld().getEntityLibrary(),index,res.disposableDroidBB,res.disposableDroidBB40f));
+                recipes.add(new RecipeUI(crafting.getItemLibrary().getRecipes().get(i),crafting.getItemLibrary(),lm.getWorld().getEntityLibrary(),index,res.disposableDroidBB,res.disposableDroidBB40f,inventoryUI.getPlayer_inventory(),res));
                 index++;
                 
             }else if(filter==0)
             {
-                recipes.add(new RecipeUI(crafting.getItemLibrary().getRecipes().get(i),crafting.getItemLibrary(),lm.getWorld().getEntityLibrary(),i,res.disposableDroidBB,res.disposableDroidBB40f));
+                recipes.add(new RecipeUI(crafting.getItemLibrary().getRecipes().get(i),crafting.getItemLibrary(),lm.getWorld().getEntityLibrary(),i,res.disposableDroidBB,res.disposableDroidBB40f,inventoryUI.getPlayer_inventory(),res));
             }
         }
     }
@@ -289,13 +296,13 @@ public class CraftingUI extends UIComponent
         this.recipeBounds = recipeBounds;
     }
 
-    public CraftingClearAllButton getCraftingClearAllButton() {
-        return craftingClearAllButton;
-    }
-
-    public void setCraftingClearAllButton(CraftingClearAllButton craftingClearAllButton) {
-        this.craftingClearAllButton = craftingClearAllButton;
-    }
+//    public CraftingClearAllButton getCraftingClearAllButton() {
+//        return craftingClearAllButton;
+//    }
+//
+//    public void setCraftingClearAllButton(CraftingClearAllButton craftingClearAllButton) {
+//        this.craftingClearAllButton = craftingClearAllButton;
+//    }
 
     public CraftingCraftButton getCraftingCraftButton() {
         return craftingCraftButton;

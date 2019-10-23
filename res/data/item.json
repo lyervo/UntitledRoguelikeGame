@@ -221,7 +221,7 @@
 	{
 		"category":"item",
 		"trueName":"Steel Bar",
-		"texture":"metal_bar",
+		"texture":"metal_bar_2",
 		"desc":"A bar of Steel.",
 		"unidentified_desc":null,
 		"stack":"1",
