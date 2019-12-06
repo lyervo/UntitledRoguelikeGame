@@ -151,6 +151,12 @@ public class Inventory
     public void debugInit(ItemLibrary itemLibrary)
     {
         addItem(new Item(itemLibrary.getItemByTrueName("Steel Bar")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Steel Bar")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Steel Bar")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Steel Bar")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Bronze Bar")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Bronze Bar")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Bronze Bar")));
         addItem(new Item(itemLibrary.getItemByTrueName("Iron Bar")));
         addItem(new Item(itemLibrary.getItemByTrueName("Iron Bar")));
         addItem(new Item(itemLibrary.getItemByTrueName("Iron Bar")));
@@ -162,7 +168,11 @@ public class Inventory
         addItem(new Item(itemLibrary.getItemByTrueName("Wood")));
         addItem(new Item(itemLibrary.getItemByTrueName("Wood")));
         addItem(new Item(itemLibrary.getItemByTrueName("Wood")));
-        addItem(new Item(itemLibrary.getItemByTrueName("Wood")));
+        for(int i=0;i<20;i++)
+        {
+            addItem(new Item(itemLibrary.getItemByTrueName("Wood")));
+        }
+        
         addItem(new Item(itemLibrary.getItemByTrueName("Tree Leaves")));
         for(int i=0;i<750;i++)
         {

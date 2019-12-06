@@ -15,6 +15,7 @@ import World.World;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.HashMap;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -40,12 +41,14 @@ public class MaterialUI
     
     private ItemType itemType;
     
-    public MaterialUI(Recipe recipe,Inventory inventory,Res res,int column,int type,int index,ItemLibrary itemLibrary,RecipeUI ui)
+    private HashMap<String,String> previousMaterial;
+    
+    public MaterialUI(Recipe recipe,Inventory inventory,Res res,int column,int type,int index,ItemLibrary itemLibrary,RecipeUI ui,HashMap<String,String> previousMaterials)
     {
         
         this.recipe = recipe;
         this.type = type;
-        
+        this.previousMaterial = previousMaterials;
         itemUI = new ArrayList<MaterialItemUI>();
         
         this.itemType = itemLibrary.getItemTypeByType(type);
@@ -63,10 +66,39 @@ public class MaterialUI
         
         this.bounds = new Rectangle(700-(column*48),66+(index*48),48,48);
         
-        materialIndex = 0;
+        
+        
+        
         if(itemUI.size()>=1)
         {
-            this.recipe.setRecipeGeneric(itemUI.get(0).getItem(),itemLibrary );
+            
+            if(previousMaterials.get(recipe.getName())!=null)
+            {
+                boolean found = false;
+               
+                String previousMat = previousMaterials.get(recipe.getName());
+                for(int i=0;i<itemUI.size();i++)
+                {
+                    if(itemUI.get(i).getName().equals(previousMat))
+                    {
+                        
+                        this.recipe.setRecipeGeneric(itemUI.get(i).getItem(), itemLibrary);
+                        materialIndex = i;
+                        found = true;
+                    }
+                }
+                if(!found)
+                {
+                    this.recipe.setRecipeGeneric(itemUI.get(0).getItem(),itemLibrary );
+                    materialIndex = 0;
+                }
+                
+            }else
+            {
+                this.recipe.setRecipeGeneric(itemUI.get(0).getItem(),itemLibrary );
+                materialIndex = 0;
+            }
+            
             ui.refreshRequirement();
         }else
         {

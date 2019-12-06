@@ -1,4 +1,10 @@
 [
+,
+	{
+		"name":"Bronze",
+		"effect":[],
+		"properties":[]
+	},
 	{
 		"name":"Iron",
 		"effect":[],
@@ -6,11 +12,6 @@
 	},
 	{
 		"name":"Steel",
-		"effect":[],
-		"properties":[]
-	},
-	{
-		"name":"Bronze",
 		"effect":[],
 		"properties":[]
 	}

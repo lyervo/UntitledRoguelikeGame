@@ -16,6 +16,7 @@ import World.World;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.HashMap;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -55,9 +56,14 @@ public class RecipeUI extends DescBox
     private EntityLibrary entityLibrary;
     private ItemLibrary itemLibrary;
     
-    public RecipeUI(Recipe recipe,ItemLibrary itemLibrary,EntityLibrary entityLibrary,int index,TrueTypeFont font,TrueTypeFont nameFont,Inventory inventory,Res res)
+    private HashMap<String,String> previousMaterials;
+    
+    public RecipeUI(Recipe recipe,ItemLibrary itemLibrary,EntityLibrary entityLibrary,int index,TrueTypeFont font,TrueTypeFont nameFont,Inventory inventory,Res res,HashMap<String,String> previousMaterials)
     {
         super(recipe.getName(),itemLibrary.getItemByTrueName(recipe.getName()).getDescTrue(),font);
+        
+        this.previousMaterials = previousMaterials;
+        
         this.recipe = recipe;
         this.font = font;
         this.nameFont = nameFont;
@@ -90,7 +96,7 @@ public class RecipeUI extends DescBox
             if(recipe.getIngredients().get(i).getItem().startsWith("<"))
             {
                 req.add(new RecipeRequirementUI(itemLibrary.getItemTypeByName(recipe.getIngredients().get(i).getItem()),font,index,i));
-                materials.add(new MaterialUI(recipe,inventory,res,column,itemLibrary.getItemTypeByName(recipe.getIngredients().get(i).getItem()).getType(),index,itemLibrary,this));
+                materials.add(new MaterialUI(recipe,inventory,res,column,itemLibrary.getItemTypeByName(recipe.getIngredients().get(i).getItem()).getType(),index,itemLibrary,this,previousMaterials));
                 column++;
             }
             else
@@ -98,7 +104,7 @@ public class RecipeUI extends DescBox
                 req.add(new RecipeRequirementUI(itemLibrary.getItemByTrueName(recipe.getIngredients().get(i).getItem()),font,index,i));
                 if(itemLibrary.getItemByTrueName(recipe.getIngredients().get(i).getItem()).getGenericType()!=-1)
                 {
-                    materials.add(new MaterialUI(recipe,inventory,res,column,itemLibrary.getItemByTrueName(recipe.getIngredients().get(i).getItem()).getGenericType(),index,itemLibrary,this));
+                    materials.add(new MaterialUI(recipe,inventory,res,column,itemLibrary.getItemByTrueName(recipe.getIngredients().get(i).getItem()).getGenericType(),index,itemLibrary,this,previousMaterials));
                     column++;
                 }
             }
@@ -169,7 +175,7 @@ public class RecipeUI extends DescBox
         }
         for(int i=0;i<recipe.getStations().size();i++)
         {
-            System.out.println("loop a loop");
+           
             req.add(new RecipeRequirementUI(entityLibrary.getFurnitureTemplateByStationType(recipe.getStations().get(i)),font,index,i+recipe.getIngredients().size()));
         }
     }

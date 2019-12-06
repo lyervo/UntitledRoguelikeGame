@@ -17,7 +17,7 @@ import org.newdawn.slick.Image;
  */
 public class Recipe
 {
-    private String name;
+    private String name,genericName;
     private int amount;
     private ArrayList<IngredientRequirement> ingredients;
     private ArrayList<Integer> stations;
@@ -39,6 +39,10 @@ public class Recipe
         requirements = new ArrayList<Pair<String,Integer>>();
         
         name = (String)jsonObj.get("name");
+        if(name.startsWith("<"))
+        {
+            genericName = name;
+        }
         
         amount = Integer.parseInt((String)jsonObj.get("amount"));
 
@@ -136,6 +140,17 @@ public class Recipe
 
     public String getName() {
         return name;
+    }
+    
+    public String getRecipeName()
+    {
+        if(genericName==null)
+        {
+            return name;
+        }else
+        {
+            return genericName;
+        }
     }
 
     public void setName(String name) {

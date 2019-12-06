@@ -128,6 +128,9 @@ public class ItemLibrary
                 JSONObject jsonObj = (JSONObject)jsonArr.get(i);
                 System.out.println(colours.get(i).getName());
                 materials.add(new Material(jsonObj,colours.get(i)));
+                Image materialTexture = paintPotion(res.metal_bar_template,colours.get(i));
+                System.out.println(materials.get(i).getName());
+                getItemByTrueName(materials.get(i).getName()+" Bar").setTexture(materialTexture);
             }
             
             
@@ -303,16 +306,17 @@ public class ItemLibrary
     {
         for(int i=0;i<recipes.size();i++)
         {
-            if(recipes.get(i).getName().equals(name))
+            if(recipes.get(i).getRecipeName().equals(name))
             {
                 learntRecipe[i] = true;
             }
         }
     }
     
-    public Image paintPotion(Image image,ItemColour colour)
+    public Image paintPotion(Image img,ItemColour colour)
     {
         try {
+            Image image = new Image(img.getTexture());
             Graphics g = image.getGraphics();
             
             Color c1 = Color.decode(colour.getFirst());
@@ -351,10 +355,13 @@ public class ItemLibrary
             
 
             g.flush();
+            return image;
         } catch (SlickException ex) {
             Logger.getLogger(ItemLibrary.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return image;
+        
+        return null;
+        
     }
     
     
@@ -382,10 +389,11 @@ public class ItemLibrary
           
             if(i.getTrueName().equals(trueName))
             {
+                
                 return i;
             }
         }
-        
+
         return null;
     }
     

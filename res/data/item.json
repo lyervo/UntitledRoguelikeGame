@@ -148,7 +148,7 @@
 		"category":"item",
 		"trueName":"Wooden Shaft",
 		"texture":"wooden_shaft",
-		"desc":"A shaft shaped from a wood log."
+		"desc":"A shaft shaped from a wood log.",
 		"unidentified_desc":null,
 		"stack":"1",
 		"properties":[4],
@@ -160,7 +160,7 @@
 		"category":"item",
 		"trueName":"Woodworking Guide I",
 		"texture":"book_1",
-		"desc":"Provides basic knowledges on woodworking."
+		"desc":"Provides basic knowledges on woodworking.",
 		"unidentified_desc":null,
 		"stack":"1",
 		"properties":[5],
@@ -168,13 +168,14 @@
 		"baseValue":75,
         "effects":[{"type":"recipe&&Wooden Shaft","duration":"1","value":"0"},
 					{"type":"recipe&&Wood Shavings","duration":"1","value":"0"},
-					{"type":"recipe&&Reinforced Wooden Shield","duration":"1","value":"0"}]
+					{"type":"recipe&&Reinforced Wooden Shield","duration":"1","value":"0"},
+					{"type":"recipe&&<metal> Sword","duration":"1","value":"0"}]
 	},
 	{
 		"category":"equipment",
 		"trueName":"<metal> Sword",
 		"texture":"iron_sword",
-		"desc":"A sword made of <metal>."
+		"desc":"A sword made of <metal>.",
 		"unidentified_desc":null,
 		"stack":"1",
 		"properties":[20,33,51,7],
@@ -223,6 +224,18 @@
 		"trueName":"Steel Bar",
 		"texture":"metal_bar_2",
 		"desc":"A bar of Steel.",
+		"unidentified_desc":null,
+		"stack":"1",
+		"properties":[6,52,4],
+		"consumed":null,
+		"baseValue":75,
+        "effects":[{"type":"slash_damage","duration":"1","value":"20"}]
+	},
+	{
+		"category":"item",
+		"trueName":"Bronze Bar",
+		"texture":"metal_bar_2",
+		"desc":"A bar of Bronze.",
 		"unidentified_desc":null,
 		"stack":"1",
 		"properties":[6,52,4],

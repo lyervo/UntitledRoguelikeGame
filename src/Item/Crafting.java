@@ -5,10 +5,12 @@
  */
 package Item;
 
+import CraftingUI.CraftingUI;
 import Entity.Furniture;
 import Res.Res;
 import World.LocalMap;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javafx.util.Pair;
 
 /**
@@ -25,8 +27,12 @@ public class Crafting
     
     private int selectIndex;
     
+    
+    
     //key == id of the furniture on the localmap, value == type of the station
     private ArrayList<Furniture> stations;
+    
+    private HashMap<String,String> previousMaterials;
     
     public Crafting(Inventory inventory,ItemLibrary itemLibrary)
     {
@@ -35,7 +41,7 @@ public class Crafting
         this.items = inventory.getItems();
         this.selectIndex = 1;
         this.stations = new ArrayList<Furniture>();
-       
+        this.previousMaterials = new HashMap<String,String>();
     }
     
 //    public void clearAllIngridient()
@@ -115,10 +121,10 @@ public class Crafting
                     
                     for(int i=items.size()-1;i>=0;i--)
                     {
-                        System.out.println("noirs");
+               
                         if(items.get(i).getProperties().contains(52)&&items.get(i).getName().equals(recipe.getIngredientByGenericType(52).getItem()))//is a metal material
                         {
-                            System.out.println("Insdjkns");
+                            
                             String[] splitter = items.get(i).getName().split(" ");
                             String template_name = "";
                             for(int z=1;z<splitter.length;z++)
@@ -196,7 +202,9 @@ public class Crafting
                         {
                             items.remove(j);
                         }
-                            
+                        
+                        
+                        
                         break;
                     }
                 }else
@@ -205,8 +213,14 @@ public class Crafting
                     if(items.get(j).getTrueName().equals(recipe.getIngredients().get(i).getItem())&&recipe.getIngredients().get(i).getConsume()==1)
                     {
                         
-                        System.out.println(items.get(j).getName());
-                
+                        
+                        //if item is a generic metal type
+                        if(items.get(j).getProperties().contains(52))
+                        {
+                            System.out.println("put "+recipe.getName()+" with "+items.get(j).getTrueName());
+                            previousMaterials.put(recipe.getName(), items.get(j).getTrueName());
+                        }
+                        
                         if(items.get(j).isStackable())
                         {
                         
@@ -222,6 +236,10 @@ public class Crafting
                         {
                             items.remove(j);
                         }
+                        
+                        
+                        
+                        
                         break;
                     }
                 }
@@ -369,6 +387,14 @@ public class Crafting
 
     public void setStations(ArrayList<Furniture> stations) {
         this.stations = stations;
+    }
+
+    public HashMap<String, String> getPreviousMaterials() {
+        return previousMaterials;
+    }
+
+    public void setPreviousMaterials(HashMap<String, String> previousMaterials) {
+        this.previousMaterials = previousMaterials;
     }
 
     

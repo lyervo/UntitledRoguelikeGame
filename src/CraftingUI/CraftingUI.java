@@ -16,6 +16,7 @@ import World.World;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.HashMap;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
@@ -54,11 +55,13 @@ public class CraftingUI extends UIComponent
     
     private Image texture;
     
-    
+    private HashMap<String,String> previousMaterials;
     
     public CraftingUI(int x,int y,Crafting crafting,Res res,InventoryUI inventoryUI,ItemLibrary itemLibrary,World world)
     {
         super(x,y);
+        
+        this.previousMaterials = crafting.getPreviousMaterials();
         
         this.texture = res.crafting_bg_1;
         
@@ -90,7 +93,7 @@ public class CraftingUI extends UIComponent
         
         
         
-        filter = 0;
+        filter = 1;
                
     }
     
@@ -238,18 +241,18 @@ public class CraftingUI extends UIComponent
             
             if(filter==1&&crafting.getItemLibrary().getLearntRecipe()[i])
             {
-                recipes.add(new RecipeUI(crafting.getItemLibrary().getRecipes().get(i),crafting.getItemLibrary(),lm.getWorld().getEntityLibrary(),index,res.disposableDroidBB,res.disposableDroidBB40f,inventoryUI.getPlayer_inventory(),res));
+                recipes.add(new RecipeUI(crafting.getItemLibrary().getRecipes().get(i),crafting.getItemLibrary(),lm.getWorld().getEntityLibrary(),index,res.disposableDroidBB,res.disposableDroidBB40f,inventoryUI.getPlayer_inventory(),res,previousMaterials));
                 index++;
             }
             if(filter==2&&crafting.checkCraftingRecipe(crafting.getItemLibrary().getRecipes().get(i))&&crafting.getItemLibrary().getLearntRecipe()[i])
             {
 
-                recipes.add(new RecipeUI(crafting.getItemLibrary().getRecipes().get(i),crafting.getItemLibrary(),lm.getWorld().getEntityLibrary(),index,res.disposableDroidBB,res.disposableDroidBB40f,inventoryUI.getPlayer_inventory(),res));
+                recipes.add(new RecipeUI(crafting.getItemLibrary().getRecipes().get(i),crafting.getItemLibrary(),lm.getWorld().getEntityLibrary(),index,res.disposableDroidBB,res.disposableDroidBB40f,inventoryUI.getPlayer_inventory(),res,previousMaterials));
                 index++;
                 
             }else if(filter==0)
             {
-                recipes.add(new RecipeUI(crafting.getItemLibrary().getRecipes().get(i),crafting.getItemLibrary(),lm.getWorld().getEntityLibrary(),i,res.disposableDroidBB,res.disposableDroidBB40f,inventoryUI.getPlayer_inventory(),res));
+                recipes.add(new RecipeUI(crafting.getItemLibrary().getRecipes().get(i),crafting.getItemLibrary(),lm.getWorld().getEntityLibrary(),i,res.disposableDroidBB,res.disposableDroidBB40f,inventoryUI.getPlayer_inventory(),res,previousMaterials));
             }
         }
     }

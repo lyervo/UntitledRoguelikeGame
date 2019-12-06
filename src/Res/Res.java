@@ -76,6 +76,7 @@ public class Res
     
     public Image tree_1;
     
+    public Image metal_bar_template;
     public Image potion_template,sword_template,dagger_template;
     
     
@@ -141,7 +142,7 @@ public class Res
         
         basicItem = item_sheet.getSprite(0, 0);
         
-        
+        metal_bar_template = new Image("res/texture/items/metal_bar_template.png");
         potion_template = new Image("res/texture/items/potion_template.png");
         sword_template = new Image("res/texture/items/sword_template.png");
         dagger_template = new Image("res/texture/items/dagger_template.png");
