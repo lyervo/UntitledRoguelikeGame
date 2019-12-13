@@ -1,0 +1,70 @@
+[
+	
+	{
+		"id":1,
+		"content":"Hello kind sir, what can I help you with today?",
+		"replies":
+		[
+			{"reply":"Tell me more about this place.","effect":[],"next":2},
+			{"reply":"Any jobs around here?","effect":[],"next":3},
+			{"reply":"Where can I do some shopping?","effect":[],"next":4},
+			{"reply":"Who are you?","effect":[],"next":5},
+			{"reply":"Nevermind.","effect":["exit"],"next":0}
+		]
+		
+	},
+	{
+		"id":2,
+		"content":"<location_town_name> is a <location_town_type>, <npc_background>,I hope you enjoy your stay around here.",
+		"replies":
+		[
+			{"reply":"Tell me more about this place.","effect":[],"next":2},
+			{"reply":"Any jobs around here?","effect":[],"next":3},
+			{"reply":"Where can I do some shopping?","effect":[],"next":4},
+			{"reply":"Who are you?","effect":[],"next":5},
+			{"reply":"Goodbye.","effect":["exit"],"next":0}
+		]
+		
+	},
+	{
+		"id":3,
+		"content":"If you're looking for some job, <generate_job_list>, I think that's all we have at the moment.",
+		"replies":
+		[
+			{"reply":"Tell me more about this place.","effect":[],"next":2},
+			{"reply":"Any jobs around here?","effect":[],"next":3},
+			{"reply":"Where can I do some shopping?","effect":[],"next":4},
+			{"reply":"Who are you?","effect":[],"next":5},
+			{"reply":"Goodbye.","effect":["exit"],"next":0}
+		]
+		
+	},
+	{
+		"id":4,
+		"content":"Well, <generate_shop_list> .",
+		"replies":
+		[
+			{"reply":"Tell me more about this place.","effect":[],"next":2},
+			{"reply":"Any jobs around here?","effect":[],"next":3},
+			{"reply":"Where can I do some shopping?","effect":[],"next":4},
+			{"reply":"Who are you?","effect":[],"next":5},
+			{"reply":"Goodbye.","effect":["exit"],"next":0}
+		]
+		
+	},
+	{
+		"id":5,
+		"content":"My name is <npc_full_name>, I'm a <npc_title>, <npc_title_add_on> .",
+		"replies":
+		[
+			{"reply":"Tell me more about this place.","effect":[],"next":2},
+			{"reply":"Any jobs around here?","effect":[],"next":3},
+			{"reply":"Where can I do some shopping?","effect":[],"next":4},
+			{"reply":"Who are you?","effect":[],"next":5},
+			{"reply":"Goodbye.","effect":["exit"],"next":0}
+		]
+		
+	}
+	
+	
+]

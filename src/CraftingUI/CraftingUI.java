@@ -17,6 +17,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.HashMap;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
@@ -103,6 +104,7 @@ public class CraftingUI extends UIComponent
         texture.draw(x,y);
 //        craftingClearAllButton.render(g,x,y);
         craftingCraftButton.render(g,x,y);
+        
         craftingFilterButton.render(g,x,y);
         recipeScrollUpButton.render(g,x,y);
         recipeScrollDownButton.render(g,x,y);
@@ -111,7 +113,18 @@ public class CraftingUI extends UIComponent
 //        {
 //            i.render(g, input, x,y);
 //        }
+
         
+        if(crafting.isCrafting())
+        {
+            
+            Color c1 = Color.decode("#00a300");
+            c1.a = 0.5f;
+            g.setColor(c1);
+            g.fillRect(craftingCraftButton.getX()+x, craftingCraftButton.getY()+y+(64-((64*(crafting.getTargetRecipe().getTurns()-crafting.getCraftingTurns())/crafting.getTargetRecipe().getTurns()))), 64, ((64*(crafting.getTargetRecipe().getTurns()-crafting.getCraftingTurns())/crafting.getTargetRecipe().getTurns())));
+        }
+
+
         for(int i=0;i<recipes.size();i++)
         {
             recipes.get(i).render(g, input, i, scroll,crafting,x,y);
