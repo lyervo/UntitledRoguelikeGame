@@ -54,7 +54,7 @@ public class Pawn extends Entity
         this.fov = fov;
         this.control = false;
         step = 1;
-        task = new Task(x,y,-1,-1,0);
+        task = new Task(x,y,-1,-1,"nothing");
         inventory = new Inventory(this,itemLibrary);
         this.name = name;
         current = System.currentTimeMillis();
@@ -82,12 +82,12 @@ public class Pawn extends Entity
 
             if (fovBoard.playerInVision(x, y, 7, world.getWm().getCurrentLocalMap()))
             {
-                task = new Task(x, y, -1, -1, 1);
+                task = new Task(x, y, -1, -1, "follow player");
             }
 
         }
 
-        if (path == null && task.getType() == 1)
+        if (path == null && task.getType().equals("follow player"))
         {
             step = 1;
             path = pf.findPath(null, x, y, world.getWm().getCurrentLocalMap().getPawns().get(0).getX(), world.getWm().getCurrentLocalMap().getPawns().get(0).getY());
@@ -109,7 +109,7 @@ public class Pawn extends Entity
         {
             if(path==null)
             {
-                if(task.getType()==2)
+                if(task.getType().equals("grab item"))
                 {
                     if(world.getWm().getCurrentLocalMap().getItemPileAt(x, y)!=null)
                     {
@@ -121,12 +121,39 @@ public class Pawn extends Entity
                             world.getWm().getCurrentLocalMap().getItemPileAt(x, y).takeFrom(world.getWm().getPlayerInventory(),task.getIndex(),world.getWm().getCurrentLocalMap(),-1);
                             
 //                            world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
-                            task = new Task(x,y,-1,-1,0);
+                            task = new Task(x,y,-1,-1,"nothing");
 
                             world.moved();
                         }
                         
                     }
+                }else if(task.getType().equals("craft"))
+                {
+                    if(k[255]||(m[19]&&world.getZ()!=world.getCraftingWindow().getZ()))
+                    {
+                        task.setType("nothing");
+                        world.getWm().getPlayerInventory().getCrafting().clearCraftingTarget();
+                    }
+                    
+                    if(System.currentTimeMillis()-current>=250)
+                    {
+                        current = System.currentTimeMillis();
+                        world.getWm().getPlayerInventory().getCrafting().craft();
+                        if(world.getWm().getPlayerInventory().getCrafting().finishedCrafting())
+                        {
+                            
+                            task = new Task(x,y,-1,-1,"nothing");
+                            world.getCrafting_ui().refreshUI(world.getWm().getCurrentLocalMap());
+                            world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
+                        }
+                        
+                        
+                        world.moved();
+                        
+                    
+                    }
+                    
+                    
                 }else
                 {
                     playerKeyboardControl(k,input,world);
@@ -134,14 +161,19 @@ public class Pawn extends Entity
             }else if(k[255])
             {
                 //k[255] will be true whenever a key is pressed
-                task = new Task(x,y,-1,-1,0);
+                task = new Task(x,y,-1,-1,"nothing");
+               
                 path = null;
                 step = 1;
                 current = System.currentTimeMillis();
                 
-            }
-            else
+            }else if(path!=null)
             {
+                if(world.getWm().getPlayerInventory().getCrafting().isCrafting())
+                {
+                    world.getWm().getPlayerInventory().getCrafting().clearCraftingTarget();
+                    task.setType("nothing");
+                }
                     if(System.currentTimeMillis()-current>=250)
                     {
                         current = System.currentTimeMillis();
@@ -156,7 +188,10 @@ public class Pawn extends Entity
                     }
             }
             
-            
+            if(path!=null&&task.getType().equals("craft"))
+            {
+                task.setType("nothing");
+            }
             
             if(world.isMoved())
             {
@@ -202,9 +237,12 @@ public class Pawn extends Entity
     }
     
     
+    
+    
+    
     public void grabItemAt(int x,int y,int id,int index)
     {
-        task = new Task(x,y,id,index,2);
+        task = new Task(x,y,id,index,"grab item");
         if(x!=this.x||y!=this.y)
         {
             calcPath(x,y);

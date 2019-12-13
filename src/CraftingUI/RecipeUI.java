@@ -91,19 +91,24 @@ public class RecipeUI extends DescBox
         
         this.entityLibrary = entityLibrary;
         
+        ArrayList<String> uniqueItemTypes = new ArrayList<String>();
+        
         for(int i=0;i<recipe.getIngredients().size();i++)
         {
-            if(recipe.getIngredients().get(i).getItem().startsWith("<"))
+            if(recipe.getIngredients().get(i).getItem().startsWith("<")&&!uniqueItemTypes.contains(recipe.getIngredients().get(i).getItem()))
             {
+                System.out.println(" generic yes "+recipe.getName());
                 req.add(new RecipeRequirementUI(itemLibrary.getItemTypeByName(recipe.getIngredients().get(i).getItem()),font,index,i));
                 materials.add(new MaterialUI(recipe,inventory,res,column,itemLibrary.getItemTypeByName(recipe.getIngredients().get(i).getItem()).getType(),index,itemLibrary,this,previousMaterials));
+                uniqueItemTypes.add(recipe.getIngredients().get(i).getItem());
                 column++;
             }
-            else
+            else if(!uniqueItemTypes.contains(recipe.getIngredients().get(i).getItem()))
             {
                 req.add(new RecipeRequirementUI(itemLibrary.getItemByTrueName(recipe.getIngredients().get(i).getItem()),font,index,i));
                 if(itemLibrary.getItemByTrueName(recipe.getIngredients().get(i).getItem()).getGenericType()!=-1)
                 {
+                    uniqueItemTypes.add(recipe.getIngredients().get(i).getItem());
                     materials.add(new MaterialUI(recipe,inventory,res,column,itemLibrary.getItemByTrueName(recipe.getIngredients().get(i).getItem()).getGenericType(),index,itemLibrary,this,previousMaterials));
                     column++;
                 }
@@ -135,7 +140,7 @@ public class RecipeUI extends DescBox
             
             for(MaterialUI ui:materials)
             {
-                ui.tick(k, m, input, world, x, y, scroll,this);
+                ui.tick(k, m, input, world, x, y, scroll,this,crafting);
             }
                 
                 
@@ -159,6 +164,7 @@ public class RecipeUI extends DescBox
     public void refreshRequirement()
     {
         req.clear();
+        ArrayList<String> uniqueItemTypes = new ArrayList<String>();
         for(int i=0;i<recipe.getIngredients().size();i++)
         {
            

@@ -11,15 +11,12 @@ package Entity;
  */
 public class Task
 {
-    private int x,y,id,index,type;
-    //type
-    //0 = wander
-    //1 = follow
-    //2 = get item
+    private int x,y,id,index;
+    private String type;
     
     
     
-    public Task(int x, int y, int id, int index, int type) 
+    public Task(int x, int y, int id, int index,String type) 
     {
         this.x = x;
         this.y = y;
@@ -62,11 +59,11 @@ public class Task
         this.index = index;
     }
 
-    public int getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(String type) {
         this.type = type;
     }
     

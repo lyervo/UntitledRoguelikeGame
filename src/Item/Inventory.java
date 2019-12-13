@@ -160,6 +160,26 @@ public class Inventory
         addItem(new Item(itemLibrary.getItemByTrueName("Iron Bar")));
         addItem(new Item(itemLibrary.getItemByTrueName("Iron Bar")));
         addItem(new Item(itemLibrary.getItemByTrueName("Iron Bar")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Steel Bar")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Steel Bar")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Steel Bar")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Steel Bar")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Bronze Bar")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Bronze Bar")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Bronze Bar")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Iron Bar")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Iron Bar")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Iron Bar")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Steel Bar")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Steel Bar")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Steel Bar")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Steel Bar")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Bronze Bar")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Bronze Bar")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Bronze Bar")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Iron Bar")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Iron Bar")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Iron Bar")));
         addItem(new Item(itemLibrary.getItemByTrueName("Woodworking Guide I")));
         addItem(new Item(itemLibrary.getItemByTrueName("Wooden Sword")));
         addItem(new Item(itemLibrary.getItemByTrueName("Iron Sword")));
@@ -168,6 +188,7 @@ public class Inventory
         addItem(new Item(itemLibrary.getItemByTrueName("Wood")));
         addItem(new Item(itemLibrary.getItemByTrueName("Wood")));
         addItem(new Item(itemLibrary.getItemByTrueName("Wood")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Crafting Knife")));
         for(int i=0;i<20;i++)
         {
             addItem(new Item(itemLibrary.getItemByTrueName("Wood")));

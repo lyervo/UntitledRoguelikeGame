@@ -5,6 +5,7 @@
  */
 package CraftingUI;
 
+import Item.Crafting;
 import Item.Inventory;
 import Item.Item;
 import Item.ItemLibrary;
@@ -108,7 +109,7 @@ public class MaterialUI
         
     }
     
-    public void tick(boolean[] k,boolean[] m,Input input,World world,int x,int y,int scroll,RecipeUI ui)
+    public void tick(boolean[] k,boolean[] m,Input input,World world,int x,int y,int scroll,RecipeUI ui,Crafting c)
     {
         if(bounds.contains(new Point(input.getMouseX()-x,input.getMouseY()-y)))
         {
@@ -127,7 +128,7 @@ public class MaterialUI
                 materialIndex = 0;
             }
             recipe.setRecipeGeneric(itemUI.get(materialIndex).getItem(), world.getItemLibrary());
-            
+            c.rememberGeneric(recipe,itemUI.get(materialIndex).getItem());
         
             ui.refreshRequirement();
             
