@@ -5,7 +5,6 @@
  */
 package CraftingUI;
 
-import Entity.Task;
 import InventoryUI.InventoryUI;
 import Item.Crafting;
 import UI.Button;
@@ -33,15 +32,9 @@ public class CraftingCraftButton extends Button
     @Override
     public void onClick(boolean[] m, World world) 
     {
-        if(crafting.getSelectIndex()!=-1)
-        {
-            crafting.clearCraftingTarget();
-            world.getWm().getPlayer().setTask(new Task(0,0,-1,-1,"craft"));
-            crafting.setCraftingTarget();
-            world.getCrafting_ui().refreshUI(world.getWm().getCurrentLocalMap());
-            world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
-        }
-        
+        crafting.craft();
+        world.getCrafting_ui().refreshUI(world.getWm().getCurrentLocalMap());
+        world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
     }
 
 }

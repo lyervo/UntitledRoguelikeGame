@@ -11,7 +11,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -34,12 +33,13 @@ public class ItemLibrary
 {
     private String seed;
     
-  
-    private HashMap<String,Item> items;
+    private ArrayList<Item> potions;
+    private ArrayList<Item> equipments;
+    private ArrayList<Item> items;
     
     private Res res;
     
-    private HashMap<String,Boolean> identify;
+    private boolean[] identify;
     
     private boolean[] learntRecipe;
     
@@ -55,12 +55,13 @@ public class ItemLibrary
     {
         this.res = res;
         this.seed = seed;
-        this.items = new HashMap<String,Item>();
+        this.potions = new ArrayList<Item>();
+        this.equipments = new ArrayList<Item>();
+        this.items = new ArrayList<Item>();
         this.recipes = new ArrayList<Recipe>();
         this.types = new ArrayList<ItemType>();
         this.materials = new ArrayList<Material>();
         this.colours = new ArrayList<ItemColour>();
-        this.identify = new HashMap<String,Boolean>();
         initItemColour();
         initItems();
         initRecipes();
@@ -214,7 +215,6 @@ public class ItemLibrary
     
     public void initItems()
     {
-        ArrayList<Item> potionPreload = new ArrayList<Item>();
         
         try {
             
@@ -234,20 +234,25 @@ public class ItemLibrary
                 JSONObject jsonObj = (JSONObject)jsonArr.get(i);
                 if(jsonObj.get("category").equals("potion"))
                 {
-                    potionPreload.add(new Item(jsonObj,this));
+                    potions.add(new Item(jsonObj,this));
                     if(jsonObj.get("texture")!=null)
                     {
-                        potionPreload.get(potionPreload.size()-1).setTexture(res.getTextureByName((String)jsonObj.get("texture")));
+                        potions.get(potions.size()-1).setTexture(res.getTextureByName((String)jsonObj.get("texture")));
+                    }
+                }else if(jsonObj.get("category").equals("potion"))
+                {
+                    equipments.add(new Item(jsonObj,this));
+                    if(jsonObj.get("texture")!=null)
+                    {
+                        equipments.get(equipments.size()-1).setTexture(res.getTextureByName((String)jsonObj.get("texture")));
                     }
                 }else
                 {
-                    Item newItem = new Item(jsonObj,this);
-                    
+                    items.add(new Item(jsonObj,this));
                     if(jsonObj.get("texture")!=null)
                     {
-                        newItem.setTexture(res.getTextureByName((String)jsonObj.get("texture")));
+                        items.get(items.size()-1).setTexture(res.getTextureByName((String)jsonObj.get("texture")));
                     }
-                    items.put((String)jsonObj.get("trueName"),newItem);
                 }
                     
                 
@@ -267,29 +272,26 @@ public class ItemLibrary
             
             
             
+            identify = new boolean[potions.size()];
+            Arrays.fill(identify, false);
             
-            
-            
-            for(int i=0;i<potionPreload.size();i++)
+            for(int i=0;i<potions.size();i++)
             {
                 
                 Image temp = new Image(res.potion_template.getTexture());
                 
                 temp = paintPotion(temp,colours.get(i));
                 
-                if(potionPreload.get(i).getTexture()==null)
+                if(potions.get(i).getTexture()==null)
                 {
-                    potionPreload.get(i).setTexture(temp);
-                    potionPreload.get(i).setName(colours.get(i).getName()+" Potion");
-                    if(potionPreload.get(i).getUnidentified_desc()!=null)
+                    potions.get(i).setTexture(temp);
+                    potions.get(i).setName(colours.get(i).getName()+" Potion");
+                    if(potions.get(i).getUnidentified_desc()!=null)
                     {
-                        String new_desc = potionPreload.get(i).getUnidentified_desc().replace("<color>", colours.get(i).getName());
-                        potionPreload.get(i).setUnidentified_desc(new_desc);
+                        String new_desc = potions.get(i).getUnidentified_desc().replace("<color>", colours.get(i).getName());
+                        potions.get(i).setUnidentified_desc(new_desc);
                     }
                 }
-                
-                items.put(potionPreload.get(i).getTrueName(), potionPreload.get(i));
-                identify.put(potionPreload.get(i).getTrueName(), Boolean.FALSE);
           
                 
                 
@@ -366,8 +368,33 @@ public class ItemLibrary
     //this will get the item by it's type name instead of it's randomly generated name
     public Item getItemByTrueName(String trueName)
     {
-        
-        return items.get(trueName); 
+        for(Item i:potions)
+        {
+          
+            if(i.getTrueName().equals(trueName))
+            {
+                return i;
+            }
+        }
+        for(Item i:equipments)
+        {
+          
+            if(i.getTrueName().equals(trueName))
+            {
+                return i;
+            }
+        }
+        for(Item i:items)
+        {
+          
+            if(i.getTrueName().equals(trueName))
+            {
+                
+                return i;
+            }
+        }
+
+        return null;
     }
     
     public Material getMaterialByName(String materialName)
@@ -384,18 +411,29 @@ public class ItemLibrary
     
     public boolean checkIdentified(String trueName)
     {
-        if(identify.get(trueName)!=null)
+        for(int i=0;i<potions.size();i++)
         {
-            return identify.get(trueName);
+            if(potions.get(i).getTrueName().equals(trueName))
+            {
+                
+                return identify[i];
+            }
         }
-        //if item is not on the identify list, return as true;
-        return true;
+        
+        return false;
     }
     
     public void identify(String trueName)
     {
         
-        identify.put(trueName, Boolean.TRUE);
+        for(int i=0;i<potions.size();i++)
+        {
+            if(potions.get(i).getTrueName().equals(trueName))
+            {
+                identify[i] = true;
+            }
+        }
+        
     }
     
     public Recipe getRecipeById(int id)
@@ -442,6 +480,46 @@ public class ItemLibrary
         this.seed = seed;
     }
 
+    public ArrayList<Item> getPotions() {
+        return potions;
+    }
+
+    public void setPotions(ArrayList<Item> potions) {
+        this.potions = potions;
+    }
+
+    public Res getRes() {
+        return res;
+    }
+
+    public void setRes(Res res) {
+        this.res = res;
+    }
+
+    public boolean[] getIdentify() {
+        return identify;
+    }
+
+    public void setIdentify(boolean[] identify) {
+        this.identify = identify;
+    }
+
+    public ArrayList<Item> getEquipments() {
+        return equipments;
+    }
+
+    public void setEquipments(ArrayList<Item> equipments) {
+        this.equipments = equipments;
+    }
+
+    public ArrayList<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(ArrayList<Item> items) {
+        this.items = items;
+    }
+
     public ArrayList<Recipe> getRecipes() {
         return recipes;
     }
@@ -464,46 +542,6 @@ public class ItemLibrary
 
     public void setLearntRecipe(boolean[] learntRecipe) {
         this.learntRecipe = learntRecipe;
-    }
-
-    public HashMap<String, Item> getItems() {
-        return items;
-    }
-
-    public void setItems(HashMap<String, Item> items) {
-        this.items = items;
-    }
-
-    public Res getRes() {
-        return res;
-    }
-
-    public void setRes(Res res) {
-        this.res = res;
-    }
-
-    public HashMap<String, Boolean> getIdentify() {
-        return identify;
-    }
-
-    public void setIdentify(HashMap<String, Boolean> identify) {
-        this.identify = identify;
-    }
-
-    public ArrayList<Material> getMaterials() {
-        return materials;
-    }
-
-    public void setMaterials(ArrayList<Material> materials) {
-        this.materials = materials;
-    }
-
-    public ArrayList<ItemColour> getColours() {
-        return colours;
-    }
-
-    public void setColours(ArrayList<ItemColour> colours) {
-        this.colours = colours;
     }
     
     

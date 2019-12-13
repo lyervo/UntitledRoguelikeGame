@@ -25,8 +25,7 @@ public class Recipe
     private boolean learnt;
     private String type;
     private Image texture;
-    private int id,turns;
-    
+    private int id;
     
     private ArrayList<Pair<String,Integer>> byProducts;
     
@@ -46,7 +45,6 @@ public class Recipe
         }
         
         amount = Integer.parseInt((String)jsonObj.get("amount"));
-        turns = Integer.parseInt((String)jsonObj.get("turn"));
 
         JSONArray ingArr = (JSONArray)jsonObj.get("ingredients");
         if(ingArr!=null)
@@ -237,22 +235,6 @@ public class Recipe
 
     public void setTemplate_texture(Image template_texture) {
         this.template_texture = template_texture;
-    }
-
-    public String getGenericName() {
-        return genericName;
-    }
-
-    public void setGenericName(String genericName) {
-        this.genericName = genericName;
-    }
-
-    public int getTurns() {
-        return turns;
-    }
-
-    public void setTurns(int turns) {
-        this.turns = turns;
     }
     
     

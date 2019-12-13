@@ -7,6 +7,7 @@ package Entity;
 
 import World.LocalMap;
 import World.Tile;
+import java.util.ArrayList;
 import rlforj.los.ILosBoard;
 
 /**

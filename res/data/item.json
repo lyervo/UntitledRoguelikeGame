@@ -10,7 +10,7 @@
 		"properties":[3,4],
 		"consumed":[],
 		"baseValue":5,
-                "effects":[]
+        "effects":[]
 	},
 	{
 		"category":"potion",
@@ -22,11 +22,11 @@
 		"properties":[1,2,4],
 		"consumed":[{"name":"Empty Potion Bottle"}],
 		"baseValue":20,
-                "effects":[{"type":"heal","duration":"1","value":"20"}]
+        "effects":[{"type":"heal","duration":"1","value":"20"}]
 	},
 	{
 		"category":"potion",
-                "trueName":"Poison",
+        "trueName":"Poison",
 		"texture":null,
 		"desc":"Gradually decrease the health of the consumer, can be nullified with Antidote.",
 		"unidentified_desc":"A <color> potion, further examination is needed to identify the potion.",
@@ -34,11 +34,11 @@
 		"properties":[1,2,4],
 		"consumed":[{"name":"Empty Potion Bottle"}],
 		"baseValue":75,
-                "effects":[{"type":"poison","duration":"999","value":"10"},{"type":"weak","duration":"10","value":"1"}]
+        "effects":[{"type":"poison","duration":"999","value":"10"},{"type":"weak","duration":"10","value":"1"}]
 	},
 	{
 		"category":"potion",
-                "trueName":"Antidote",
+        "trueName":"Antidote",
 		"texture":null,
 		"desc":"Cures poison effects when drank.",
 		"unidentified_desc":"A <color> potion, further examination is needed to identify the potion.",
@@ -46,11 +46,11 @@
 		"properties":[1,2,4],
 		"consumed":[{"name":"Empty Potion Bottle"}],
 		"baseValue":75,
-                "effects":[{"type":"cure_poison","duration":"1","value":"1"}]
+        "effects":[{"type":"cure_poison","duration":"1","value":"1"}]
 	},
 	{
 		"category":"equipment",
-                "trueName":"Wooden Sword",
+        "trueName":"Wooden Sword",
 		"texture":"wooden_sword",
 		"desc":"A piece of woodcraft used for sword practice.",
 		"unidentified_desc":null,
@@ -58,31 +58,19 @@
 		"properties":[20,24],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[{"type":"blunt_damage","duration":"1","value":"5"}]
+        "effects":[{"type":"blunt_damage","duration":"1","value":"5"}]
 	},
 	{
 		"category":"equipment",
-                "trueName":"Iron Sword",
+        "trueName":"Iron Sword",
 		"texture":"iron_sword",
 		"desc":"A plain iron sword, made for slashing and stabbing.",
 		"unidentified_desc":null,
 		"stack":"1",
-		"properties":[20,24],
+		"properties":[20,24,51],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[{"type":"slash_damage","duration":"1","value":"10"}]
-	},
-	{
-		"category":"equipment",
-                "trueName":"Crafting Knife",
-		"texture":"dagger",
-		"desc":"A knife made for wood carving.",
-		"unidentified_desc":null,
-		"stack":"1",
-		"properties":[20,24],
-		"consumed":null,
-		"baseValue":75,
-                "effects":[{"type":"slash_damage","duration":"1","value":"10"}]
+        "effects":[{"type":"slash_damage","duration":"1","value":"10"}]
 	},
 	{
 		"category":"equipment",
@@ -91,10 +79,10 @@
 		"desc":"A huge long sword, requires 2 hand to use.",
 		"unidentified_desc":null,
 		"stack":"1",
-		"properties":[20,33],
+		"properties":[20,33,51],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[{"type":"slash_damage","duration":"1","value":"30"}]
+        "effects":[{"type":"slash_damage","duration":"1","value":"30"}]
 	},
 	{
 		"category":"equipment",
@@ -106,7 +94,7 @@
 		"properties":[20,26],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[{"type":"blunt_defense","duration":"1","value":"15"}]
+        "effects":[{"type":"blunt_defense","duration":"1","value":"15"}]
 	},
 	{
 		"category":"equipment",
@@ -118,7 +106,7 @@
 		"properties":[20,26],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[{"type":"blunt_defense","duration":"1","value":"30"}]
+        "effects":[{"type":"blunt_defense","duration":"1","value":"30"}]
 	},
 	{
 		"category":"item",
@@ -130,7 +118,7 @@
 		"properties":[4],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[]
+        "effects":[]
 	},
 	{
 		"category":"item",
@@ -142,7 +130,7 @@
 		"properties":[4],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[]
+        "effects":[]
 	},
 	{
 		"category":"item",
@@ -154,7 +142,7 @@
 		"properties":[4],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[]
+        "effects":[]
 	},
 	{
 		"category":"item",
@@ -166,7 +154,7 @@
 		"properties":[4],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[]
+        "effects":[]
 	},
 	{
 		"category":"item",
@@ -178,12 +166,10 @@
 		"properties":[5],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[{"type":"recipe&&Wooden Shaft","duration":"1","value":"0"},
+        "effects":[{"type":"recipe&&Wooden Shaft","duration":"1","value":"0"},
 					{"type":"recipe&&Wood Shavings","duration":"1","value":"0"},
 					{"type":"recipe&&Reinforced Wooden Shield","duration":"1","value":"0"},
-					{"type":"recipe&&<metal> Sword","duration":"1","value":"0"},
-                                        {"type":"recipe&&<metal> Dagger","duration":"1","value":"0"},
-                                        {"type":"recipe&&<metal> Axe","duration":"1","value":"0"}]
+					{"type":"recipe&&<metal> Sword","duration":"1","value":"0"}]
 	},
 	{
 		"category":"equipment",
@@ -192,10 +178,10 @@
 		"desc":"A sword made of <metal>.",
 		"unidentified_desc":null,
 		"stack":"1",
-		"properties":[20,33,7],
+		"properties":[20,33,51,7],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[{"type":"slash_damage","duration":"1","value":"10"}]
+        "effects":[{"type":"slash_damage","duration":"1","value":"10"}]
 	},
 	{
 		"category":"equipment",
@@ -204,10 +190,10 @@
 		"desc":"An Axe made of <metal>, tool for cutting down trees.",
 		"unidentified_desc":null,
 		"stack":"1",
-		"properties":[20,33,7],
+		"properties":[20,33,51,7],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[{"type":"slash_damage","duration":"1","value":"10"}]
+        "effects":[{"type":"slash_damage","duration":"1","value":"10"}]
 	},
 	{
 		"category":"equipment",
@@ -216,10 +202,10 @@
 		"desc":"A Dagger made of <metal>.",
 		"unidentified_desc":null,
 		"stack":"1",
-		"properties":[20,33,7],
+		"properties":[20,33,51,7],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[{"type":"stab_damage","duration":"1","value":"5"}]
+        "effects":[{"type":"stab_damage","duration":"1","value":"5"}]
 	},
 	{
 		"category":"item",
@@ -231,7 +217,7 @@
 		"properties":[6,52,4],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[{"type":"slash_damage","duration":"1","value":"10"}]
+        "effects":[{"type":"slash_damage","duration":"1","value":"10"}]
 	},
 	{
 		"category":"item",
@@ -243,7 +229,7 @@
 		"properties":[6,52,4],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[{"type":"slash_damage","duration":"1","value":"20"}]
+        "effects":[{"type":"slash_damage","duration":"1","value":"20"}]
 	},
 	{
 		"category":"item",
@@ -255,6 +241,6 @@
 		"properties":[6,52,4],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[{"type":"slash_damage","duration":"1","value":"20"}]
+        "effects":[{"type":"slash_damage","duration":"1","value":"20"}]
 	}
 ]

@@ -144,9 +144,6 @@ public class Item
         
     }
     
-    
-    
-    
     public void decreaseStack()
     {
         stack--;
@@ -363,14 +360,12 @@ public class Item
     
     public void setMetalMaterial(ItemLibrary itemLibrary,Material material,Image template,String template_name)
     {
-       
         trueName = trueName.replace("<metal>", material.getName());
-        
         desc = desc.replaceAll("<metal>", material.getName());
         
         for(int i=0;i<material.getProperties().size();i++)
         {
-            if(!properties.contains(material.getProperties().get(i))&&material.getProperties().get(i)!=52)
+            if(!properties.contains(material.getProperties().get(i)))
             {
                 properties.add(material.getProperties().get(i));
             }
@@ -387,33 +382,18 @@ public class Item
             }
         }
         
-        
-        if(itemLibrary.getRes().getTextureByName(trueName+material.getItemColor().getName()+"_"+template_name)!=null)
+        if(itemLibrary.getRes().getTextureByName(material.getItemColor().getName()+"_"+template_name)!=null)
         {
-            //grab painted template texture if already exists in res class
             this.texture = itemLibrary.getRes().getTextureByName(material.getItemColor().getName()+"_"+template_name);
         }else
         {
-            //paint a new template texture if not exist in res class
             this.texture = paintItem(template,material.getItemColor());
-            itemLibrary.getRes().getImages().add(new Pair(trueName+material.getItemColor().getName()+"_"+template_name,this.texture));
+            itemLibrary.getRes().getImages().add(new Pair(material.getItemColor().getName()+"_"+template_name,this.texture));
         }
             
         
         
         
-    }
-    
-    public int getItemType()
-    {
-        for(Integer i:properties)
-        {
-            if(i>=50&&i<=60)
-            {
-                return i;
-            }
-        }
-        return -1;
     }
     
     public boolean isMetalMaterial()

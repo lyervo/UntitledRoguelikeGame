@@ -27,10 +27,6 @@ public class Crafting
     
     private int selectIndex;
     
-    //turns take to finish crafting
-    private int craftingTurns;
-    
-    private Recipe targetRecipe;
     
     
     //key == id of the furniture on the localmap, value == type of the station
@@ -106,12 +102,6 @@ public class Crafting
         
     }
     
-    public void setCraftingTarget()
-    {
-        targetRecipe = itemLibrary.getRecipeById(selectIndex);
-        craftingTurns = targetRecipe.getTurns();
-    }
-    
     public void craft()
     {
         if(selectIndex == -1)
@@ -119,94 +109,70 @@ public class Crafting
             return;
         }
         
-        if(targetRecipe!=null)
+        if(itemLibrary.getRecipeById(selectIndex)!=null)
         {
-            
-            if(checkCraftingRecipe(targetRecipe))
+            Recipe recipe = itemLibrary.getRecipeById(selectIndex);
+            if(checkCraftingRecipe(recipe))
             {
-                
-                
-                craftingTurns--;
-                System.out.println("crafting turns left:"+craftingTurns);
-                if(craftingTurns<=0&&targetRecipe!=null)
+                if(itemLibrary.getItemByTrueName(recipe.getName()).getProperties().contains(7))//is a metal generic
                 {
                     
-                    if(itemLibrary.getItemByTrueName(targetRecipe.getName()).getProperties().contains(7))//is a metal generic
+                    Item a = new Item(itemLibrary.getItemByTrueName(recipe.getName()));
+                    
+                    for(int i=items.size()-1;i>=0;i--)
                     {
-
-                        Item a = new Item(itemLibrary.getItemByTrueName(targetRecipe.getName()));
-
-                        for(int i=items.size()-1;i>=0;i--)
+               
+                        if(items.get(i).getProperties().contains(52)&&items.get(i).getName().equals(recipe.getIngredientByGenericType(52).getItem()))//is a metal material
                         {
-
-                            if(items.get(i).getProperties().contains(52)&&items.get(i).getName().equals(targetRecipe.getIngredientByGenericType(52).getItem()))//is a metal material
+                            
+                            String[] splitter = items.get(i).getName().split(" ");
+                            String template_name = "";
+                            for(int z=1;z<splitter.length;z++)
                             {
-
-                                String[] splitter = items.get(i).getName().split(" ");
-                                String template_name = "";
-                                for(int z=1;z<splitter.length;z++)
-                                {
-                                    template_name+=splitter[z];
-                                }
-                                System.out.println("target recipe is "+targetRecipe.getName());
-                                a.setMetalMaterial(itemLibrary,itemLibrary.getMaterialByName(splitter[0]),targetRecipe.getTemplate_texture(),template_name);
-                                inventory.addItem(a);
-                                break;
+                                template_name+=splitter[z];
                             }
+                            a.setMetalMaterial(itemLibrary,itemLibrary.getMaterialByName(splitter[0]),recipe.getTemplate_texture(),template_name);
+                            inventory.addItem(a);
+                            break;
                         }
                     }
-                    else if(itemLibrary.getItemByTrueName(targetRecipe.getName()).isStackable())
+                }
+                else if(itemLibrary.getItemByTrueName(recipe.getName()).isStackable())
+                {
+                    Item a = itemLibrary.getItemByTrueName(recipe.getName());
+                    a.setStack(recipe.getAmount());
+                    inventory.addItem(new Item(a));
+                }else
+                {
+                    for(int i=0;i<recipe.getAmount();i++)
                     {
-                        Item a = itemLibrary.getItemByTrueName(targetRecipe.getName());
-                        a.setStack(targetRecipe.getAmount());
+                        inventory.addItem(new Item(itemLibrary.getItemByTrueName(recipe.getName())));
+                    }
+                }
+                
+                for(int i=0;i<recipe.getByProducts().size();i++)
+                {
+                    if(itemLibrary.getItemByTrueName(recipe.getByProducts().get(i).getKey()).isStackable())
+                    {
+                        Item a = itemLibrary.getItemByTrueName(recipe.getByProducts().get(i).getKey());
+                        a.setStack(recipe.getByProducts().get(i).getValue());
                         inventory.addItem(new Item(a));
                     }else
                     {
-                        for(int i=0;i<targetRecipe.getAmount();i++)
+                        for(int j=0;j<recipe.getByProducts().get(i).getValue();j++)
                         {
-                            inventory.addItem(new Item(itemLibrary.getItemByTrueName(targetRecipe.getName())));
+                            inventory.addItem(new Item(itemLibrary.getItemByTrueName(recipe.getByProducts().get(i).getKey())));
                         }
                     }
-
-                    for(int i=0;i<targetRecipe.getByProducts().size();i++)
-                    {
-                        if(itemLibrary.getItemByTrueName(targetRecipe.getByProducts().get(i).getKey()).isStackable())
-                        {
-                            Item a = itemLibrary.getItemByTrueName(targetRecipe.getByProducts().get(i).getKey());
-                            a.setStack(targetRecipe.getByProducts().get(i).getValue());
-                            inventory.addItem(new Item(a));
-                        }else
-                        {
-                            for(int j=0;j<targetRecipe.getByProducts().get(i).getValue();j++)
-                            {
-                                inventory.addItem(new Item(itemLibrary.getItemByTrueName(targetRecipe.getByProducts().get(i).getKey())));
-                            }
-                        }
-                    }
-                    System.out.println("add item to inventory");
-                    removeIngredients(targetRecipe);
-                    targetRecipe = null;
                 }
                 
-            }else
-            {
-                clearCraftingTarget();
+                removeIngredients(recipe);
+                
+                
             }
             
         }
         
-    }
-    
-    public void clearCraftingTarget()
-    {
-        System.out.println("I am called");
-        targetRecipe = null;
-        craftingTurns = 0;
-    }
-    
-    public boolean finishedCrafting()
-    {
-        return craftingTurns == 0;
     }
     
     public void removeIngredients(Recipe recipe)
@@ -218,8 +184,7 @@ public class Crafting
                 
                 if(recipe.getIngredients().get(i).getItem().startsWith("<"))
                 {
-                    
-                    
+                   
                     if(items.get(j).getProperties().contains(itemLibrary.getItemTypeByName(recipe.getIngredients().get(i).getItem()).getType())&&recipe.getIngredients().get(i).getConsume()==1)
                     {
                         if(items.get(j).isStackable())
@@ -249,17 +214,22 @@ public class Crafting
                     {
                         
                         
-                        
+                        //if item is a generic metal type
+                        if(items.get(j).getProperties().contains(52))
+                        {
+                            System.out.println("put "+recipe.getName()+" with "+items.get(j).getTrueName());
+                            previousMaterials.put(recipe.getName(), items.get(j).getTrueName());
+                        }
                         
                         if(items.get(j).isStackable())
                         {
                         
                             items.get(j).addStack(-1);
-                            
+                            System.out.println("remove "+j);
                             if(items.get(j).getStack()<=0)
                             {
                                 items.remove(j);
-                                
+                                System.out.println("remove "+j);
                             }
                         
                         }else
@@ -271,10 +241,6 @@ public class Crafting
                         
                         
                         break;
-                    }else if(items.get(j).getTrueName().equals(recipe.getIngredients().get(i).getItem()))
-                    {
-                        
-                        break;
                     }
                 }
                 
@@ -283,12 +249,6 @@ public class Crafting
                 
             }
         }
-    }
-    
-    public void rememberGeneric(Recipe recipe,Item item)
-    {
-        
-        previousMaterials.put(recipe.getName(), item.getTrueName());
     }
     
     public boolean checkCraftingRecipe(Recipe recipe)
@@ -337,12 +297,11 @@ public class Crafting
                         
                         if(recipeItems.get(j).isStackable())
                         {
-                            
-                                recipeItems.get(j).addStack(-1);
-                                if(recipeItems.get(j).getStack()==0)
-                                {
-                                    recipeItems.remove(j);
-                                }
+                            recipeItems.get(j).addStack(-1);
+                            if(recipeItems.get(j).getStack()==0)
+                            {
+                                recipeItems.remove(j);
+                            }
                         
                         }else
                         {
@@ -383,10 +342,6 @@ public class Crafting
         
     }
     
-    public boolean isCrafting()
-    {
-        return (targetRecipe!=null&&craftingTurns!=0);
-    }
     
     public void removeIngridient(int index)
     {
@@ -440,22 +395,6 @@ public class Crafting
 
     public void setPreviousMaterials(HashMap<String, String> previousMaterials) {
         this.previousMaterials = previousMaterials;
-    }
-
-    public int getCraftingTurns() {
-        return craftingTurns;
-    }
-
-    public void setCraftingTurns(int craftingTurns) {
-        this.craftingTurns = craftingTurns;
-    }
-
-    public Recipe getTargetRecipe() {
-        return targetRecipe;
-    }
-
-    public void setTargetRecipe(Recipe targetRecipe) {
-        this.targetRecipe = targetRecipe;
     }
 
     

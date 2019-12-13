@@ -3,33 +3,22 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/InventoryUI/InventorySecondaryScrollDownButton.java</file>
-            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Item/Item.java</file>
-            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Camera/Camera.java</file>
-            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Item/Crafting.java</file>
-            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/CraftingUI/CraftingUIWindow.java</file>
-            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Entity/Task.java</file>
-            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/res/data/dialog/dialog_job.json</file>
-            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/CraftingUI/RecipeUI.java</file>
-            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/res/data/item.json</file>
-            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Entity/EntityLibrary.java</file>
-            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/CraftingUI/MaterialItemUI.java</file>
-            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Entity/Pawn.java</file>
-            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Entity/FurnitureTemplate.java</file>
-            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/CraftingUI/CraftingFilterButton.java</file>
-            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/res/data/dialog/dialog_regular.json</file>
-            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Entity/FOVBoard.java</file>
-            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Entity/Entity.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/CraftingUI/MaterialUI.java</file>
-            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Entity/Furniture.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Item/Inventory.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Item/Item.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Item/Crafting.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/CraftingUI/RecipeRequirementUI.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/res/data/materials.json</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Game/Game.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/CraftingUI/CraftingUI.java</file>
-            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/CraftingUI/CraftingCraftButton.java</file>
-            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/res/data/colours.json</file>
-            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/res/data/creatures.json</file>
-            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/res/data/recipe.json</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/CraftingUI/RecipeScrollDownButton.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/CraftingUI/RecipeUI.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/res/data/item.json</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/CraftingUI/MaterialItemUI.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Item/ItemLibrary.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/res/data/item_type.json</file>
-            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Entity/Meter.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/CraftingUI/StationUI.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/CraftingUI/RecipeScrollUpButton.java</file>
         </group>
     </open-files>
 </project-private>
