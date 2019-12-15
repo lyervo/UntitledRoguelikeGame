@@ -1,5 +1,6 @@
 [	
 	
+	
 	{
 		"category":"item",
 		"trueName":"Empty Potion Bottle",
@@ -10,7 +11,8 @@
 		"properties":[3,4],
 		"consumed":[],
 		"baseValue":5,
-                "effects":[]
+                "effects":[],
+                "durability":1
 	},
 	{
 		"category":"potion",
@@ -22,7 +24,8 @@
 		"properties":[1,2,4],
 		"consumed":[{"name":"Empty Potion Bottle"}],
 		"baseValue":20,
-                "effects":[{"type":"heal","duration":"1","value":"20"}]
+                "effects":[{"type":"heal","duration":"1","value":"20"}],
+                "durability":1
 	},
 	{
 		"category":"potion",
@@ -34,7 +37,8 @@
 		"properties":[1,2,4],
 		"consumed":[{"name":"Empty Potion Bottle"}],
 		"baseValue":75,
-                "effects":[{"type":"poison","duration":"999","value":"10"},{"type":"weak","duration":"10","value":"1"}]
+                "effects":[{"type":"poison","duration":"999","value":"10"},{"type":"weak","duration":"10","value":"1"}],
+                "durability":1
 	},
 	{
 		"category":"potion",
@@ -46,7 +50,8 @@
 		"properties":[1,2,4],
 		"consumed":[{"name":"Empty Potion Bottle"}],
 		"baseValue":75,
-                "effects":[{"type":"cure_poison","duration":"1","value":"1"}]
+                "effects":[{"type":"cure_poison","duration":"1","value":"1"}],
+                "durability":1
 	},
 	{
 		"category":"equipment",
@@ -58,7 +63,8 @@
 		"properties":[20,24],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[{"type":"blunt_damage","duration":"1","value":"5"}]
+                "effects":[{"type":"blunt_damage","duration":"1","value":"5"}],
+                "durability":1
 	},
 	{
 		"category":"equipment",
@@ -70,7 +76,8 @@
 		"properties":[20,24],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[{"type":"slash_damage","duration":"1","value":"10"}]
+                "effects":[{"type":"slash_damage","duration":"1","value":"10"}],
+                "durability":1
 	},
 	{
 		"category":"equipment",
@@ -82,7 +89,8 @@
 		"properties":[20,24],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[{"type":"slash_damage","duration":"1","value":"10"}]
+                "effects":[{"type":"slash_damage","duration":"1","value":"10"}],
+                "durability":1
 	},
 	{
 		"category":"equipment",
@@ -94,7 +102,8 @@
 		"properties":[20,33],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[{"type":"slash_damage","duration":"1","value":"30"}]
+                "effects":[{"type":"slash_damage","duration":"1","value":"30"}],
+                "durability":1
 	},
 	{
 		"category":"equipment",
@@ -106,7 +115,8 @@
 		"properties":[20,26],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[{"type":"blunt_defense","duration":"1","value":"15"}]
+                "effects":[{"type":"blunt_defense","duration":"1","value":"15"}],
+                "durability":1
 	},
 	{
 		"category":"equipment",
@@ -118,7 +128,8 @@
 		"properties":[20,26],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[{"type":"blunt_defense","duration":"1","value":"30"}]
+                "effects":[{"type":"blunt_defense","duration":"1","value":"30"}],
+                "durability":1
 	},
 	{
 		"category":"item",
@@ -130,7 +141,8 @@
 		"properties":[4],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[]
+                "effects":[],
+                "durability":1
 	},
 	{
 		"category":"item",
@@ -142,7 +154,8 @@
 		"properties":[4],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[]
+                "effects":[],
+                "durability":1
 	},
 	{
 		"category":"item",
@@ -154,7 +167,8 @@
 		"properties":[4],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[]
+                "effects":[],
+                "durability":1
 	},
 	{
 		"category":"item",
@@ -166,7 +180,8 @@
 		"properties":[4],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[]
+                "effects":[],
+                "durability":1
 	},
 	{
 		"category":"item",
@@ -183,7 +198,8 @@
 					{"type":"recipe&&Reinforced Wooden Shield","duration":"1","value":"0"},
 					{"type":"recipe&&<metal> Sword","duration":"1","value":"0"},
                                         {"type":"recipe&&<metal> Dagger","duration":"1","value":"0"},
-                                        {"type":"recipe&&<metal> Axe","duration":"1","value":"0"}]
+                                        {"type":"recipe&&<metal> Axe","duration":"1","value":"0"}],
+                "durability":1
 	},
 	{
 		"category":"equipment",
@@ -195,7 +211,8 @@
 		"properties":[20,33,7],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[{"type":"slash_damage","duration":"1","value":"10"}]
+                "effects":[{"type":"slash_damage","duration":"1","value":"10"}],
+                "durability":1
 	},
 	{
 		"category":"equipment",
@@ -207,7 +224,8 @@
 		"properties":[20,33,7],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[{"type":"slash_damage","duration":"1","value":"10"}]
+                "effects":[{"type":"slash_damage","duration":"1","value":"10"}],
+                "durability":1
 	},
 	{
 		"category":"equipment",
@@ -219,7 +237,8 @@
 		"properties":[20,33,7],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[{"type":"stab_damage","duration":"1","value":"5"}]
+                "effects":[{"type":"stab_damage","duration":"1","value":"5"}],
+                "durability":1
 	},
 	{
 		"category":"item",
@@ -231,7 +250,8 @@
 		"properties":[6,52,4],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[{"type":"slash_damage","duration":"1","value":"10"}]
+                "effects":[{"type":"slash_damage","duration":"1","value":"10"}],
+                "durability":1
 	},
 	{
 		"category":"item",
@@ -243,7 +263,8 @@
 		"properties":[6,52,4],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[{"type":"slash_damage","duration":"1","value":"20"}]
+                "effects":[{"type":"slash_damage","duration":"1","value":"20"}],
+                "durability":1
 	},
 	{
 		"category":"item",
@@ -255,6 +276,34 @@
 		"properties":[6,52,4],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[{"type":"slash_damage","duration":"1","value":"20"}]
+                "effects":[{"type":"slash_damage","duration":"1","value":"20"}],
+                "durability":1
+	},
+	{
+		"category":"food",
+		"trueName":"Raw meat",
+		"texture":"raw_meat_1",
+		"desc":"A piece of raw meat",
+		"unidentified_desc":null,
+		"stack":"1",
+		"properties":[0],
+		"consumed":null,
+                "expire":[{"name":"Rot"}],
+		"baseValue":75,
+                "effects":[{"type":"on_rot","duration":"1","value":"20"}],
+                "durability":10
+	},
+	{
+		"category":"item",
+		"trueName":"Rot",
+		"texture":"raw_meat_1",
+		"desc":"Rotten organics",
+		"unidentified_desc":null,
+		"stack":"1",
+		"properties":[4],
+		"consumed":null,
+		"baseValue":1,
+                "effects":[{"type":"slash_damage","duration":"1","value":"20"}],
+                "durability":1
 	}
 ]

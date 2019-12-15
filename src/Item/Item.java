@@ -5,7 +5,10 @@
  */
 package Item;
 
+import World.World;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.util.Pair;
@@ -14,6 +17,7 @@ import org.json.simple.JSONObject;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
 /**
@@ -27,8 +31,8 @@ public class Item
     private Image texture;
     
     private boolean perishable;
-    private boolean lifeSpan;
-    
+    private int durability;
+    private int maxDurability;
     private int stack;
     
     
@@ -72,7 +76,7 @@ public class Item
     
     
     
-    private ArrayList<Integer> properties;
+    private HashSet<Integer> properties;
     
     private ArrayList<Effect> effects;
     
@@ -81,6 +85,8 @@ public class Item
     private String desc,unidentified_desc;
     
     private String metal;
+    
+    private ArrayList<String> expire;
     
     public Item(Item item)
     {
@@ -91,11 +97,14 @@ public class Item
         this.unidentified_desc = item.getUnidentified_desc();
         this.desc = item.getDescTrue();
         
-        this.properties = new ArrayList<Integer>(item.getProperties());
+        this.properties = new HashSet<Integer>(item.getProperties());
         this.effects = new ArrayList<Effect>(item.getEffects());
         this.postConsume = new ArrayList<String>(item.getPostConsume());
         this.itemLibrary = item.getItemLibrary();
         this.stack = item.getStack();
+        this.durability = item.getDurability();
+        this.maxDurability = item.getMaxDurability();
+        this.expire = item.getExpire();
     }
     
     
@@ -103,7 +112,7 @@ public class Item
     public Item(JSONObject json,ItemLibrary itemLibrary)
     {
         this.itemLibrary = itemLibrary;
-        properties = new ArrayList<Integer>();
+        properties = new HashSet<Integer>();
         effects = new ArrayList<Effect>();
         postConsume = new ArrayList<String>();
         stack = Integer.parseInt((String)json.get("stack"));
@@ -142,8 +151,37 @@ public class Item
             this.unidentified_desc = (String)json.get("unidentified_desc");
         }
         
+        long longDura = (long)json.get("durability");
+        int duraInt = (int)longDura;
+        this.durability = duraInt;
+        this.maxDurability = duraInt;
+        
+        expire = new ArrayList<String>();
+        
+        if(json.get("expire")!=null)
+        {
+            JSONArray expArr = (JSONArray)json.get("expire");
+            
+                for(int i=0;i<expArr.size();i++)
+                {
+                    JSONObject expObj = (JSONObject)expArr.get(i);
+                    expire.add((String)expObj.get("name"));
+                }
+            
+        }
+        
     }
     
+    public void tick(boolean[] k,boolean[] m,Input input,World world)
+    {
+        if(world.isMoved())
+        {
+            if(properties.contains(0))
+            {
+                durability--;
+            }
+        }
+    }
     
     
     
@@ -169,6 +207,36 @@ public class Item
             return name;
         }
     }
+    
+    public void render(Graphics g,int x,int y,int w,int h,Color color)
+    {
+        texture.draw(x,y,w,h,color);
+        if(properties.contains(0))
+        {
+            Color c = Color.decode("#00a300");
+            c.a = 0.5f;
+            g.setColor(c);
+            g.fillRect(x, y+(h-(h*(getDurabilityPercentage()))), w/6, h*(getDurabilityPercentage()));
+        }
+    }
+    
+    public void render(Graphics g,int x,int y,int w,int h)
+    {
+        texture.draw(x,y,w,h);
+        if(properties.contains(0))
+        {
+            Color c = Color.decode("#00a300");
+            c.a = 0.5f;
+            g.setColor(c);
+            g.fillRect(x, y+(h-(h*(getDurabilityPercentage()))), w/6, h*(getDurabilityPercentage()));
+        }
+    }
+    
+    public float getDurabilityPercentage()
+    {
+      
+        return (float)durability/maxDurability;
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -190,19 +258,11 @@ public class Item
         this.perishable = perishable;
     }
 
-    public boolean isLifeSpan() {
-        return lifeSpan;
-    }
-
-    public void setLifeSpan(boolean lifeSpan) {
-        this.lifeSpan = lifeSpan;
-    }
-
-    public ArrayList<Integer> getProperties() {
+    public HashSet<Integer> getProperties() {
         return properties;
     }
 
-    public void setProperties(ArrayList<Integer> properties) {
+    public void setProperties(HashSet<Integer> properties) {
         this.properties = properties;
     }
 
@@ -270,7 +330,7 @@ public class Item
         return name;
     }
 
-    public Integer getType()
+    public Integer getEquipmentType()
     {
         for(Integer i:properties)
         {
@@ -456,6 +516,30 @@ public class Item
             }
         }
         return null;
+    }
+
+    public int getDurability() {
+        return durability;
+    }
+
+    public void setDurability(int durability) {
+        this.durability = durability;
+    }
+
+    public int getMaxDurability() {
+        return maxDurability;
+    }
+
+    public void setMaxDurability(int maxDurability) {
+        this.maxDurability = maxDurability;
+    }
+
+    public ArrayList<String> getExpire() {
+        return expire;
+    }
+
+    public void setExpire(ArrayList<String> expire) {
+        this.expire = expire;
     }
     
     

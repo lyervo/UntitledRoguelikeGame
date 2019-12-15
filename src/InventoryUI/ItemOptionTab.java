@@ -127,7 +127,7 @@ public class ItemOptionTab extends OptionTab
                 lm.getWorld().moved();
                 break;
             case 21:
-                inventory.getEquipment().unequip(item.getType());
+                inventory.getEquipment().unequip(item.getEquipmentType());
                 lm.getWorld().moved();
                 break;
                 

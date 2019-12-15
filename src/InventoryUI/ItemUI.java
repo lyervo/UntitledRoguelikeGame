@@ -181,9 +181,9 @@ public class ItemUI extends DescBox
     public void dragRender(Graphics g,Input input)
     {
         
-        item.getTexture().draw(input.getMouseX()-xofs,input.getMouseY()-yofs,64,64);
-        g.setColor(Color.black);
-        g.drawRect(input.getMouseX()-xofs, input.getMouseY()-yofs, 64, 64);
+        item.render(g,input.getMouseX()-xofs,input.getMouseY()-yofs,64,64);
+        
+        
         if(item.isStackable())
         {
             g.setColor(Color.white);

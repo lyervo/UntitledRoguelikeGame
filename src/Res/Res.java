@@ -47,6 +47,7 @@ public class Res
     
     public Image furniture_inventory,furniture_inventory_fuelable;
     
+    public Image meat_raw_1;
     
     
     public Image minimize,maximize;
@@ -165,7 +166,7 @@ public class Res
         
         tree_1 = new Image("res/texture/entities/tree_1.png");
         
-        
+        meat_raw_1 = new Image("res/texture/items/meat_raw_1.png");
         sharp_object = new Image("res/texture/items/sharp_object.png");
         
         table = new Image("res/texture/furniture/table.png");
@@ -176,6 +177,7 @@ public class Res
         
         book_1 = new Image("res/texture/items/book_1.png");
         
+        images.add(new Pair("raw_meat_1",meat_raw_1));
         images.add(new Pair("dagger",dagger));
         images.add(new Pair("dagger_template",dagger_template));
         images.add(new Pair("sword_template",sword_template));

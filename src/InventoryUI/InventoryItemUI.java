@@ -136,14 +136,14 @@ public class InventoryItemUI extends ItemUI
                         int rowIndex = index/9;
                         if(hover)
                         {
-                            item.getTexture().draw((columnIndex*71)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,64,64);
+                            item.render(g,(columnIndex*71)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,64,64);
                             if(item.isStackable())
                             {
                                 fontSmall.drawString((columnIndex*71)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,""+item.getStack());
                             }
                         }else
                         {
-                            item.getTexture().draw((columnIndex*71)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,64,64,Color.gray);
+                            item.render(g,(columnIndex*71)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,64,64,Color.gray);
                             if(item.isStackable())
                             {
                                 fontSmall.drawString((columnIndex*71)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,""+item.getStack());
@@ -153,7 +153,7 @@ public class InventoryItemUI extends ItemUI
                     {
                         if(hover)
                         {
-                            item.getTexture().draw((index*71)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,64,64);
+                            item.render(g,(index*71)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,64,64);
                             if(item.isStackable())
                             {
                                 fontSmall.drawString((index*71)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,""+item.getStack());
@@ -161,7 +161,7 @@ public class InventoryItemUI extends ItemUI
                         }else
                         {
                          
-                            item.getTexture().draw((index*71)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,64,64,Color.gray);
+                            item.render(g,(index*71)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,64,64,Color.gray);
                             if(item.isStackable())
                             {
                                 fontSmall.drawString((index*71)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,""+item.getStack());
@@ -179,14 +179,14 @@ public class InventoryItemUI extends ItemUI
                         int rowIndex = index/9;
                         if(hover)
                         {
-                            item.getTexture().draw((columnIndex*71)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,64,64);
+                            item.render(g,(columnIndex*71)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,64,64);
                             if(item.isStackable())
                             {
                                 fontSmall.drawString((columnIndex*71)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,""+item.getStack());
                             }
                         }else
                         {
-                            item.getTexture().draw((columnIndex*71)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,64,64,Color.gray);
+                            item.render(g,(columnIndex*71)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,64,64,Color.gray);
                             if(item.isStackable())
                             {
                                 fontSmall.drawString((columnIndex*71)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,""+item.getStack());
@@ -196,7 +196,7 @@ public class InventoryItemUI extends ItemUI
                     {
                         if(hover)
                         {
-                            item.getTexture().draw((index*71)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,64,64);
+                            item.render(g,(index*71)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,64,64);
                             if(item.isStackable())
                             {
                                 fontSmall.drawString((index*71)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,""+item.getStack());
@@ -204,7 +204,7 @@ public class InventoryItemUI extends ItemUI
                         }else
                         {
                          
-                            item.getTexture().draw((index*71)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,64,64,Color.gray);
+                            item.render(g,(index*71)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,64,64,Color.gray);
                             if(item.isStackable())
                             {
                                 fontSmall.drawString((index*71)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,""+item.getStack());
@@ -222,7 +222,7 @@ public class InventoryItemUI extends ItemUI
                         int rowIndex = index/4;
                         if(hover)
                         {
-                            item.getTexture().draw((columnIndex*71)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,64,64);
+                            item.render(g,(columnIndex*71)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,64,64);
                             if(item.isStackable())
                             {
                                 
@@ -231,7 +231,7 @@ public class InventoryItemUI extends ItemUI
                             
                         }else
                         {
-                            item.getTexture().draw((columnIndex*71)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,64,64,Color.gray);
+                            item.render(g,(columnIndex*71)+16+x,32+((rowIndex-ui.getScroll1())*64)+((rowIndex-ui.getScroll1())*7)+y,64,64,Color.gray);
                             if(item.isStackable())
                             {
                                 
@@ -242,7 +242,7 @@ public class InventoryItemUI extends ItemUI
                     {
                         if(hover)
                         {
-                            item.getTexture().draw((index*71)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,64,64);
+                            item.render(g,(index*71)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,64,64);
                             if(item.isStackable())
                             {
                               
@@ -250,7 +250,7 @@ public class InventoryItemUI extends ItemUI
                             }
                         }else
                         {
-                            item.getTexture().draw((index*71)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,64,64,Color.gray);
+                            item.render(g,(index*71)+16+x,32-(ui.getScroll1()*64)-(ui.getScroll1()*7)+y,64,64,Color.gray);
                             if(item.isStackable())
                             {
                                 
@@ -269,14 +269,14 @@ public class InventoryItemUI extends ItemUI
                         int rowIndex = index/4;
                         if(hover)
                         {
-                            item.getTexture().draw((columnIndex*71)+371+x,32+((rowIndex-ui.getScroll2())*71)+y,64,64);
+                            item.render(g,(columnIndex*71)+371+x,32+((rowIndex-ui.getScroll2())*71)+y,64,64);
                             if(item.isStackable())
                             {
                                 fontSmall.drawString((columnIndex*71)+371+x,32+((rowIndex-ui.getScroll2())*71)+y,""+item.getStack());
                             }
                         }else
                         {
-                            item.getTexture().draw((columnIndex*71)+371+x,32+((rowIndex-ui.getScroll2())*71)+y,64,64,Color.gray);
+                            item.render(g,(columnIndex*71)+371+x,32+((rowIndex-ui.getScroll2())*71)+y,64,64,Color.gray);
                             if(item.isStackable())
                             {
                                
@@ -287,14 +287,14 @@ public class InventoryItemUI extends ItemUI
                     {
                         if(hover)
                         {
-                            item.getTexture().draw((index*(71))+371+x,32-(ui.getScroll2()*71)+y,64,64);
+                            item.render(g,(index*(71))+371+x,32-(ui.getScroll2()*71)+y,64,64);
                             if(item.isStackable())
                             {
                                 fontSmall.drawString((index*(71))+371+x,32-(ui.getScroll2()*71)+y,""+item.getStack());
                             }
                         }else
                         {
-                            item.getTexture().draw((index*(71))+371+x,32-(ui.getScroll2()*71)+y,64,64,Color.gray);
+                            item.render(g,(index*(71))+371+x,32-(ui.getScroll2()*71)+y,64,64,Color.gray);
                             if(item.isStackable())
                             {
                                 g.setColor(Color.white);
@@ -342,7 +342,7 @@ public class InventoryItemUI extends ItemUI
             {
                 if(dropRect2.intersects(world.getEquipment_ui().getMainBounds())&&world.getZ()==world.getEquipmentWindow().getZ())
                 {
-                    if(item.getType()==33&&dropRect2.intersects(world.getEquipment_ui().getBounds().get(3).getValue()))
+                    if(item.getEquipmentType()==33&&dropRect2.intersects(world.getEquipment_ui().getBounds().get(3).getValue()))
                     {
                         world.getEquipment_ui().getEquipment().equip(item);
                         world.moved();
@@ -354,7 +354,7 @@ public class InventoryItemUI extends ItemUI
                     for(Pair<Integer,Rectangle> p:world.getEquipment_ui().getBounds())
                     {
                         System.out.println("loop");
-                        if(p.getKey()==item.getType()&&p.getValue().intersects(dropRect2))
+                        if(p.getKey()==item.getEquipmentType()&&p.getValue().intersects(dropRect2))
                         {
                             world.getEquipment_ui().getEquipment().equip(item);
                             ui.refreshInventoryUI(world.getWm().getCurrentLocalMap());

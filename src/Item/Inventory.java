@@ -8,7 +8,9 @@ package Item;
 import Entity.Entity;
 import Res.Res;
 import World.LocalMap;
+import World.World;
 import java.util.ArrayList;
+import org.newdawn.slick.Input;
 
 /**
  *
@@ -39,6 +41,29 @@ public class Inventory
         this.items = new ArrayList<Item>(items);
      
         
+    }
+    
+    
+    public void tick(boolean[] k,boolean[] m,Input input,World world)
+    {
+        for(int i=items.size()-1;i>=0;i--)
+        {
+            items.get(i).tick(k, m, input, world);
+            if(items.get(i).getDurability() <= 0)
+            {
+                if(items.get(i).getExpire().size()!=0)
+                {
+                    for(int j=0;j<items.get(i).getExpire().size();j++)
+                    {
+                        addItem(world.getItemLibrary().getItemByTrueName(items.get(i).getExpire().get(j)));
+                    }
+                }
+                items.remove(i);
+            }
+        }
+        equipment.tick(k, m, input, world);
+        world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
+        world.getEquipment_ui().refreshUI();
     }
     
     
@@ -151,6 +176,10 @@ public class Inventory
     public void debugInit(ItemLibrary itemLibrary)
     {
         addItem(new Item(itemLibrary.getItemByTrueName("Steel Bar")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Raw meat")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Raw meat")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Raw meat")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Raw meat")));
         addItem(new Item(itemLibrary.getItemByTrueName("Steel Bar")));
         addItem(new Item(itemLibrary.getItemByTrueName("Steel Bar")));
         addItem(new Item(itemLibrary.getItemByTrueName("Steel Bar")));

@@ -217,6 +217,11 @@ public class Pawn extends Entity
         {
             
             processStatus(k,m,input,world);
+            if(control)
+            {
+                world.getWm().getPlayerInventory().tick(k, m, input, world);
+            }
+            
         }
         
     }

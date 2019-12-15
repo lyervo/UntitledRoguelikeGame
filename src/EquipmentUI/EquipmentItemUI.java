@@ -28,7 +28,7 @@ public class EquipmentItemUI extends ItemUI
         super(item, index, res);
         this.ui = ui;
        
-            if(item.getType()!=33)
+            if(item.getEquipmentType()!=33)
             {
                 if(index<3)
                 {
@@ -53,7 +53,7 @@ public class EquipmentItemUI extends ItemUI
         {
             
             
-            if(item.getType()!=33)
+            if(item.getEquipmentType()!=33)
             {
                 int colIndex = index%3;
                 int rowIndex = index/3;
@@ -135,7 +135,7 @@ public class EquipmentItemUI extends ItemUI
         
         if(dropRect2.intersects(world.getInventoryWindow().getBounds())&&world.getZ()==world.getInventoryWindow().getZ())
         {
-            ui.getEquipment().unequip(item.getType());
+            ui.getEquipment().unequip(item.getEquipmentType());
             ui.refreshUI();
             world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
             return;

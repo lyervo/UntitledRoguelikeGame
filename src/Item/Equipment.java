@@ -9,8 +9,10 @@ import Item.Inventory;
 import Item.Item;
 import Res.Res;
 import InventoryUI.ItemUI;
+import World.World;
 import java.util.ArrayList;
 import javafx.util.Pair;
+import org.newdawn.slick.Input;
 
 /**
  *
@@ -70,11 +72,11 @@ public class Equipment
             equipments.get(3).setItem(item);
             inventory.removeItem(item);
             return;
-        }else if(item.getType()==26)//if item is an off-hand equipment
+        }else if(item.getEquipmentType()==26)//if item is an off-hand equipment
         {
             if(equipments.get(3).getItem()!=null)//if there is a main hand weapon
             {
-                if(equipments.get(3).getItem().getType()==33)//if main hand weapon is a two hand weapon
+                if(equipments.get(3).getItem().getEquipmentType()==33)//if main hand weapon is a two hand weapon
                 {
                     inventory.addItem(equipments.get(3).getItem());
                     equipments.get(3).setItem(null);
@@ -110,6 +112,8 @@ public class Equipment
         
     }
     
+    
+    
     public void unequip(int type)
     {
         if(type==33)
@@ -128,6 +132,24 @@ public class Equipment
             }
         }
     }
+    
+    
+    public void tick(boolean[] k,boolean[] m,Input input,World world)
+    {
+        for(Slot s:equipments)
+        {
+            if(s.getItem()!=null)
+            {
+                s.getItem().tick(k, m, input, world);
+                if(s.getItem().getDurability() <= 0)
+                {
+                    s.setItem(null);
+                }
+            }
+        }
+    }
+    
+    
 
     public ArrayList<Slot> getEquipments() {
         return equipments;
