@@ -12,7 +12,7 @@ import World.LocalMap;
 import World.Tile;
 import World.World;
 import java.util.ArrayList;
-import java.util.Arrays;
+
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.util.pathfinding.AStarPathFinder;
@@ -105,7 +105,7 @@ public class Pawn extends Entity
     @Override
     public void tick(boolean[] k, boolean[] m,Input input, World world)
     {
-        if(control&&!world.isMoved())
+        if(control&&!world.isMoved()&&!world.getDialogue().isDisplay())
         {
             if(path==null)
             {

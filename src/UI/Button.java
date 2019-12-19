@@ -8,7 +8,10 @@ package UI;
 import World.World;
 import java.awt.Point;
 import java.awt.Rectangle;
+import org.json.simple.JSONObject;
+import org.newdawn.slick.AppletGameContainer.Container;
 import org.newdawn.slick.Color;
+import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
@@ -39,6 +42,22 @@ public abstract class Button
     private boolean display;
     
     
+    //constructor for dialog option
+    public Button(int index,int previousHeight,JSONObject jsonObj,GameContainer container,TrueTypeFont font)
+    {
+        this.x = 0;
+        this.y = container.getHeight()-previousHeight-font.getHeight();
+        this.height = font.getHeight();
+        this.width = container.getWidth();
+        this.bounds = new Rectangle(x,y,width,height);
+        this.text = (String)jsonObj.get("reply");
+        this.hover = false;
+        this.fill = Color.green;
+        this.border = Color.black;
+        this.hoverFill = Color.gray;
+        this.font = font;
+        this.display = true;
+    }
     
     public Button(int x,int y,int width,int height,String text,Color border,Color fill,Color hoverFill,TrueTypeFont font)
     {

@@ -24,7 +24,10 @@ public class EquipmentButton extends Button
     @Override
     public void onClick(boolean[] m, World world)
     {
-        world.getEquipmentWindow().setDisplay();
+        if(!world.getDialogue().isDisplay())
+        {
+            world.getEquipmentWindow().setDisplay();
+        }
     }
     
 }

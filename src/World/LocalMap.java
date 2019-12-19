@@ -165,10 +165,14 @@ public class LocalMap implements TileBasedMap, ILosBoard
         }
 
         cam.tick(k,m,world);
-        for (ItemPile ip : itemPiles)
+        
+        
+        for(int i=itemPiles.size()-1;i>=0;i--)
         {
-            ip.tick(k, m,input, world);
+            itemPiles.get(i).tick(k, m, input, world);
         }
+        
+        
         for (Tile[] ts : tiles)
         {
             for (Tile t : ts)

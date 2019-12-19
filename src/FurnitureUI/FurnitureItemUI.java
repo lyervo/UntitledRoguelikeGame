@@ -5,7 +5,7 @@
  */
 package FurnitureUI;
 
-import Entity.Furniture;
+
 import InventoryUI.ItemUI;
 import Item.Item;
 import Res.Res;

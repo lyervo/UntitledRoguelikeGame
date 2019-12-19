@@ -6,7 +6,7 @@
 package World;
 
 import Camera.Camera;
-import Entity.Entity;
+
 import Entity.Pawn;
 import Entity.Traveler;
 import Item.Inventory;

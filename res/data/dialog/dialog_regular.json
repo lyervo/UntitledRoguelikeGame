@@ -2,14 +2,14 @@
 	
 	{
 		"id":1,
-		"content":"Hello kind sir, what can I help you with today?",
+		"content":"Hello kind sir, what can I help you with today?there is a house, in new orleans, they call the rising sun, and its been of ruin of many poor boy, and god I know I'm one.\nMy mother was a tailor, sew my new blue jeans, my father was a gambling man, down in new orleans.",
 		"replies":
 		[
-			{"reply":"Tell me more about this place.","effect":[],"next":2},
+			{"reply":"Tell me more about this place.","effect":[],"condition":[],"next":2},
 			{"reply":"Any jobs around here?","effect":[],"next":3},
 			{"reply":"Where can I do some shopping?","effect":[],"next":4},
 			{"reply":"Who are you?","effect":[],"next":5},
-			{"reply":"Nevermind.","effect":["exit"],"next":0}
+			{"reply":"Nevermind.","effect":["exit"],"next":-1}
 		]
 		
 	},
@@ -22,7 +22,7 @@
 			{"reply":"Any jobs around here?","effect":[],"next":3},
 			{"reply":"Where can I do some shopping?","effect":[],"next":4},
 			{"reply":"Who are you?","effect":[],"next":5},
-			{"reply":"Goodbye.","effect":["exit"],"next":0}
+			{"reply":"Goodbye.","effect":["exit"],"next":-1}
 		]
 		
 	},
@@ -35,7 +35,7 @@
 			{"reply":"Any jobs around here?","effect":[],"next":3},
 			{"reply":"Where can I do some shopping?","effect":[],"next":4},
 			{"reply":"Who are you?","effect":[],"next":5},
-			{"reply":"Goodbye.","effect":["exit"],"next":0}
+			{"reply":"Goodbye.","effect":["exit"],"next":-1}
 		]
 		
 	},
@@ -48,7 +48,7 @@
 			{"reply":"Any jobs around here?","effect":[],"next":3},
 			{"reply":"Where can I do some shopping?","effect":[],"next":4},
 			{"reply":"Who are you?","effect":[],"next":5},
-			{"reply":"Goodbye.","effect":["exit"],"next":0}
+			{"reply":"Goodbye.","effect":["exit"],"next":-1}
 		]
 		
 	},
@@ -61,7 +61,7 @@
 			{"reply":"Any jobs around here?","effect":[],"next":3},
 			{"reply":"Where can I do some shopping?","effect":[],"next":4},
 			{"reply":"Who are you?","effect":[],"next":5},
-			{"reply":"Goodbye.","effect":["exit"],"next":0}
+			{"reply":"Goodbye.","effect":["exit"],"next":-1}
 		]
 		
 	}

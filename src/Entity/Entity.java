@@ -11,7 +11,7 @@ import World.World;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SpriteSheet;
-import org.newdawn.slick.util.pathfinding.AStarPathFinder;
+
 
 /**
  *

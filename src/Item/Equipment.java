@@ -7,11 +7,11 @@ package Item;
 
 import Item.Inventory;
 import Item.Item;
-import Res.Res;
+
 import InventoryUI.ItemUI;
 import World.World;
 import java.util.ArrayList;
-import javafx.util.Pair;
+
 import org.newdawn.slick.Input;
 
 /**

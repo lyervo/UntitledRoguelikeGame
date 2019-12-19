@@ -8,12 +8,12 @@ package InventoryUI;
 import UI.DescBox;
 import Item.Item;
 import Res.Res;
-import World.LocalMap;
+
 import World.World;
-import java.awt.Point;
+
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import java.util.Collections;
+
 import javafx.util.Pair;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;

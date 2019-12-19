@@ -15,6 +15,12 @@ public class Effect
     private int duration;
     private String type;
     
+    
+    //types of effects
+    //weapon_
+    //pawn_
+    //
+    
     public Effect(double value,int duration,String type)
     {
         this.value = value;

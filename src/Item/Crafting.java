@@ -5,13 +5,13 @@
  */
 package Item;
 
-import CraftingUI.CraftingUI;
+
 import Entity.Furniture;
-import Res.Res;
+
 import World.LocalMap;
 import java.util.ArrayList;
 import java.util.HashMap;
-import javafx.util.Pair;
+
 
 /**
  *
@@ -38,6 +38,16 @@ public class Crafting
     
     private HashMap<String,String> previousMaterials;
     
+    
+    
+    /**
+    * Creates the crafting object, the crafting object is used to craft items base on the selected recipe
+    *
+    * @param inventory The inventory of the entity.
+    * @param itemLibrary The item library contains information of items and recipes.
+    * 
+    * 
+    */
     public Crafting(Inventory inventory,ItemLibrary itemLibrary)
     {
         this.inventory = inventory;
@@ -48,46 +58,16 @@ public class Crafting
         this.previousMaterials = new HashMap<String,String>();
     }
     
-//    public void clearAllIngridient()
-//    {
-//        if(!items.isEmpty())
-//        {
-//            for(int i=items.size()-1;i>=0;i--)
-//            {
-//                inventory.addItem(new Item(items.get(i)));
-//                items.remove(i);
-//            }
-//        }
-//    }
-//    
-//    public void addIngredient(int index)
-//    {
-//        
-//        if(items.size()>=9)
-//        {
-//            return;
-//        }
-//        
-//        if(inventory.getItems().get(index).isMetalMaterial())
-//        {
-//            for(int i=items.size()-1;i>=0;i--)
-//            {
-//                if(items.get(i).isMetalMaterial())
-//                {
-//                    inventory.addItem(items.get(i));
-//                    items.remove(i);
-//                }
-//            }
-//            items.add(new Item(inventory.getItems().get(index)));
-//        }else
-//        {
-//            items.add(new Item(inventory.getItems().get(index)));
-//        }
-//            
-//        inventory.removeItem(inventory.getItems().get(index),-1);
-//        
-//        
-//    }
+    
+    /**
+    * Get any adjacent crafting stations in the local map of the entity.
+    * 
+    * The station is refreshed every turn this function is called.
+    *
+    * @param lm the map which the entity currently resides in.
+    * 
+    * 
+    */
     
     public void getNearbyStations(LocalMap lm)
     {
@@ -106,18 +86,34 @@ public class Crafting
         
     }
     
+    /**
+    * Initiate the crafting queue base on the selected crafting recipe.
+    * 
+    * 
+    */
     public void setCraftingTarget()
     {
         targetRecipe = itemLibrary.getRecipeById(selectIndex);
         craftingTurns = targetRecipe.getTurns();
     }
     
+    /**
+    * <p>This function is called by the entity each time a turn has passed if it's task is set to crafting.</p>
+    *
+    * <p>It will check whether the inventory of the entity has all the requirement of the recipe met, 
+    * if so it will decrease the crafting turn by 1, else it will clear the crafting queue and cancel the operation.</p>
+    * 
+    * <p>When crafting turn is less or equal to 0, ingredients(items) mark as consumed by the recipe will be removed from the inventory of the entity,
+    * and the result and by product of the recipe will be added to the inventory of the entity, after finishing the operation it will clear the crafting queue.
+    * </p>
+    */
     public void craft()
     {
         if(selectIndex == -1)
         {
             return;
         }
+        
         
         if(targetRecipe!=null)
         {
@@ -127,7 +123,6 @@ public class Crafting
                 
                 
                 craftingTurns--;
-                System.out.println("crafting turns left:"+craftingTurns);
                 if(craftingTurns<=0&&targetRecipe!=null)
                 {
                     
@@ -183,7 +178,6 @@ public class Crafting
                             }
                         }
                     }
-                    System.out.println("add item to inventory");
                     removeIngredients(targetRecipe);
                     targetRecipe = null;
                 }
@@ -197,18 +191,39 @@ public class Crafting
         
     }
     
+    /**
+    * Clear the crafting queue by setting the target recipe to null and crafting turn to 0
+    *
+    * 
+    * 
+    * 
+    */
     public void clearCraftingTarget()
     {
-        System.out.println("I am called");
         targetRecipe = null;
         craftingTurns = 0;
+        
     }
     
+    
+    /**
+    * Check if a crafting queue is finished by checking whether the number of crafting turn left is equal or less than 0.
+    *
+    * @return craftingTurn <= 0
+    */
     public boolean finishedCrafting()
     {
-        return craftingTurns == 0;
+        return craftingTurns <= 0;
     }
     
+    
+    /**
+    * Remove items from the inventory base on the ingredient requirements from the provided recipe
+    *
+    * @param recipe selected recipe which contains a list of ingredient requirements
+    * 
+    * 
+    */
     public void removeIngredients(Recipe recipe)
     {
         for(int i=0;i<recipe.getIngredients().size();i++)
@@ -285,12 +300,34 @@ public class Crafting
         }
     }
     
+    
+    /**
+    * <p>Use for the crafting UI to remember material selection so that it won't get reset every time the UI is refreshed.</p>
+    * 
+    * <p>This function is called whenever a generic material is used to craft the respective generic item.<p/>
+    * 
+    *
+    * @param recipe Selected recipe which uses a generic material.
+    * @param item The selected generic material.
+    * 
+    * 
+    */
     public void rememberGeneric(Recipe recipe,Item item)
     {
         
         previousMaterials.put(recipe.getName(), item.getTrueName());
     }
     
+    
+    /**
+    * Check items in the inventory base on the ingredient requirements from the provided recipe
+    *
+    * @param recipe selected recipe which contains a list of ingredient requirements
+    * 
+    * @return Whether all the requirements of the recipe is met.
+    * 
+    * 
+    */
     public boolean checkCraftingRecipe(Recipe recipe)
     {
         
@@ -383,16 +420,19 @@ public class Crafting
         
     }
     
+    /**
+    * Check if there is currently a crafting queue
+    *
+    * @return whether there is a target recipe and crafting turns is not less or equal to 0
+    * 
+    * 
+    */
     public boolean isCrafting()
     {
-        return (targetRecipe!=null&&craftingTurns!=0);
+        return (targetRecipe!=null&&craftingTurns>=1);
     }
     
-    public void removeIngridient(int index)
-    {
-        inventory.addItem(new Item(items.get(index)));
-        items.remove(index);
-    }
+    
 
     public ArrayList<Item> getItems() {
         return items;

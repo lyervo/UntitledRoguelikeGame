@@ -6,7 +6,7 @@
 		"trueName":"Empty Potion Bottle",
 		"texture":"empty_bottle",
 		"desc":"An empty potion bottle, used to contain potion.",
-		"unidentified_desc":null,
+		
 		"stack":"1",
 		"properties":[3,4],
 		"consumed":[],

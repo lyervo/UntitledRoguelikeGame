@@ -7,7 +7,7 @@ package Item;
 
 import World.World;
 import java.util.ArrayList;
-import java.util.HashMap;
+
 import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -87,6 +87,9 @@ public class Item
     private String metal;
     
     private ArrayList<String> expire;
+    
+    //determines the ownership of an item,use to check if an item is stolen
+    private String ownership;
     
     public Item(Item item)
     {

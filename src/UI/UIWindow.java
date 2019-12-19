@@ -5,7 +5,7 @@
  */
 package UI;
 
-import FurnitureUI.FurnitureUIWindow;
+
 import Res.Res;
 import World.World;
 import java.awt.Point;

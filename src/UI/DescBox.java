@@ -5,7 +5,7 @@
  */
 package UI;
 
-import java.awt.Point;
+
 import java.util.ArrayList;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;

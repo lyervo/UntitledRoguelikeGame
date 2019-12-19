@@ -10,6 +10,8 @@ import Entity.EntityLibrary;
 import CraftingUI.CraftingButton;
 import CraftingUI.CraftingUI;
 import CraftingUI.CraftingUIWindow;
+import Dialogue.DialogueLibrary;
+import Dialogue.DialogueWindow;
 import Entity.Furniture;
 import EquipmentUI.EquipmentButton;
 import EquipmentUI.EquipmentUI;
@@ -26,10 +28,10 @@ import InventoryUI.ItemOptionTab;
 import InventoryUI.XItemTextField;
 import Item.Item;
 import UI.OptionTab;
-import UI.UIComponent;
+
 import UI.UIWindow;
 import java.util.ArrayList;
-import java.util.Collections;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -98,7 +100,8 @@ public class World
     
     private OptionTab optionTab;
     
-    
+    private DialogueWindow dialogue;
+    private DialogueLibrary dialogueLibrary;
     
     public World(Res res,GameContainer container,Input input)
     {
@@ -125,7 +128,8 @@ public class World
         
         xItemTextField = new XItemTextField(container,res.disposableDroidBB,(container.getWidth()/2)-((res.disposableDroidBB.getWidth("00000")+5)/2),(container.getHeight()/2)-(res.disposableDroidBB.getHeight()/2),res.disposableDroidBB.getWidth("00000")+5,res.disposableDroidBB.getHeight(),res);
 
-        
+        dialogueLibrary = new DialogueLibrary(this);
+        dialogue = new DialogueWindow(dialogueLibrary,this);
         
         
         
@@ -175,6 +179,12 @@ public class World
     
     public void tick(boolean[] k,boolean[] m,Input input)
     {
+        
+        if(k[Input.KEY_SPACE])
+        {
+            dialogue.setDisplay(!dialogue.isDisplay());
+        }
+        
         if(xItemTextFieldActive)
         {
             xItemTextField.tick(k,m, input, this,inventory_ui);
@@ -182,11 +192,13 @@ public class World
         hoveringWindow = false;
         
         
-        for(int i=uis.size()-1;i>=0;i--)
+        if(!dialogue.isDisplay())
         {
-            uis.get(i).tick(k, m, input, this);
+            for(int i=uis.size()-1;i>=0;i--)
+            {
+                uis.get(i).tick(k, m, input, this);
+            }
         }
-        
         if(optionTab!=null)
         {
             optionTab.tick(k, m, input, wm.getCurrentLocalMap());
@@ -230,14 +242,14 @@ public class World
         equipmentButton.tick(m, input, this);
         craftingButton.tick(m, input, this);
         
-        if(k[Input.KEY_I])
+        if(!dialogue.isDisplay())
         {
-            deactivateXItemTextField();
-            inventoryWindow.setDisplay();
-        }else if(k[Input.KEY_TAB]&&uiDisplay == 0)
-        {
-            deactivateXItemTextField();
-            quickItemBarUIDisplay = !quickItemBarUIDisplay;
+        
+            if(k[Input.KEY_I])
+            {
+                deactivateXItemTextField();
+                inventoryWindow.setDisplay();
+            }
         }
         
         
@@ -248,8 +260,11 @@ public class World
         
         
         
-        wm.tick(k,m,input,this);
-        
+        if(!dialogue.isDisplay())
+        {
+            wm.tick(k,m,input,this);
+        }
+        dialogue.tick(k, m, input, this);
         if(moved)
         {
             equipment_ui.refreshUI();
@@ -335,6 +350,7 @@ public class World
         {
             optionTab.render(g);
         }
+        dialogue.render(g);
         
     }
     
@@ -689,6 +705,22 @@ public class World
 
     public void setOptionTab(OptionTab optionTab) {
         this.optionTab = optionTab;
+    }
+
+    public DialogueWindow getDialogue() {
+        return dialogue;
+    }
+
+    public void setDialogue(DialogueWindow dialogue) {
+        this.dialogue = dialogue;
+    }
+
+    public DialogueLibrary getDialogueueLibrary() {
+        return dialogueLibrary;
+    }
+
+    public void setDialogueueLibrary(DialogueLibrary dialogueLibrary) {
+        this.dialogueLibrary = dialogueLibrary;
     }
     
     

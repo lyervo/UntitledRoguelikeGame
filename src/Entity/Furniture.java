@@ -11,7 +11,7 @@ import Item.Item;
 import World.LocalMap;
 import World.World;
 import java.util.ArrayList;
-import org.newdawn.slick.Image;
+
 import org.newdawn.slick.Input;
 
 /**

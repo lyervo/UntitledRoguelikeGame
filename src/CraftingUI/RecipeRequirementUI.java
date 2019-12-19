@@ -6,7 +6,7 @@
 package CraftingUI;
 
 import UI.DescBox;
-import Entity.Furniture;
+
 import Entity.FurnitureTemplate;
 import Item.Item;
 import Item.ItemType;
@@ -14,7 +14,7 @@ import World.World;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import org.newdawn.slick.Color;
+
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;

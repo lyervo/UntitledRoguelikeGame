@@ -10,9 +10,9 @@ import InventoryUI.InventoryUI;
 import Item.Crafting;
 import UI.Button;
 import World.World;
-import org.newdawn.slick.Color;
+
 import org.newdawn.slick.Image;
-import org.newdawn.slick.TrueTypeFont;
+
 
 /**
  *

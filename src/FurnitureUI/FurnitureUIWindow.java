@@ -8,8 +8,6 @@ package FurnitureUI;
 import Res.Res;
 import UI.UIComponent;
 import UI.UIWindow;
-import World.World;
-import org.newdawn.slick.Input;
 
 /**
  *

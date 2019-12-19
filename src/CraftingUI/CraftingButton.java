@@ -24,8 +24,11 @@ public class CraftingButton extends Button
     @Override
     public void onClick(boolean[] m, World world)
     {
-        world.getCraftingWindow().setDisplay();
-        world.getCrafting_ui().refreshUI(world.getWm().getCurrentLocalMap());
+        if(!world.getDialogue().isDisplay())
+        {
+            world.getCraftingWindow().setDisplay();
+            world.getCrafting_ui().refreshUI(world.getWm().getCurrentLocalMap());
+        }
     }
     
 }

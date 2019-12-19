@@ -102,22 +102,16 @@ public class CraftingUI extends UIComponent
     public void render(Graphics g,Input input,int x,int y)
     {
         texture.draw(x,y);
-//        craftingClearAllButton.render(g,x,y);
+
         craftingCraftButton.render(g,x,y);
         
         craftingFilterButton.render(g,x,y);
         recipeScrollUpButton.render(g,x,y);
         recipeScrollDownButton.render(g,x,y);
-        
-//        for(CraftingItemUI i:itemUI)
-//        {
-//            i.render(g, input, x,y);
-//        }
 
         
         if(crafting.isCrafting())
         {
-            
             Color c1 = Color.decode("#00a300");
             c1.a = 0.5f;
             g.setColor(c1);
@@ -130,15 +124,7 @@ public class CraftingUI extends UIComponent
             recipes.get(i).render(g, input, i, scroll,crafting,x,y);
         }
         
-//        for(CraftingItemUI i:itemUI)
-//        {
-//            if(i.isDrag())
-//            {
-//                i.dragRender(g, input);
-//            }
-//        }
-        
-        
+
         
         for(StationUI s:stations)
         {
@@ -177,7 +163,7 @@ public class CraftingUI extends UIComponent
     @Override
     public void tick(boolean[] k,boolean[] m,Input input,World world,int x,int y,UIWindow window)
     {
-//        craftingClearAllButton.tick(m, input, world,x,y,window.getZ());
+
         craftingCraftButton.tick(m, input, world,x,y,window.getZ());
         craftingFilterButton.tick(m, input, world,x,y,window.getZ());
         recipeScrollUpButton.tick(m, input, world,x,y,window.getZ());
@@ -192,11 +178,7 @@ public class CraftingUI extends UIComponent
                 scrollDown();
             }
         }
-        
-//        for(int i=itemUI.size()-1;i>=0;i--)
-//        {
-//            itemUI.get(i).tick(k, m, input, world, x, y);
-//        }
+
         for(int i=0;i<recipes.size();i++)
         {
             recipes.get(i).tick(k,m, input,world, i,scroll, crafting,x,y);
@@ -272,13 +254,7 @@ public class CraftingUI extends UIComponent
 
 
 
-//    public ArrayList<CraftingItemUI> getItemUI() {
-//        return itemUI;
-//    }
-//
-//    public void setItemUI(ArrayList<CraftingItemUI> itemUI) {
-//        this.itemUI = itemUI;
-//    }
+
 
     public Crafting getCrafting() {
         return crafting;
@@ -312,13 +288,6 @@ public class CraftingUI extends UIComponent
         this.recipeBounds = recipeBounds;
     }
 
-//    public CraftingClearAllButton getCraftingClearAllButton() {
-//        return craftingClearAllButton;
-//    }
-//
-//    public void setCraftingClearAllButton(CraftingClearAllButton craftingClearAllButton) {
-//        this.craftingClearAllButton = craftingClearAllButton;
-//    }
 
     public CraftingCraftButton getCraftingCraftButton() {
         return craftingCraftButton;

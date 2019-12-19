@@ -10,15 +10,14 @@ import Entity.Status;
 import Item.Inventory;
 import Item.Item;
 import Item.ItemLibrary;
-import Item.ItemPile;
-import static Item.ItemType.*;
+
 import Res.Res;
 import World.LocalMap;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import javafx.util.Pair;
 import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.TrueTypeFont;
+
 
 /**
  *

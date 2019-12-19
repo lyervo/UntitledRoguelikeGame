@@ -93,14 +93,7 @@ public class CraftingItemUI extends ItemUI
     public void checkDrop(Input input,World world,int x,int y)
     {
         
-        dropRect = new Rectangle(input.getMouseX()-xofs,input.getMouseY()-yofs,64,64);
         
-        if(world.getZ()!=world.getCraftingWindow().getZ()||!dropRect.intersects(world.getCraftingWindow().getBounds()))
-        {
-            world.getCrafting_ui().getCrafting().removeIngridient(index);
-            world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
-            world.getCrafting_ui().refreshUI(world.getWm().getCurrentLocalMap());
-        }
         
         
     }

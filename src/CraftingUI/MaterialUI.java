@@ -7,7 +7,7 @@ package CraftingUI;
 
 import Item.Crafting;
 import Item.Inventory;
-import Item.Item;
+
 import Item.ItemLibrary;
 import Item.ItemType;
 import Item.Recipe;
