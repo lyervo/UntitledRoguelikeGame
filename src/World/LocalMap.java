@@ -286,6 +286,43 @@ public class LocalMap implements TileBasedMap, ILosBoard
         return null;
     }
     
+    public ArrayList<Pawn> getPawnsAt(int x,int y)
+    {
+        ArrayList<Pawn> result = new ArrayList<Pawn>();
+        for(Pawn p:pawns)
+        {
+            if(p.getX()==x&&p.getY()==y)
+            {
+                result.add(p);
+            }
+        }
+        return result;
+    }
+    
+    public Pawn getPawnById(int id)
+    {
+        for(Pawn p:pawns)
+        {
+            if(p.getId()==id)
+            {
+                return p;
+            }
+        }
+        return null;
+    }
+    
+    public ItemPile getItemPileById(int id)
+    {
+        for(ItemPile ip:itemPiles)
+        {
+            if(ip.getId() == id)
+            {
+                return ip;
+            }
+        }
+        return null;
+    }
+    
     public void spawnOptionTab(Tile t)
     {
         optionTab = new TileOptionTab(input.getMouseX(),input.getMouseY(),container,this,res.disposableDroidBB,res,t);

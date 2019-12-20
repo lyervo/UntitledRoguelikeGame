@@ -12,6 +12,7 @@ import Item.Item;
 import Item.ItemLibrary;
 
 import Res.Res;
+import UI.Option;
 import World.LocalMap;
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -60,7 +61,7 @@ public class ItemOptionTab extends OptionTab
             return;
         }
         
-        switch (options.get(hoveringIndex).getValue())
+        switch (options.get(hoveringIndex).getActionType())
         {
             case -4:
                 lm.getWorld().activateXItemTextField(index, state);
@@ -142,18 +143,18 @@ public class ItemOptionTab extends OptionTab
     public void initOptions()
     {
         optionBounds = new ArrayList<Rectangle>();
-        options = new ArrayList<Pair<String,Integer>>();
+        options = new ArrayList<Option>();
         if(state!=4&&state!=6)
         {
-            options.add(new Pair("Drop",0));
+            options.add(new Option("Drop",0));
             
             
             
             if(item.getStack()>1)
             {
-                options.add(new Pair("Drop All",1));
-                options.add(new Pair("Drop Half",2));
-                options.add(new Pair("Drop X",3));
+                options.add(new Option("Drop All",1));
+                options.add(new Option("Drop Half",2));
+                options.add(new Option("Drop X",3));
             }
             
                 
@@ -162,38 +163,38 @@ public class ItemOptionTab extends OptionTab
                 switch(i)
                 {
                     case 0:
-                        options.add(new Pair("Eat",3));
+                        options.add(new Option("Eat",3));
                         break;
                     case 1:
-                        options.add(new Pair("Drink",4));
+                        options.add(new Option("Drink",4));
                         break;
                     case 2:
-                        options.add(new Pair("Empty",5));
+                        options.add(new Option("Empty",5));
                         break;
                     case 3:
                         break;
                     case 5:
      
-                        options.add(new Pair("Read",6));
+                        options.add(new Option("Read",6));
                         break;
                     case 20:
-                        options.add(new Pair("Equip",20));
+                        options.add(new Option("Equip",20));
                         break;
                 }
             }
         }else if(state == 4)
         {
-            options.add(new Pair("Take",-1));
+            options.add(new Option("Take",-1));
             if(item.getStack()>1)
             {
-                options.add(new Pair("Take All",-2));
-                options.add(new Pair("Take Half",-3));
-                options.add(new Pair("Take X",-4));
+                options.add(new Option("Take All",-2));
+                options.add(new Option("Take Half",-3));
+                options.add(new Option("Take X",-4));
         
             }
         }else if(state == 6)
         {
-            options.add(new Pair("Unequip",21));
+            options.add(new Option("Unequip",21));
         }
         
         setLongestIndex();

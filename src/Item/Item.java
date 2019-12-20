@@ -453,13 +453,14 @@ public class Item
         
         if(itemLibrary.getRes().getTextureByName(trueName+material.getItemColor().getName()+"_"+template_name)!=null)
         {
+           
             //grab painted template texture if already exists in res class
-            this.texture = itemLibrary.getRes().getTextureByName(material.getItemColor().getName()+"_"+template_name);
+            this.texture = itemLibrary.getRes().getTextureByName(trueName+material.getItemColor().getName()+"_"+template_name);
         }else
         {
             //paint a new template texture if not exist in res class
             this.texture = paintItem(template,material.getItemColor());
-            itemLibrary.getRes().getImages().add(new Pair(trueName+material.getItemColor().getName()+"_"+template_name,this.texture));
+            itemLibrary.getRes().getImages().put(trueName+material.getItemColor().getName()+"_"+template_name,this.texture);
         }
             
         

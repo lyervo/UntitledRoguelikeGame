@@ -14,7 +14,7 @@ public class Task
     private int x,y,id,index;
     private String type;
     
-    
+    private Entity target;
     
     public Task(int x, int y, int id, int index,String type) 
     {
@@ -25,7 +25,15 @@ public class Task
         this.type = type;
     }
 
-    
+    public void clearTask()
+    {
+        this.x = 0;
+        this.y = 0;
+        this.id = 0;
+        this.index = 0;
+        this.target = null;
+        this.type = "nothing";
+    }
     
     public int getX() {
         return x;
@@ -66,6 +74,15 @@ public class Task
     public void setType(String type) {
         this.type = type;
     }
+
+    public Entity getTarget() {
+        return target;
+    }
+
+    public void setTarget(Entity target) {
+        this.target = target;
+    }
+    
     
     
 }

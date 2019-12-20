@@ -11,6 +11,7 @@ import java.awt.FontFormatException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javafx.util.Pair;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -81,7 +82,7 @@ public class Res
     public Image potion_template,sword_template,dagger_template;
     
     
-    private ArrayList<Pair<String,Image>> images;
+    private HashMap<String,Image> images;
     private ArrayList<Pair<String,SpriteSheet>> sprites;
     
     
@@ -97,7 +98,7 @@ public class Res
         
 //        potion_pop = new Sound("res/audio/potion_pop.ogg");
         
-        images = new ArrayList<Pair<String,Image>>();
+        images = new HashMap<String,Image>();
         this.container = container;
         SpriteSheet ss = new SpriteSheet("res/texture/entities/player0.png",32,32);
         
@@ -177,25 +178,25 @@ public class Res
         
         book_1 = new Image("res/texture/items/book_1.png");
         
-        images.add(new Pair("raw_meat_1",meat_raw_1));
-        images.add(new Pair("dagger",dagger));
-        images.add(new Pair("dagger_template",dagger_template));
-        images.add(new Pair("sword_template",sword_template));
-        images.add(new Pair("book_1",book_1));
-        images.add(new Pair("empty_bottle",empty_potion));
-        images.add(new Pair("wooden_sword",wooden_sword));
-        images.add(new Pair("iron_sword",iron_sword));
-        images.add(new Pair("zweihander",zweihander));
-        images.add(new Pair("wooden_shield",wooden_shield));
-        images.add(new Pair("tree_1",tree_1));
-        images.add(new Pair("wood",wood));
-        images.add(new Pair("leaves",leaves));
-        images.add(new Pair("sharp_object",sharp_object));
-        images.add(new Pair("wooden_shaft",wooden_shaft));
-        images.add(new Pair("wood_shavings",wood_shavings));
-        images.add(new Pair("table",table));
-        images.add(new Pair("metal_bar",metal_bar));
-        images.add(new Pair("metal_bar_2",metal_bar_2));
+        images.put("raw_meat_1",meat_raw_1);
+        images.put("dagger",dagger);
+        images.put("dagger_template",dagger_template);
+        images.put("sword_template",sword_template);
+        images.put("book_1",book_1);
+        images.put("empty_bottle",empty_potion);
+        images.put("wooden_sword",wooden_sword);
+        images.put("iron_sword",iron_sword);
+        images.put("zweihander",zweihander);
+        images.put("wooden_shield",wooden_shield);
+        images.put("tree_1",tree_1);
+        images.put("wood",wood);
+        images.put("leaves",leaves);
+        images.put("sharp_object",sharp_object);
+        images.put("wooden_shaft",wooden_shaft);
+        images.put("wood_shavings",wood_shavings);
+        images.put("table",table);
+        images.put("metal_bar",metal_bar);
+        images.put("metal_bar_2",metal_bar_2);
         
         
         sprites.add(new Pair("camp_fire",camp_fire));
@@ -232,15 +233,9 @@ public class Res
     
     public Image getTextureByName(String name)
     {
-        for(Pair<String,Image> p:images)
-        {
-            if(p.getKey().equals(name))
-            {
-                return p.getValue();
-            }
-        }
         
-        return null;
+        
+        return images.get(name);
     }
     
     public TrueTypeFont loadFont(String path,float size) throws FontFormatException, IOException
@@ -252,11 +247,11 @@ public class Res
         return font;
     }
 
-    public ArrayList<Pair<String, Image>> getImages() {
+    public HashMap<String,Image> getImages() {
         return images;
     }
 
-    public void setImages(ArrayList<Pair<String, Image>> images) {
+    public void setImages(HashMap<String,Image> images) {
         this.images = images;
     }
 

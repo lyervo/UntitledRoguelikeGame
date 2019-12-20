@@ -7,10 +7,12 @@ package MapUI;
 
 import Entity.Furniture;
 import Entity.Pawn;
+import Entity.Task;
 import UI.OptionTab;
 import Item.Item;
 import Item.ItemPile;
 import Res.Res;
+import UI.Option;
 import World.LocalMap;
 import World.Tile;
 import java.awt.Rectangle;
@@ -33,12 +35,15 @@ public class TileOptionTab extends OptionTab
     
     private Furniture furniture;
     
+    private LocalMap lm;
+    
     public TileOptionTab(int x, int y, GameContainer container, LocalMap lm, TrueTypeFont font,Res res,Tile t) {
         super(x, y, lm, container,font,res);
         this.t = t;
         p = lm.getPawnAt(t.getX(),t.getY());
         ip = lm.getItemPileAt(t.getX(), t.getY());
         furniture = lm.furnitureAt(t.getX(), t.getY());
+        this.lm = lm;
         initOptions();
         initOptionTab();
     }
@@ -47,9 +52,10 @@ public class TileOptionTab extends OptionTab
     @Override
     public void runOption(LocalMap lm)
     {
-        switch (options.get(hoveringIndex).getValue()) {
+        switch (options.get(hoveringIndex).getActionType())
+        {
             case 0:
-                lm.getPlayer().calcPath(t.getX(), t.getY());
+                lm.getPlayer().walkTo(t.getX(),t.getY());
                 break;
             case 1:
                 if(p!=null)
@@ -90,6 +96,9 @@ public class TileOptionTab extends OptionTab
                     lm.getWorld().spawnFurnitureInventoryWindow(furniture, 100, 100);
                 }
                 break;
+            case 5:
+                lm.getPlayer().setTask(new Task(0,0,options.get(hoveringIndex).getId(),0,"talk_to_target"));
+                break;
         }
     }
 
@@ -97,29 +106,43 @@ public class TileOptionTab extends OptionTab
     public void initOptions()
     {
         optionBounds = new ArrayList<Rectangle>();
-        options = new ArrayList<Pair<String,Integer>>();
+        options = new ArrayList<Option>();
         if(!t.isSolid())
         {
-            options.add(new Pair("Walk to",0));
+            options.add(new Option("Walk to",0));
         }
         ArrayList<Item> items = lm.getItemsAt(t.getX(), t.getY());
         if(t.getVisit()==2)
         {
-            options.add(new Pair("Look",1));
+            options.add(new Option("Look",1));
             if(items!=null)
             {
                 for(Item i:items)
                 {
-                    options.add(new Pair("Take "+i.getName(),2));
+                    options.add(new Option("Take "+i.getName(),2));
                 }
             }
         }
+        
+        if(lm.getPawnAt(t.getX(), t.getY())!=null)
+        {
+            ArrayList<Pawn> pawns = lm.getPawnsAt(t.getX(),t.getY());
+            for(Pawn p:pawns)
+            {
+                if(!p.isControl())
+                {
+                    options.add(new Option("Talk to "+p.getName(),5));
+                    options.get(options.size()-1).setId(p.getId());
+                }
+            }
+        }
+        
         
         if(furniture!=null)
         {
             if(furniture.isFuelable()&&furniture.withinDistance(1, lm.getPlayer()))
             {
-                options.add(new Pair("Interact",3));
+                options.add(new Option("Interact",3));
             }
         }
         

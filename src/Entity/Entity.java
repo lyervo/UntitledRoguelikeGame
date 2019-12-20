@@ -89,6 +89,14 @@ public abstract class Entity
         return ((Math.abs(this.x-entity.getX()))<=distance&&(Math.abs(this.y-entity.getY()))<=distance);
     }
     
+    public int distanceBetween(Entity p)
+    {
+        int px = Math.abs(x - p.getX());
+        int py = Math.abs(y - p.getY());
+        return px + py;
+        
+    }
+    
     public void setPos(int x,int y)
     {
         this.x = x;

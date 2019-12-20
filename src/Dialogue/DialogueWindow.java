@@ -82,6 +82,11 @@ public class DialogueWindow
         }
     }
     
+    public void display()
+    {
+        display = true;
+    }
+    
     public void switchDialog(int id,World world)
     {
         if(id<=-1)

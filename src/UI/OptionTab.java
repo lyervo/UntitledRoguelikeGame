@@ -35,7 +35,7 @@ public abstract class OptionTab
     
     protected int hoveringIndex;
     
-    protected ArrayList<Pair<String,Integer>> options;
+    protected ArrayList<Option> options;
     protected ArrayList<Rectangle> optionBounds;
     protected int longestIndex;
   
@@ -68,7 +68,7 @@ public abstract class OptionTab
     
     public void initOptionTab()
     {
-        int xoffset = container.getWidth()-(x+optionFont.getWidth(options.get(longestIndex).getKey()));
+        int xoffset = container.getWidth()-(x+optionFont.getWidth(options.get(longestIndex).getText()));
         if(xoffset>0)
         {
             
@@ -198,7 +198,7 @@ public abstract class OptionTab
             if(i*optionFont.getHeight()-scroll*optionFont.getHeight()<145&&i*optionFont.getHeight()-scroll*optionFont.getHeight()>=0)
             {
                
-                optionFont.drawString(this.x+5, this.y+(i*optionFont.getHeight()-(scroll*optionFont.getHeight())), options.get(i).getKey());
+                optionFont.drawString(this.x+5, this.y+(i*optionFont.getHeight()-(scroll*optionFont.getHeight())), options.get(i).getText());
             }
             if(i!=0&&i*optionFont.getHeight()-scroll*optionFont.getHeight()<145&&i*optionFont.getHeight()-scroll*optionFont.getHeight()>=0)
             {
@@ -227,13 +227,13 @@ public abstract class OptionTab
         int max = 0;
         for(i=0;i<options.size();i++)
         {
-            if(optionFont.getWidth(options.get(i).getKey())>max)
+            if(optionFont.getWidth(options.get(i).getText())>max)
             {
-                max = optionFont.getWidth(options.get(i).getKey());
+                max = optionFont.getWidth(options.get(i).getText());
                 longestIndex = i;
             }
         }
-        w = optionFont.getWidth(options.get(longestIndex).getKey())+10;
+        w = optionFont.getWidth(options.get(longestIndex).getText())+10;
            
         h = options.size()*optionFont.getHeight();
         if(h>optionFont.getHeight()*5)
@@ -330,11 +330,11 @@ public abstract class OptionTab
         this.hoveringIndex = hoveringIndex;
     }
 
-    public ArrayList<Pair<String, Integer>> getOptions() {
+    public ArrayList<Option> getOptions() {
         return options;
     }
 
-    public void setOptions(ArrayList<Pair<String, Integer>> options) {
+    public void setOptions(ArrayList<Option> options) {
         this.options = options;
     }
 
