@@ -60,7 +60,7 @@ public class Tile {
             {
                 if(hover&&m[10]&&visit!=0)
                 {
-                    if(!solid)
+                    if(!isSolid())
                     {
                         ((Pawn)world.getWm().getCurrentLocalMap().getPawns().get(0)).walkTo(x, y);
                     }

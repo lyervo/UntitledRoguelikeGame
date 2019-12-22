@@ -5,6 +5,7 @@
  */
 package UI;
 
+import Dialogue.DialogueOption;
 import World.World;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -51,6 +52,22 @@ public abstract class Button
         this.width = container.getWidth();
         this.bounds = new Rectangle(x,y,width,height);
         this.text = (String)jsonObj.get("reply");
+        this.hover = false;
+        this.fill = Color.green;
+        this.border = Color.black;
+        this.hoverFill = Color.gray;
+        this.font = font;
+        this.display = true;
+    }
+    
+    public Button(int index,int previousHeight,String text,GameContainer container,TrueTypeFont font)
+    {
+        this.x = 0;
+        this.y = container.getHeight()-previousHeight-font.getHeight();
+        this.height = font.getHeight();
+        this.width = container.getWidth();
+        this.bounds = new Rectangle(x,y,width,height);
+        this.text = text;
         this.hover = false;
         this.fill = Color.green;
         this.border = Color.black;

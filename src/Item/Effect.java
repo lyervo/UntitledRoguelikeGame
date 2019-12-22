@@ -5,6 +5,8 @@
  */
 package Item;
 
+import org.json.simple.JSONObject;
+
 /**
  *
  * @author Timot
@@ -26,6 +28,13 @@ public class Effect
         this.value = value;
         this.duration = duration;
         this.type = type;
+    }
+    
+    public Effect(JSONObject jsonObj)
+    {
+        this.value = Integer.parseInt((String)jsonObj.get("value"));
+        this.duration = Integer.parseInt((String)jsonObj.get("duration"));
+        this.type = (String)jsonObj.get("type");
     }
 
     public Effect(Effect effect)

@@ -46,6 +46,7 @@ public class Inventory
     
     public void tick(boolean[] k,boolean[] m,Input input,World world)
     {
+        boolean removed = false;
         for(int i=items.size()-1;i>=0;i--)
         {
             items.get(i).tick(k, m, input, world);
@@ -59,11 +60,16 @@ public class Inventory
                     }
                 }
                 items.remove(i);
+                removed = true;
+                
             }
         }
         equipment.tick(k, m, input, world);
-        world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
-        world.getEquipment_ui().refreshUI();
+        if(removed)
+        {
+            world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
+            world.getEquipment_ui().refreshUI();
+        }
     }
     
     
@@ -237,6 +243,27 @@ public class Inventory
                 addItem(new Item(itemLibrary.getItemByTrueName("Healing Potion")));
             }
         }
+        
+    }
+    
+    
+    public int getItemCount(String name)
+    {
+        int count = 0;
+        for(Item i:items)
+        {
+            if(i.getTrueName().equals(name))
+            {
+                if(i.isStackable())
+                {
+                    count += i.getStack();
+                }else
+                {
+                    count++;
+                }
+            }
+        }
+        return count;
         
     }
     

@@ -27,6 +27,8 @@ import InventoryUI.InventoryUIWindow;
 import InventoryUI.ItemOptionTab;
 import InventoryUI.XItemTextField;
 import Item.Item;
+import Narrator.NarratorButton;
+import Narrator.NarratorUIWindow;
 import UI.OptionTab;
 
 import UI.UIWindow;
@@ -55,7 +57,12 @@ public class World
     private int turn;
     
     private GameContainer container;
+    
+    
     private Narrator ancestor;
+    private NarratorUIWindow narratorWindow;
+    
+    
     private double scale;
     private Input input;
     
@@ -94,6 +101,7 @@ public class World
     private InventoryButton inventoryButton;
     private EquipmentButton equipmentButton;
     private CraftingButton craftingButton;
+    private NarratorButton narratorButton;
     
     
     private int z;
@@ -121,7 +129,10 @@ public class World
         
         this.scale = (double)container.getHeight()/768;
         
-        ancestor = new Narrator(container,res.disposableDroidBB);
+        ancestor = new Narrator(0,0,res.disposableDroidBB);
+        narratorWindow = new NarratorUIWindow(50,100,"Log",ancestor,res);
+        
+        
         cam = new Camera(100,100,container);
         
         xItemTextFieldActive = false;
@@ -141,7 +152,11 @@ public class World
         ancestor.addText("Ruin has come to our family. You remember our venerable house,"
                 + " opulent and imperial; gazing proudly from its stoic perch above the moor."
                 + " I lived all my years in that ancient, rumour-shadowed manor. Fattened by"
-                + " decadence and luxury... and yet, I began to tire of... conventional extravagance.");
+                + " decadence and luxury... and yet, I began to tire of... conventional extravagance."
+                + " There is a house in new orleans, they call the rising sun, and its been of ruin of "
+                + "many poor boy, and god I know I'm one, My mother was a taylor, sew my new blue jeans,"
+                + " my father was a gambling man, down in new orleans");
+        ancestor.addText("ewdifjvkglti jkrhnlfgrweijdgnb mwinjr ewfrgdijmkleoiwdgf jbokm werfgtioj mkleko 3ed 3edrfdfrgb");
         
         mapTick = false;
         
@@ -161,6 +176,7 @@ public class World
         uis.add(equipmentWindow);
         uis.add(inventoryWindow);
         uis.add(craftingWindow);
+        uis.add(narratorWindow);
         
         for(int i=0;i<uis.size();i++)
         {
@@ -170,6 +186,7 @@ public class World
         inventoryButton = new InventoryButton(10,container.getHeight()-64,res.inventory_icon);
         equipmentButton = new EquipmentButton(84,container.getHeight()-64,res.inventory_icon);
         craftingButton = new CraftingButton(158,container.getHeight()-64,res.inventory_icon);
+        narratorButton = new NarratorButton(232,container.getHeight()-64,res.inventory_icon);
         
         
         
@@ -180,10 +197,6 @@ public class World
     public void tick(boolean[] k,boolean[] m,Input input)
     {
         
-        if(k[Input.KEY_SPACE])
-        {
-            dialogue.setDisplay(!dialogue.isDisplay());
-        }
         
         if(xItemTextFieldActive)
         {
@@ -241,6 +254,7 @@ public class World
         inventoryButton.tick(m, input, this);
         equipmentButton.tick(m, input, this);
         craftingButton.tick(m, input, this);
+        narratorButton.tick(m, input, this);
         
         if(!dialogue.isDisplay())
         {
@@ -300,6 +314,7 @@ public class World
         inventoryButton.render(g);
         equipmentButton.render(g);
         craftingButton.render(g);
+        narratorButton.render(g);
         wm.render(g, animate);
 
         
@@ -720,6 +735,22 @@ public class World
     }
 
     public void setDialogueueLibrary(DialogueLibrary dialogueLibrary) {
+        this.dialogueLibrary = dialogueLibrary;
+    }
+
+    public NarratorUIWindow getNarratorWindow() {
+        return narratorWindow;
+    }
+
+    public void setNarratorWindow(NarratorUIWindow narratorWindow) {
+        this.narratorWindow = narratorWindow;
+    }
+
+    public DialogueLibrary getDialogueLibrary() {
+        return dialogueLibrary;
+    }
+
+    public void setDialogueLibrary(DialogueLibrary dialogueLibrary) {
         this.dialogueLibrary = dialogueLibrary;
     }
     

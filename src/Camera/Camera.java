@@ -70,7 +70,7 @@ public class Camera
     public void tick(boolean[] k,boolean[] m,World world)
     {
         
-        if(world.getZ()==0)
+        if(world.getZ()==0&&world.getWm().getCurrentLocalMap().getOptionTab()==null)
         {
             if(m[16])
             {

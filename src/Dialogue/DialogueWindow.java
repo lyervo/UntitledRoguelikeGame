@@ -98,7 +98,8 @@ public class DialogueWindow
             return;
         }
         
-        dialogue = dialogLibrary.getDialogById(id);
+        dialogue = new Dialogue(dialogLibrary.getDialogById(id),world);
+       
         
        
     }

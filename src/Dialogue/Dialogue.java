@@ -60,6 +60,24 @@ public class Dialogue
         
     }
     
+    public Dialogue(Dialogue dialogue,World world)
+    {
+        this.id = dialogue.getId();
+        this.font = dialogue.getFont();
+        this.lines = new ArrayList<String>(dialogue.getLines());
+        int previousHeight = 0;
+        choices = new ArrayList<DialogueOption>();
+        System.out.println("this is a new copy of dialogue "+dialogue.getChoices().size());
+        for(int i=0;i<dialogue.getChoices().size();i++)
+        {
+            if(dialogue.getChoices().get(i).valid(world))
+            {
+                choices.add(new DialogueOption(i,previousHeight,dialogue.getChoices().get(i),world.getContainer(),world.getRes().disposableDroidBB));
+                previousHeight += choices.get(choices.size()-1).getHeight();
+            }
+        }
+    }
+    
     public void parseLines(String lineUnparse,int width)
     {
         String[] splitter = lineUnparse.split("\n");
@@ -116,7 +134,12 @@ public class Dialogue
         
         
     }
-
+    
+    public void refresh(World world)
+    {
+        
+    }
+    
     public ArrayList<String> getLines() {
         return lines;
     }
@@ -147,6 +170,22 @@ public class Dialogue
 
     public void setDisplay(boolean display) {
         this.display = display;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public TrueTypeFont getFont() {
+        return font;
+    }
+
+    public void setFont(TrueTypeFont font) {
+        this.font = font;
     }
     
     

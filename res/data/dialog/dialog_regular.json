@@ -9,7 +9,7 @@
 			{"reply":"Any jobs around here?","effect":[],"next":3},
 			{"reply":"Where can I do some shopping?","effect":[],"next":4},
 			{"reply":"Who are you?","effect":[],"next":5},
-			{"reply":"Nevermind.","effect":["exit"],"next":-1}
+			{"reply":"Nevermind.","effect":[],"next":-1}
 		]
 		
 	},
@@ -22,7 +22,7 @@
 			{"reply":"Any jobs around here?","effect":[],"next":3},
 			{"reply":"Where can I do some shopping?","effect":[],"next":4},
 			{"reply":"Who are you?","effect":[],"next":5},
-			{"reply":"Goodbye.","effect":["exit"],"next":-1}
+			{"reply":"Goodbye.","effect":[],"next":-1}
 		]
 		
 	},
@@ -35,7 +35,7 @@
 			{"reply":"Any jobs around here?","effect":[],"next":3},
 			{"reply":"Where can I do some shopping?","effect":[],"next":4},
 			{"reply":"Who are you?","effect":[],"next":5},
-			{"reply":"Goodbye.","effect":["exit"],"next":-1}
+			{"reply":"Goodbye.","effect":[],"next":-1}
 		]
 		
 	},
@@ -48,7 +48,7 @@
 			{"reply":"Any jobs around here?","effect":[],"next":3},
 			{"reply":"Where can I do some shopping?","effect":[],"next":4},
 			{"reply":"Who are you?","effect":[],"next":5},
-			{"reply":"Goodbye.","effect":["exit"],"next":-1}
+			{"reply":"Goodbye.","effect":[],"next":-1}
 		]
 		
 	},
@@ -61,7 +61,36 @@
 			{"reply":"Any jobs around here?","effect":[],"next":3},
 			{"reply":"Where can I do some shopping?","effect":[],"next":4},
 			{"reply":"Who are you?","effect":[],"next":5},
-			{"reply":"Goodbye.","effect":["exit"],"next":-1}
+			{"reply":"Goodbye.","effect":[],"next":-1}
+		]
+		
+	},
+	{
+		"id":6,
+		"content":"Hello, would you like to have a freebie?",
+		"replies":
+		[
+			{"reply":"Yes please.","effect":[{"type":"spawn_item%Iron Bar","duration":"1","value":"1"}],"condition":[{"type":"no_item%Iron Bar","value":"1"}],"next":7},
+                        {"reply":"Yes please.","effect":[],"condition":[{"type":"got_item%Iron Bar","value":"1"}],"next":8},
+			{"reply":"Nah goodbye.","effect":[],"next":-1}
+		]
+		
+	},
+	{
+		"id":7,
+		"content":"Here, it is on the house.",
+		"replies":
+		[
+                    {"reply":"Thank you!","effect":[],"next":-1}
+		]
+		
+	},
+	{
+		"id":8,
+		"content":"Sorry,but I think you already have a freebie",
+		"replies":
+		[
+                    {"reply":"Ok then.","effect":[],"next":-1}
 		]
 		
 	}

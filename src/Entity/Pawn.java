@@ -84,26 +84,52 @@ public class Pawn extends Entity
             fovBoard.resetVision(x, y, 7);
             fov.visitFieldOfView(fovBoard, x, y, 7);
 
-            if (fovBoard.playerInVision(x, y, 7, world.getWm().getCurrentLocalMap()))
+            if(task.getType().equals("nothing"))
             {
-                task = new Task(x, y, -1, -1, "follow player");
+                if (fovBoard.playerInVision(x, y, 7, world.getWm().getCurrentLocalMap()))
+                {
+                    task = new Task(world.getWm().getPlayer().getX(), world.getWm().getPlayer().getY(), -1, -1, "follow player");
+                    task.setTarget(world.getWm().getPlayer());
+                }
             }
 
         }
 
-        if (path == null && task.getType().equals("follow player"))
+        if(task.getType().equals("follow player"))
+        {
+            pawnFollowLogic(world);
+        }
+    }
+    
+    
+    public void pawnFollowLogic(World world)
+    {
+        if (path == null&&distanceBetween(task.getTarget())>=1)
         {
             step = 1;
-            path = pf.findPath(null, x, y, world.getWm().getCurrentLocalMap().getPawns().get(0).getX(), world.getWm().getCurrentLocalMap().getPawns().get(0).getY());
-        }else if (path != null)
+            path = pf.findPath(null, x, y, task.getTarget().getX(), task.getTarget().getY());
+        }else if(task.getX()!=task.getTarget().getX()||task.getTarget().getY()!=task.getY())
         {
-            if (step == path.getLength() - 1 || path.getLength() <= 1)
+            path = null;
+            step = 1;
+            path = pf.findPath(null, x, y, task.getTarget().getX(), task.getTarget().getY());
+        }
+        if(world.isMoved()&&path!=null)
+        {
+            
+            if(distanceBetween(task.getTarget())<=2)
             {
                 path = null;
-            } else if (world.isMoved()) {
+                step = 1;
+            }else
+            {
                 doPath(world.getWm().getCurrentLocalMap());
             }
         }
+        
+        
+        
+        
     }
 
     @Override
@@ -131,14 +157,9 @@ public class Pawn extends Entity
                 path = null;
                 step = 1;
                 current = System.currentTimeMillis();
-                
-            }else
-            {
                 playerKeyboardControl(k,input,world);
+                
             }
-            
-            
-            
             
             if(world.isMoved())
             {
@@ -332,6 +353,7 @@ public class Pawn extends Entity
         {
             world.getWm().getPlayerInventory().getCrafting().clearCraftingTarget();
             task.clearTask();
+            path = null;
         }
         if (System.currentTimeMillis() - current >= 250)
         {
@@ -370,7 +392,7 @@ public class Pawn extends Entity
                         world.getWm().getCurrentLocalMap().getItemPileAt(x, y).takeFrom(world.getWm().getPlayerInventory(), task.getIndex(), world.getWm().getCurrentLocalMap(), -1);
         //                            world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
                         task.clearTask();
-
+                        path = null;
                         world.moved();
                     }
 
@@ -403,6 +425,7 @@ public class Pawn extends Entity
     {
         if (k[255] || (m[19] && world.getZ() != world.getCraftingWindow().getZ())) {
             task.clearTask();
+            path = null;
             world.getWm().getPlayerInventory().getCrafting().clearCraftingTarget();
         }
 
@@ -411,6 +434,7 @@ public class Pawn extends Entity
             world.getWm().getPlayerInventory().getCrafting().craft();
             if (world.getWm().getPlayerInventory().getCrafting().finishedCrafting()) {
                 task.clearTask();
+                path = null;
                 world.getCrafting_ui().refreshUI(world.getWm().getCurrentLocalMap());
                 world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
             }
@@ -428,9 +452,10 @@ public class Pawn extends Entity
         }
         if(distanceBetween(task.getTarget()) <= 1)
         {
-            world.getDialogue().switchDialog(1, world);
+            world.getDialogue().switchDialog(6, world);
             world.getDialogue().display();
             task.clearTask();
+            path = null;
         }else
         {
             if (path == null)

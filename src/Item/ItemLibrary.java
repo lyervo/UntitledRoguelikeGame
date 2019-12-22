@@ -114,7 +114,6 @@ public class ItemLibrary
                 jsonString += jsonReader.nextLine();
             }
             JSONParser jsonParser = new JSONParser();
-            System.out.println(jsonString);
             Object obj = jsonParser.parse(jsonString);
             JSONArray jsonArr = (JSONArray)obj;
             
@@ -247,9 +246,11 @@ public class ItemLibrary
                     {
                         newItem.setTexture(res.getTextureByName((String)jsonObj.get("texture")));
                     }
+                    
                     items.put((String)jsonObj.get("trueName"),newItem);
                 }
-                    
+                
+                
                 
             }
         

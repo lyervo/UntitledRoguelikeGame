@@ -408,6 +408,7 @@ public class InventoryItemUI extends ItemUI
                 if(dropRect.intersects(ui.getPrimaryBounds()))
                 {
                     world.getWm().getCurrentLocalMap().getItemPileAt(world.getWm().getCurrentLocalMap().getPlayer().getX(), world.getWm().getCurrentLocalMap().getPlayer().getY()).takeFrom(world.getWm().getPlayerInventory(), index, world.getWm().getCurrentLocalMap(),-1);
+                    world.getAncestor().addText(item.getName()+" added to inventory.");
                     ui.refreshInventoryUI(world.getWm().getCurrentLocalMap());
                     return;
                 }

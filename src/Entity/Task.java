@@ -35,6 +35,12 @@ public class Task
         this.type = "nothing";
     }
     
+    public void setCordsToTarget()
+    {
+        x = target.getX();
+        y = target.getY();
+    }
+    
     public int getX() {
         return x;
     }
