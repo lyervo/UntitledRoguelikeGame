@@ -64,35 +64,35 @@ public class ItemOptionTab extends OptionTab
         switch (options.get(hoveringIndex).getActionType())
         {
             case -4:
-                lm.getWorld().activateXItemTextField(index, state);
+                lm.getWorld().activateXItemTextField(item.getTrueName(), state);
                 break;
             case -3:
-                lm.getItemPileAt(lm.getPlayer().getX(), lm.getPlayer().getY()).takeFrom(lm.getWm().getPlayerInventory(), index, lm,item.getStack()/2);
+                lm.getItemPileAt(lm.getPlayer().getX(), lm.getPlayer().getY()).takeFrom(lm.getWm().getPlayerInventory(), item.getTrueName(), lm,item.getStack()/2);
                 lm.getWorld().moved();
                 break;
             case -2:
-                lm.getItemPileAt(lm.getPlayer().getX(), lm.getPlayer().getY()).takeFrom(lm.getWm().getPlayerInventory(), index, lm,-1);
+                lm.getItemPileAt(lm.getPlayer().getX(), lm.getPlayer().getY()).takeFrom(lm.getWm().getPlayerInventory(), item.getTrueName(), lm,-1);
                 lm.getWorld().moved();
                 break;
             case -1:
-                lm.getItemPileAt(lm.getPlayer().getX(), lm.getPlayer().getY()).takeFrom(lm.getWm().getPlayerInventory(), index, lm,1);
+                lm.getItemPileAt(lm.getPlayer().getX(), lm.getPlayer().getY()).takeFrom(lm.getWm().getPlayerInventory(), item.getTrueName(), lm,1);
                 lm.getWorld().moved();
                 break;
             case 0:
-                inventory.dropItem(lm.getPlayer().getX(), lm.getPlayer().getY(), index, lm,1);
+                inventory.dropItem(lm.getPlayer().getX(), lm.getPlayer().getY(), item.getTrueName(), lm,1);
                 lm.getWorld().moved();
                 break;
             case 1:
-                inventory.dropItem(lm.getPlayer().getX(), lm.getPlayer().getY(), index, lm,-1);
+                inventory.dropItem(lm.getPlayer().getX(), lm.getPlayer().getY(), item.getTrueName(), lm,-1);
                 lm.getWorld().moved();
                 break;
             case 2:
-                inventory.dropItem(lm.getPlayer().getX(), lm.getPlayer().getY(), index, lm,item.getStack()/2);
+                inventory.dropItem(lm.getPlayer().getX(), lm.getPlayer().getY(), item.getTrueName(), lm,item.getStack()/2);
                 lm.getWorld().moved();
                 break;
             case 3:
                 
-                lm.getWorld().activateXItemTextField(index,state);
+                lm.getWorld().activateXItemTextField(item.getTrueName(),state);
                 
                 break;
             case 4:

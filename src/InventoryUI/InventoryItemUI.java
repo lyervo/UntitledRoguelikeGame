@@ -353,7 +353,7 @@ public class InventoryItemUI extends ItemUI
                     
                     for(Pair<Integer,Rectangle> p:world.getEquipment_ui().getBounds())
                     {
-                        System.out.println("loop");
+                       
                         if(p.getKey()==item.getEquipmentType()&&p.getValue().intersects(dropRect2))
                         {
                             world.getEquipment_ui().getEquipment().equip(item);
@@ -369,7 +369,7 @@ public class InventoryItemUI extends ItemUI
                 
                 if(!dropRect.intersects(world.getInventory_ui().getPrimaryBounds())&&world.getZ()==0)
                 {
-                    ui.getPlayer_inventory().dropItem(world.getWm().getPlayer().getX(), world.getWm().getPlayer().getY(), index, world.getWm().getCurrentLocalMap(), -1);
+                    ui.getPlayer_inventory().dropItem(world.getWm().getPlayer().getX(), world.getWm().getPlayer().getY(), item.getTrueName(), world.getWm().getCurrentLocalMap(), -1);
                     ui.refreshInventoryUI(world.getWm().getCurrentLocalMap());
                     return;
                 }
@@ -378,8 +378,8 @@ public class InventoryItemUI extends ItemUI
                 {
                     if(dropRect.intersects(ui.getSecondaryBounds()))
                     {
-                        System.out.println("index"+index);
-                        ui.getPlayer_inventory().dropItem(world.getWm().getPlayer().getX(), world.getWm().getPlayer().getY(), index, world.getWm().getCurrentLocalMap(), -1);
+                       
+                        ui.getPlayer_inventory().dropItem(world.getWm().getPlayer().getX(), world.getWm().getPlayer().getY(), item.getTrueName(), world.getWm().getCurrentLocalMap(), -1);
                         ui.refreshInventoryUI(world.getWm().getCurrentLocalMap());
                         return;
                     }
@@ -407,7 +407,7 @@ public class InventoryItemUI extends ItemUI
             {
                 if(dropRect.intersects(ui.getPrimaryBounds()))
                 {
-                    world.getWm().getCurrentLocalMap().getItemPileAt(world.getWm().getCurrentLocalMap().getPlayer().getX(), world.getWm().getCurrentLocalMap().getPlayer().getY()).takeFrom(world.getWm().getPlayerInventory(), index, world.getWm().getCurrentLocalMap(),-1);
+                    world.getWm().getCurrentLocalMap().getItemPileAt(world.getWm().getCurrentLocalMap().getPlayer().getX(), world.getWm().getCurrentLocalMap().getPlayer().getY()).takeFrom(world.getWm().getPlayerInventory(), item.getTrueName(), world.getWm().getCurrentLocalMap(),-1);
                     world.getAncestor().addText(item.getName()+" added to inventory.");
                     ui.refreshInventoryUI(world.getWm().getCurrentLocalMap());
                     return;

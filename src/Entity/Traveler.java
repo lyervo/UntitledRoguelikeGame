@@ -34,6 +34,11 @@ public class Traveler extends Entity
     {
         
     }
+
+    @Override
+    public boolean hasItem(String name) {
+        return true;
+    }
    
     
 }

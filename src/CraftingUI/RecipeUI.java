@@ -97,7 +97,7 @@ public class RecipeUI extends DescBox
         {
             if(recipe.getIngredients().get(i).getItem().startsWith("<")&&!uniqueItemTypes.contains(recipe.getIngredients().get(i).getItem()))
             {
-                System.out.println(" generic yes "+recipe.getName());
+               
                 req.add(new RecipeRequirementUI(itemLibrary.getItemTypeByName(recipe.getIngredients().get(i).getItem()),font,index,i));
                 materials.add(new MaterialUI(recipe,inventory,res,column,itemLibrary.getItemTypeByName(recipe.getIngredients().get(i).getItem()).getType(),index,itemLibrary,this,previousMaterials));
                 uniqueItemTypes.add(recipe.getIngredients().get(i).getItem());

@@ -15,6 +15,8 @@ public class Task
     private String type;
     
     private Entity target;
+    private String info;
+    
     
     public Task(int x, int y, int id, int index,String type) 
     {
@@ -87,6 +89,14 @@ public class Task
 
     public void setTarget(Entity target) {
         this.target = target;
+    }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
     }
     
     

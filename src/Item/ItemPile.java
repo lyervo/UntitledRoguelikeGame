@@ -69,27 +69,32 @@ public class ItemPile extends Entity
         }
     }
     
-    public void takeFrom(Inventory inventory,int index,LocalMap lm,int stack)
+    public void takeFrom(Inventory inventory,String name,LocalMap lm,int stack)
     {
 
-        if(items.get(index).isStackable()&&stack>0&&items.get(index).getStack()>=stack)
+        for(int index = items.size()-1;index>=0;index--)
         {
-            Item a = new Item(items.get(index));
-            a.setStack(stack);
-            inventory.addItem(a);
-            items.get(index).addStack(-stack);
-            if(items.get(index).getStack()<=0)
+            if(items.get(index).getTrueName().equals(name))
             {
-                items.remove(index);
+                if(items.get(index).isStackable()&&stack>0&&items.get(index).getStack()>=stack)
+                {
+                    Item a = new Item(items.get(index));
+                    a.setStack(stack);
+                    inventory.addItem(a);
+                    items.get(index).addStack(-stack);
+                    if(items.get(index).getStack()<=0)
+                    {
+                        items.remove(index);
+                    }
+
+                }else
+                {
+                    inventory.addItem(new Item(items.get(index)));
+                    items.remove(index);
+                    break;
+                }
             }
-            
-        }else
-        {
-            inventory.addItem(new Item(items.get(index)));
-            items.remove(index);
         }
-            
-        
         
         
         if(items.isEmpty())
@@ -135,6 +140,19 @@ public class ItemPile extends Entity
 
     public void setItems(ArrayList<Item> items) {
         this.items = items;
+    }
+
+    @Override
+    public boolean hasItem(String name)
+    {
+        for(int i=0;i<items.size();i++)
+        {
+            if(items.get(i).getTrueName().equals(name))
+            {
+                return true;
+            }
+        }
+        return false;
     }
     
     

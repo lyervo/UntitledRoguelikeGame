@@ -144,11 +144,11 @@ public class Narrator extends UIComponent
         {
             if(m[16])
             {
-                System.out.println("up");
+               
                 scrollUp();
             }else if(m[17])
             {
-                System.out.println("down");
+              
                 scrollDown();
             }
         }

@@ -76,7 +76,6 @@ public class LocalMap implements TileBasedMap, ILosBoard
         this.input = world.getInput();
         this.world = world;
         tiles = new Tile[height][width];
-        System.out.println("width"+width+" height"+height);
         cam = new Camera(width,height,container);
         this.itemLibrary = itemLibrary;
         
@@ -326,6 +325,19 @@ public class LocalMap implements TileBasedMap, ILosBoard
     public void spawnOptionTab(Tile t)
     {
         optionTab = new TileOptionTab(input.getMouseX(),input.getMouseY(),container,this,res.disposableDroidBB,res,t);
+    }
+    
+    public void spawnItemAt(int x,int y,Item item)
+    {
+        ItemPile ip = getItemPileAt(x,y);
+        if(ip == null)
+        {
+            
+            itemPiles.add(new ItemPile(0,x,y,item));
+        }else
+        {
+            ip.addItem(item);
+        }
     }
 
     @Override

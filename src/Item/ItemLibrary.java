@@ -81,7 +81,7 @@ public class ItemLibrary
                 jsonString += jsonReader.nextLine();
             }
             JSONParser jsonParser = new JSONParser();
-            System.out.println(jsonString);
+          
             Object obj = jsonParser.parse(jsonString);
             JSONArray jsonArr = (JSONArray)obj;
             
@@ -124,10 +124,10 @@ public class ItemLibrary
             for(int i=0;i<jsonArr.size();i++)
             {
                 JSONObject jsonObj = (JSONObject)jsonArr.get(i);
-                System.out.println(colours.get(i).getName());
+               
                 materials.add(new Material(jsonObj,colours.get(i)));
                 Image materialTexture = paintPotion(res.metal_bar_template,colours.get(i));
-                System.out.println(materials.get(i).getName());
+                
                 getItemByTrueName(materials.get(i).getName()+" Bar").setTexture(materialTexture);
             }
             

@@ -87,7 +87,7 @@ public class TileOptionTab extends OptionTab
                 if (!t.isSolid()) {
                     itemIndex--;
                 }
-                lm.getPlayer().grabItemAt(t.getX(), t.getY(), id, itemIndex);
+                lm.getPlayer().grabItemAt(t.getX(), t.getY(), id, itemIndex,ip.getItems().get(itemIndex).getTrueName());
                 
                 break;
             case 3:

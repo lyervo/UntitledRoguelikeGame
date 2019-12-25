@@ -18,6 +18,7 @@ import EquipmentUI.EquipmentUI;
 import EquipmentUI.EquipmentUIWindow;
 import FurnitureUI.FurnitureUI;
 import FurnitureUI.FurnitureUIWindow;
+import GameConsole.GameConsole;
 import Item.ItemLibrary;
 import Narrator.Narrator;
 import Res.Res;
@@ -111,6 +112,10 @@ public class World
     private DialogueWindow dialogue;
     private DialogueLibrary dialogueLibrary;
     
+    private boolean consoleActive;
+    private GameConsole gameConsole;
+   
+    
     public World(Res res,GameContainer container,Input input)
     {
         this.z = 0;
@@ -137,7 +142,7 @@ public class World
         
         xItemTextFieldActive = false;
         
-        xItemTextField = new XItemTextField(container,res.disposableDroidBB,(container.getWidth()/2)-((res.disposableDroidBB.getWidth("00000")+5)/2),(container.getHeight()/2)-(res.disposableDroidBB.getHeight()/2),res.disposableDroidBB.getWidth("00000")+5,res.disposableDroidBB.getHeight(),res);
+        xItemTextField = new XItemTextField(container,res.disposableDroidBB,(container.getWidth()/2)-((res.disposableDroidBB.getWidth("00000")+5)/2),(container.getHeight()/2)-(res.disposableDroidBB.getHeight()/2),res.disposableDroidBB.getWidth("00000")+5,res.disposableDroidBB.getHeight(),this,res);
 
         dialogueLibrary = new DialogueLibrary(this);
         dialogue = new DialogueWindow(dialogueLibrary,this);
@@ -190,13 +195,28 @@ public class World
         
         
         
-
-        
+        gameConsole = new GameConsole(this);
+        consoleActive = false;
     }
     
     public void tick(boolean[] k,boolean[] m,Input input)
     {
         
+        if(k[Input.KEY_F1])
+        {
+            consoleActive = !consoleActive;
+            if(consoleActive)
+            {
+                gameConsole.startState();
+            }
+        }
+        
+        
+        if(consoleActive)
+        {
+            gameConsole.tick(k, m, input, this);
+            return;
+        }
         
         if(xItemTextFieldActive)
         {
@@ -366,7 +386,10 @@ public class World
             optionTab.render(g);
         }
         dialogue.render(g);
-        
+        if(consoleActive)
+        {
+            gameConsole.render(g);
+        }
     }
     
     
@@ -400,12 +423,12 @@ public class World
     }
     
     
+   
     
-    
-    public void activateXItemTextField(int index,int state)
+    public void activateXItemTextField(String itemName,int state)
     {
         xItemTextFieldActive = true;
-        xItemTextField.setIndex(index);
+        xItemTextField.setItemName(itemName);
         xItemTextField.setState(state);
     }
     
@@ -752,6 +775,36 @@ public class World
 
     public void setDialogueLibrary(DialogueLibrary dialogueLibrary) {
         this.dialogueLibrary = dialogueLibrary;
+    }
+
+    public NarratorButton getNarratorButton()
+    {
+        return narratorButton;
+    }
+
+    public void setNarratorButton(NarratorButton narratorButton)
+    {
+        this.narratorButton = narratorButton;
+    }
+
+    public boolean isConsoleActive()
+    {
+        return consoleActive;
+    }
+
+    public void setConsoleActive(boolean consoleActive)
+    {
+        this.consoleActive = consoleActive;
+    }
+
+    public GameConsole getGameConsole()
+    {
+        return gameConsole;
+    }
+
+    public void setGameConsole(GameConsole gameConsole)
+    {
+        this.gameConsole = gameConsole;
     }
     
     

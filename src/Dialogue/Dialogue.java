@@ -67,7 +67,7 @@ public class Dialogue
         this.lines = new ArrayList<String>(dialogue.getLines());
         int previousHeight = 0;
         choices = new ArrayList<DialogueOption>();
-        System.out.println("this is a new copy of dialogue "+dialogue.getChoices().size());
+        
         for(int i=0;i<dialogue.getChoices().size();i++)
         {
             if(dialogue.getChoices().get(i).valid(world))

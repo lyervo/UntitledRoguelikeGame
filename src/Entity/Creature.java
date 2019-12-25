@@ -48,6 +48,11 @@ public class Creature extends Entity
     public void setHp(Meter hp) {
         this.hp = hp;
     }
+
+    @Override
+    public boolean hasItem(String name) {
+        return true;
+    }
     
     
     

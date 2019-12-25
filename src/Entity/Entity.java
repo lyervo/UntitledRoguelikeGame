@@ -28,12 +28,15 @@ public abstract class Entity
     protected int animatingIndex;
     protected int animatingTimer;
     
+    static int ID = 0;
+    
     
     public Entity(int id,int x,int y,Image texture)
     {
         this.x = x;
         this.y = y;
-        this.id = id;
+        this.id = ID+1;
+        ID++;
         this.texture = texture;
         this.direction = 0;
     }
@@ -42,13 +45,16 @@ public abstract class Entity
     {
         this.x = x;
         this.y = y;
-        this.id = id;
+        this.id = ID + 1;
+        ID++;
         this.sprites = sprites;
         this.autoAnimate = autoAnimate;
         this.direction = 0;
     }
     
     public abstract void tick(boolean[] k,boolean[] m,Input input,World world);
+    
+    public abstract boolean hasItem(String name);
     
     public void render(Camera cam,LocalMap map,boolean animate)
     {

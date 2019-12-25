@@ -86,7 +86,7 @@ public class DialogueOption extends Button
             if(effects.get(i).getType().startsWith("spawn_item"))
             {
                 String[] splitter = effects.get(i).getType().split("%");
-                System.out.println(splitter[1]+" add to inventory");
+               
                 world.getWm().getPlayerInventory().addItem(world.getItemLibrary().getItemByTrueName(splitter[1]));
             }
         }
@@ -109,7 +109,6 @@ public class DialogueOption extends Button
                 splitter = condition.get(i).getKey().split("%");
                 if(world.getWm().getPlayerInventory().getItemCount(splitter[1])>=condition.get(i).getValue())
                 {
-                    System.out.println(world.getWm().getPlayerInventory().getItemCount(splitter[1])+">="+condition.get(i).getValue());
                     return false;
                 }
             }else if(condition.get(i).getKey().startsWith("got_item"))

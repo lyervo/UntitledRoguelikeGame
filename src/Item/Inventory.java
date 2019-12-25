@@ -73,38 +73,45 @@ public class Inventory
     }
     
     
-    public void dropItem(int x,int y,int index,LocalMap lm,int amount)
+    public void dropItem(int x,int y,String itemName,LocalMap lm,int amount)
     {
-        System.out.println("index is "+index);
-        if(amount>0&&amount<=items.get(index).getStack()&&items.get(index).isStackable())
+
+        for(int index = items.size()-1;index>=0;index--)
         {
-            if(lm.getItemPileAt(owner.getX(), owner.getY())==null)
+            if(items.get(index).getTrueName().equals(itemName))
             {
-                items.get(index).addStack(-amount);
+                if(amount>0&&amount<=items.get(index).getStack()&&items.get(index).isStackable())
+                {
+                    if(lm.getItemPileAt(owner.getX(), owner.getY())==null)
+                    {
+                        items.get(index).addStack(-amount);
 
-                Item i = new Item(items.get(index));
-                i.setStack(amount);
-                lm.getItemPiles().add(new ItemPile(lm.getItemPiles().size(),owner.getX(),owner.getY(),i));
+                        Item i = new Item(items.get(index));
+                        i.setStack(amount);
+                        lm.getItemPiles().add(new ItemPile(lm.getItemPiles().size(),owner.getX(),owner.getY(),i));
 
-            }else
-            {
+                    }else
+                    {
 
-                items.get(index).addStack(-amount);
+                        items.get(index).addStack(-amount);
 
-                Item i = new Item(items.get(index));
-                i.setStack(amount);
-                lm.getItemPileAt(owner.getX(), owner.getY()).addItem(new Item(i));
+                        Item i = new Item(items.get(index));
+                        i.setStack(amount);
+                        lm.getItemPileAt(owner.getX(), owner.getY()).addItem(new Item(i));
+                    }
+                }else
+                {
+                    if(lm.getItemPileAt(owner.getX(), owner.getY())==null)
+                    {
+                        lm.getItemPiles().add(new ItemPile(lm.getItemPiles().size(),owner.getX(),owner.getY(),items.get(index)));
+                    }else
+                    {  
+                        lm.getItemPileAt(owner.getX(), owner.getY()).addItem(items.get(index));
+                    }
+                    items.remove(index);
+                    return;
+                }
             }
-        }else
-        {
-            if(lm.getItemPileAt(owner.getX(), owner.getY())==null)
-            {
-                lm.getItemPiles().add(new ItemPile(lm.getItemPiles().size(),owner.getX(),owner.getY(),items.get(index)));
-            }else
-            {  
-                lm.getItemPileAt(owner.getX(), owner.getY()).addItem(items.get(index));
-            }
-            items.remove(index);
         }
         
       

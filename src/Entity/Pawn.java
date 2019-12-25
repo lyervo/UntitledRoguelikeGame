@@ -77,7 +77,7 @@ public class Pawn extends Entity
     }
     
     
-    public void pawnAction(boolean[] k,boolean[] m,Input input,World world)
+    public void pawnAction(Input input,World world)
     {
         if (world.isMoved())
         {
@@ -138,47 +138,11 @@ public class Pawn extends Entity
         if(control&&!world.isMoved()&&!world.getDialogue().isDisplay())
         {
             
-            if(task.getType().equals("grab item"))
-            {
-                playerGrabItemLogic(k,m,input,world);
-            }else if(task.getType().equals("craft"))
-            {
-                playerCraftingLogic(k,m,input,world);
-            }else if(task.getType().equals("talk_to_target"))
-            {
-                playerMoveToTalkLogic(k,m,input,world);
-            }else if(task.getType().equals("walk_to"))
-            {
-                playerWalkLogic(k,m,input,world);
-            }else if(k[255])
-            {
-                //k[255] will be true whenever a key is pressed
-                task.clearTask();
-                path = null;
-                step = 1;
-                current = System.currentTimeMillis();
-                playerKeyboardControl(k,input,world);
-                
-            }
-            
-            if(world.isMoved())
-            {
-                
-                for(Tile[] ts:world.getWm().getCurrentLocalMap().getTiles())
-                {
-                    for(Tile t: ts)
-                    {
-                        t.resetVisit();
-                    }
-                }
-                
-                fov.visitFieldOfView(world.getWm().getCurrentLocalMap(), x, y, 7);
-                
-            }
+            playerAction(k,m,input,world);
             
         }else
         {
-            pawnAction(k,m,input,world);
+            pawnAction(input,world);
         }
         
         if(world.isMoved())
@@ -194,7 +158,75 @@ public class Pawn extends Entity
         
     }
     
-    
+    public void playerAction(boolean[] k,boolean[] m,Input input,World world)
+    {
+        if(k[255])
+        {
+            //k[255] will be true whenever a key is pressed
+            task.clearTask();
+            path = null;
+            step = 1;
+            current = System.currentTimeMillis();
+            playerKeyboardControl(k, input, world);
+                
+        }
+        
+        if (task.getType().equals("grab item"))
+        {
+            playerGrabItemLogic(k, m, input, world);
+        }else if (task.getType().equals("craft"))
+        {
+            playerCraftingLogic(k, m, input, world);
+        }else if (task.getType().equals("talk_to_target"))
+        {
+            playerMoveToTalkLogic(k, m, input, world);
+        }else if (task.getType().equals("walk_to"))
+        {
+            playerWalkLogic(k, m, input, world);
+        }
+
+        if (world.isMoved())
+        {
+
+            
+            int ix = x-8;
+            int iy = y-8;
+            int mx = x+9;
+            int my = y+9;
+            
+            if(iy<0)
+            {
+                iy = 0;
+            }
+            if(ix<0)
+            {
+                ix = 0;
+            }
+            
+            
+            if(my>world.getWm().getCurrentLocalMap().getHeight())
+            {
+                my = world.getWm().getCurrentLocalMap().getHeight();
+            }
+            if(mx>world.getWm().getCurrentLocalMap().getWidth())
+            {
+                mx = world.getWm().getCurrentLocalMap().getWidth();
+            }
+            
+            
+            
+            
+            for (int i=iy;i<my;i++)
+            {
+                for (int j=ix;j<mx;j++)
+                {
+                    world.getWm().getCurrentLocalMap().getTiles()[i][j].resetVisit();
+                }
+            }
+            fov.visitFieldOfView(world.getWm().getCurrentLocalMap(), x, y, 7);
+
+        }
+    }
     
     public void processStatus(boolean[] k,boolean[] m,Input input,World world)
     {
@@ -218,9 +250,10 @@ public class Pawn extends Entity
         task = new Task(x,y,0,0,"walk_to");
     }
     
-    public void grabItemAt(int x,int y,int id,int index)
+    public void grabItemAt(int x,int y,int id,int index,String itemName)
     {
         task = new Task(x,y,id,index,"grab item");
+        task.setInfo(itemName);
         
     }
     
@@ -376,20 +409,25 @@ public class Pawn extends Entity
             task.setTarget(world.getWm().getCurrentLocalMap().getItemPileById(task.getId()));
         }
         
+        if(!task.getTarget().hasItem(task.getInfo()))
+        {
+            task.clearTask();
+            path = null;
+            return;
+        }
+        
         if(distanceBetween(task.getTarget()) == 0)
         {
-            
-        
-        
             if (world.getWm().getCurrentLocalMap().getItemPileAt(x, y) != null)
             {
 
+                
                     if (world.getWm().getCurrentLocalMap().getItemPileAt(x, y).getId() == task.getId())
                     {
 
                         world.getAncestor().addText(world.getWm().getCurrentLocalMap().getItemPileAt(x, y).getItems().get(task.getIndex()).getName() + " added to inventory.");
 
-                        world.getWm().getCurrentLocalMap().getItemPileAt(x, y).takeFrom(world.getWm().getPlayerInventory(), task.getIndex(), world.getWm().getCurrentLocalMap(), -1);
+                        world.getWm().getCurrentLocalMap().getItemPileAt(x, y).takeFrom(world.getWm().getPlayerInventory(), task.getInfo(), world.getWm().getCurrentLocalMap(), -1);
         //                            world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
                         task.clearTask();
                         path = null;
@@ -561,6 +599,11 @@ public class Pawn extends Entity
 
     public void setStatus(ArrayList<Status> status) {
         this.status = status;
+    }
+
+    @Override
+    public boolean hasItem(String name) {
+        return true;
     }
 
     

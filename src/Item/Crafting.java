@@ -143,7 +143,7 @@ public class Crafting
                                 {
                                     template_name+=splitter[z];
                                 }
-                                System.out.println("target recipe is "+targetRecipe.getName());
+                                
                                 a.setMetalMaterial(itemLibrary,itemLibrary.getMaterialByName(splitter[0]),targetRecipe.getTemplate_texture(),template_name);
                                 inventory.addItem(a);
                                 break;
