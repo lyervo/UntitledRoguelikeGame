@@ -7,6 +7,7 @@ package Item;
 
 
 import Entity.Furniture;
+import Entity.Pawn;
 
 import World.LocalMap;
 import java.util.ArrayList;
@@ -74,7 +75,7 @@ public class Crafting
         if(lm != null)
         {
             stations.clear();
-            ArrayList<Furniture> f = new ArrayList<Furniture>(lm.furnituresAround(lm.getPlayer().getX(), lm.getPlayer().getY()));
+            ArrayList<Furniture> f = new ArrayList<Furniture>(lm.furnituresAround(inventory.getOwner().getX(), inventory.getOwner().getY()));
             for(int i=0;i<f.size();i++)
             {
                 if(f.get(i).getStationType()!=-1)
@@ -98,6 +99,18 @@ public class Crafting
     }
     
     /**
+     * 
+     * Initiate the crafting queue using the recipe name
+     * 
+     * @param recipeName name of the recipe
+     */
+    public void setCraftingTarget(String recipeName)
+    {
+        targetRecipe = itemLibrary.getRecipeByName(recipeName);
+        craftingTurns = targetRecipe.getTurns();
+    }
+    
+    /**
     * <p>This function is called by the entity each time a turn has passed if it's task is set to crafting.</p>
     *
     * <p>It will check whether the inventory of the entity has all the requirement of the recipe met, 
@@ -109,7 +122,7 @@ public class Crafting
     */
     public void craft()
     {
-        if(selectIndex == -1)
+        if(selectIndex == -1&&((Pawn)inventory.getOwner()).isControl())
         {
             return;
         }
@@ -121,7 +134,7 @@ public class Crafting
             if(checkCraftingRecipe(targetRecipe))
             {
                 
-                
+                System.out.println("has all the requirement");
                 craftingTurns--;
                 if(craftingTurns<=0&&targetRecipe!=null)
                 {
@@ -184,6 +197,7 @@ public class Crafting
                 
             }else
             {
+                
                 clearCraftingTarget();
             }
             

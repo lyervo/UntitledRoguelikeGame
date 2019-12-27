@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -51,6 +52,8 @@ public class ItemLibrary
     
     private ArrayList<ItemColour> colours;
     
+    private ArrayList<Item> itemPreload;
+    
     public ItemLibrary(String seed,Res res)
     {
         this.res = res;
@@ -61,11 +64,16 @@ public class ItemLibrary
         this.materials = new ArrayList<Material>();
         this.colours = new ArrayList<ItemColour>();
         this.identify = new HashMap<String,Boolean>();
+        this.itemPreload = new ArrayList<Item>();
+        
         initItemColour();
+        initPotions();
+        initMaterials();
+        
         initItems();
         initRecipes();
         initItemType();
-        initMaterials();
+        
     }
     
     public void initItemColour()
@@ -129,6 +137,11 @@ public class ItemLibrary
                 Image materialTexture = paintPotion(res.metal_bar_template,colours.get(i));
                 
                 getItemByTrueName(materials.get(i).getName()+" Bar").setTexture(materialTexture);
+                
+                
+                
+                
+                
             }
             
             
@@ -171,6 +184,17 @@ public class ItemLibrary
         }
     }
     
+    public Image getRecipeTemplateTextureByName(String recipeName)
+    {
+        for(Recipe r:recipes)
+        {
+            if(r.getName().equals(recipeName))
+            {
+                return r.getTemplate_texture();
+            }
+        }
+        return null;
+    }
     
     public void initRecipes()
     {
@@ -211,7 +235,7 @@ public class ItemLibrary
     }
     
     
-    public void initItems()
+    public void initPotions()
     {
         ArrayList<Item> potionPreload = new ArrayList<Item>();
         
@@ -238,6 +262,10 @@ public class ItemLibrary
                     {
                         potionPreload.get(potionPreload.size()-1).setTexture(res.getTextureByName((String)jsonObj.get("texture")));
                     }
+                }else if(jsonObj.get("category").equals("metal_material"))
+                {
+                    Item m = new Item(jsonObj,this);
+                    items.put(m.getTrueName(), m);
                 }else
                 {
                     Item newItem = new Item(jsonObj,this);
@@ -247,7 +275,7 @@ public class ItemLibrary
                         newItem.setTexture(res.getTextureByName((String)jsonObj.get("texture")));
                     }
                     
-                    items.put((String)jsonObj.get("trueName"),newItem);
+                    itemPreload.add(newItem);
                 }
                 
                 
@@ -299,6 +327,34 @@ public class ItemLibrary
             
         
         
+    }
+    
+    public void initItems()
+    {
+        for (int i = 0; i < itemPreload.size(); i++)
+        {
+            if (itemPreload.get(i).getTrueName().startsWith("<metal>"))
+            {
+                items.put(itemPreload.get(i).getTrueName(), itemPreload.get(i));
+
+                for (Material m : materials)
+                {
+                    Item newItem = new Item(itemPreload.get(i));
+                    String[] splitter = newItem.getTrueName().split(" ");
+                    String templateName = "";
+                    for(int z =1;z<splitter.length;z++)
+                    {
+                        templateName+=splitter[z];
+                    }
+                    newItem.setMetalMaterial(this, m,res.getTextureByName((templateName+"_template").toLowerCase()) , newItem.getTrueName());
+                    items.put(newItem.getTrueName(), newItem);
+                }
+            } else
+            {
+                items.put(itemPreload.get(i).getTrueName(), itemPreload.get(i));
+            }
+        }
+        itemPreload.clear();
     }
     
     public void learnRecipeByName(String name)
@@ -371,6 +427,29 @@ public class ItemLibrary
         return items.get(trueName); 
     }
     
+    public Item getItemByName(String name)
+    {
+        Item a = items.get(name);
+        if(a == null)
+        {
+            for(Map.Entry e:items.entrySet())
+            {
+                String unidentifiedName = ((Item)e.getValue()).getUnidentifiedName();
+                if(unidentifiedName!=null)
+                {
+                    if(unidentifiedName.equals(name))
+                    {
+                        return ((Item)e.getValue());
+                    }
+                }
+            }
+        }else
+        {
+            return a;
+        }
+        return null;
+    }
+    
     public Material getMaterialByName(String materialName)
     {
         for(Material m:materials)
@@ -410,6 +489,19 @@ public class ItemLibrary
         }
         return null;
     }
+    
+    public Recipe getRecipeByName(String recipeName)
+    {
+        for(Recipe r:recipes)
+        {
+            if(r.getName().equals(recipeName))
+            {
+                return r;
+            }
+        }
+        return null;
+    }
+    
     public ItemType getItemTypeByName(String name)
     {
         for(ItemType i:types)

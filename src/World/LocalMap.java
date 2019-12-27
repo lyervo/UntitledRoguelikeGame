@@ -112,7 +112,7 @@ public class LocalMap implements TileBasedMap, ILosBoard
         pf = new AStarPathFinder(this,100,true);
         
         pawns.add(new Pawn(2,2,2,res.human2,fov,"Adam",world.getItemLibrary()));
-        
+        pawns.add(new Pawn(0,3,5,res.human2,fov,"Henry",world.getItemLibrary()));
        
         optionTab = null;
         
@@ -121,9 +121,16 @@ public class LocalMap implements TileBasedMap, ILosBoard
             ((Pawn)p).initPawn(this, pf);
         }
         cam.setTarget((Pawn)pawns.get(0));
+        world.getWm().getPlayerInventory().setOwner(pawns.get(0));
+        
+        for(Pawn p:pawns)
+        {
+            p.getInventory().getCrafting().getNearbyStations(this);
+        }
         
         
     }
+    
     
     
     
@@ -338,6 +345,19 @@ public class LocalMap implements TileBasedMap, ILosBoard
         {
             ip.addItem(item);
         }
+    }
+    
+    public ArrayList<ItemPile> getItemPilesWithItemByName(String itemName)
+    {
+        ArrayList<ItemPile> ips = new ArrayList<ItemPile>();
+        for(ItemPile ip:itemPiles)
+        {
+            if(ip.hasItem(itemName))
+            {
+                ips.add(ip);
+            }
+        }
+        return ips;
     }
 
     @Override

@@ -8,6 +8,7 @@ package Entity;
 import Camera.Camera;
 import Item.Inventory;
 import Item.ItemLibrary;
+import Item.ItemPile;
 import World.LocalMap;
 import World.Tile;
 import World.World;
@@ -47,7 +48,7 @@ public class Pawn extends Entity
     private ArrayList<Status> status;
     
 
-    
+    private ArrayList<String> recipes;
     
     
     
@@ -63,6 +64,7 @@ public class Pawn extends Entity
         this.name = name;
         current = System.currentTimeMillis();
         status = new ArrayList<Status>();
+        
         
     }
     
@@ -83,23 +85,30 @@ public class Pawn extends Entity
         {
             fovBoard.resetVision(x, y, 7);
             fov.visitFieldOfView(fovBoard, x, y, 7);
-
-            if(task.getType().equals("nothing"))
-            {
-                if (fovBoard.playerInVision(x, y, 7, world.getWm().getCurrentLocalMap()))
-                {
-                    task = new Task(world.getWm().getPlayer().getX(), world.getWm().getPlayer().getY(), -1, -1, "follow player");
-                    task.setTarget(world.getWm().getPlayer());
-                }
-            }
+            
+            inventory.getCrafting().getNearbyStations(world.getWm().getCurrentLocalMap());
+            
 
         }
 
-        if(task.getType().equals("follow player"))
+        if(task.getType().equals("follow_target"))
         {
             pawnFollowLogic(world);
+        }else if(task.getType().equals("grab_item"))
+        {
+            pawnGrabItemLogic(world);
+        }else if(task.getType().equals("craft"))
+        {
+            pawnCraftingLogic(world);
+        }else if(task.getType().equals("search_item"))
+        {
+            pawnSearchItemLogic(world);
         }
+        
+        
     }
+    
+    
     
     
     public void pawnFollowLogic(World world)
@@ -130,6 +139,30 @@ public class Pawn extends Entity
         
         
         
+    }
+    
+    public void pawnCraftingLogic(World world)
+    {
+        if(inventory.getCrafting().getTargetRecipe()==null)
+        {
+            inventory.getCrafting().setCraftingTarget(task.getInfo());
+            
+        }
+
+        if (world.isMoved())
+        {
+  
+            inventory.getCrafting().craft();
+            if (inventory.getCrafting().finishedCrafting())
+            {
+                task.clearTask();
+                path = null;
+                
+            }
+
+           
+
+        }
     }
 
     @Override
@@ -171,7 +204,7 @@ public class Pawn extends Entity
                 
         }
         
-        if (task.getType().equals("grab item"))
+        if (task.getType().equals("grab_item"))
         {
             playerGrabItemLogic(k, m, input, world);
         }else if (task.getType().equals("craft"))
@@ -252,7 +285,7 @@ public class Pawn extends Entity
     
     public void grabItemAt(int x,int y,int id,int index,String itemName)
     {
-        task = new Task(x,y,id,index,"grab item");
+        task = new Task(x,y,id,index,"grab_item");
         task.setInfo(itemName);
         
     }
@@ -447,6 +480,127 @@ public class Pawn extends Entity
                 current = System.currentTimeMillis();
                 doPath(world.getWm().getCurrentLocalMap());
                 world.moved();
+
+                if(step == path.getLength())
+                {
+                    path = null;
+                    step = 1;
+                }
+                
+
+            }
+        }
+    }
+    
+    public void pawnGrabItemLogic(World world)
+    {
+        if(task.getTarget() == null)
+        {
+            task.setTarget(world.getWm().getCurrentLocalMap().getItemPileById(task.getId()));
+        }
+        
+        if(!task.getTarget().hasItem(task.getInfo()))
+        {
+            task.clearTask();
+            path = null;
+            return;
+        }
+        
+        if(distanceBetween(task.getTarget()) == 0)
+        {
+            if (world.getWm().getCurrentLocalMap().getItemPileAt(x, y) != null)
+            {
+
+                
+                    if (world.getWm().getCurrentLocalMap().getItemPileAt(x, y).getId() == task.getId())
+                    {
+
+
+                        world.getWm().getCurrentLocalMap().getItemPileAt(x, y).takeFrom(inventory, task.getInfo(), world.getWm().getCurrentLocalMap(), -1);
+        //                            world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
+                        task.clearTask();
+                        path = null;
+                        world.moved();
+                    }
+
+            }
+        }else
+        {
+            if (path == null)
+            {
+                calcPath(task.getTarget().getX(), task.getTarget().getY());
+            }
+            
+            if(world.isMoved())
+            {
+                
+                doPath(world.getWm().getCurrentLocalMap());
+                
+
+                if(step == path.getLength())
+                {
+                    path = null;
+                    step = 1;
+                }
+                
+
+            }
+        }
+    }
+    
+    public void pawnSearchItemLogic(World world)
+    {
+        if(task.getTarget() == null)
+        {
+            ArrayList<ItemPile> ips = world.getWm().getCurrentLocalMap().getItemPilesWithItemByName(task.getInfo());
+            if(ips.isEmpty())
+            {
+                task.clearTask();
+            }
+            int itemPileID = getClosestItemPile(ips);
+            
+            task.setId(itemPileID);
+            task.setTarget(world.getWm().getCurrentLocalMap().getItemPileById(task.getId()));
+            
+        }
+        
+        if(!task.getTarget().hasItem(task.getInfo()))
+        {
+            task.clearTask();
+            path = null;
+            return;
+        }
+        
+        if(distanceBetween(task.getTarget()) == 0)
+        {
+            if (world.getWm().getCurrentLocalMap().getItemPileAt(x, y) != null)
+            {
+
+                
+                    if (world.getWm().getCurrentLocalMap().getItemPileAt(x, y).getId() == task.getId())
+                    {
+
+
+                        world.getWm().getCurrentLocalMap().getItemPileAt(x, y).takeFrom(inventory, task.getInfo(), world.getWm().getCurrentLocalMap(), -1);
+        //                            world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
+                        task.clearTask();
+                        path = null;
+                        world.moved();
+                    }
+
+            }
+        }else
+        {
+            if (path == null)
+            {
+                calcPath(task.getTarget().getX(), task.getTarget().getY());
+            }
+            
+            if(world.isMoved())
+            {
+                
+                doPath(world.getWm().getCurrentLocalMap());
+                
 
                 if(step == path.getLength())
                 {

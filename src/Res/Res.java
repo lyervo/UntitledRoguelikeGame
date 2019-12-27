@@ -197,7 +197,7 @@ public class Res
         images.put("table",table);
         images.put("metal_bar",metal_bar);
         images.put("metal_bar_2",metal_bar_2);
-        
+        images.put("axe_template",sword_template);
         
         sprites.add(new Pair("camp_fire",camp_fire));
         

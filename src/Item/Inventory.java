@@ -33,6 +33,7 @@ public class Inventory
         equipment = new Equipment(this);
         crafting = new Crafting(this,itemLibrary);
         
+        
     }
     
     public Inventory(Entity owner,ArrayList<Item> items)

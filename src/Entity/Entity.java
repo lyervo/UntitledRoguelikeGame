@@ -6,8 +6,10 @@
 package Entity;
 
 import Camera.Camera;
+import Item.ItemPile;
 import World.LocalMap;
 import World.World;
+import java.util.ArrayList;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SpriteSheet;
@@ -97,6 +99,7 @@ public abstract class Entity
     
     public int distanceBetween(Entity p)
     {
+        
         int px = Math.abs(x - p.getX());
         int py = Math.abs(y - p.getY());
         return px + py;
@@ -107,6 +110,36 @@ public abstract class Entity
     {
         this.x = x;
         this.y = y;
+    }
+    
+    public int getClosestEntity(ArrayList<Entity> entities)
+    {
+        int min = Integer.MAX_VALUE;
+        int id = 0;
+        for(Entity e:entities)
+        {
+            if(e.distanceBetween(this)<min)
+            {
+                min = e.distanceBetween(this);
+                id = e.getId();
+            }
+        }
+        return id;
+    }
+    
+    public int getClosestItemPile(ArrayList<ItemPile> entities)
+    {
+        int min = Integer.MAX_VALUE;
+        int id = 0;
+        for(ItemPile e:entities)
+        {
+            if(e.distanceBetween(this)<min)
+            {
+                min = e.distanceBetween(this);
+                id = e.getId();
+            }
+        }
+        return id;
     }
 
     public int getX() {

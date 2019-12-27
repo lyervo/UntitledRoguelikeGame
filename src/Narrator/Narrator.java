@@ -119,11 +119,14 @@ public class Narrator extends UIComponent
         g.fillRect(x, y, w, h);
         g.setColor(Color.yellow);
         g.drawRect(x, y, w, h);
-        for(int i=scrollIndex;i<scrollIndex+15;i++)
+        if(!lines.isEmpty())
         {
-            if(!outOfBounds((i*font.getHeight())-(scrollIndex*font.getHeight())))
+            for(int i=scrollIndex;i<scrollIndex+15;i++)
             {
-                font.drawString(x+5,y+(i*font.getHeight())-(scrollIndex*font.getHeight()), lines.get(i));
+                if(!outOfBounds((i*font.getHeight())-(scrollIndex*font.getHeight())))
+                {
+                    font.drawString(x+5,y+(i*font.getHeight())-(scrollIndex*font.getHeight()), lines.get(i));
+                }
             }
         }
     }

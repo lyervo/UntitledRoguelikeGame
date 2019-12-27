@@ -68,19 +68,6 @@
 	},
 	{
 		"category":"equipment",
-                "trueName":"Iron Sword",
-		"texture":"iron_sword",
-		"desc":"A plain iron sword, made for slashing and stabbing.",
-		"unidentified_desc":null,
-		"stack":"1",
-		"properties":[20,24],
-		"consumed":null,
-		"baseValue":75,
-                "effects":[{"type":"slash_damage","duration":"1","value":"10"}],
-                "durability":1
-	},
-	{
-		"category":"equipment",
                 "trueName":"Crafting Knife",
 		"texture":"dagger",
 		"desc":"A knife made for wood carving.",
@@ -241,7 +228,7 @@
                 "durability":1
 	},
 	{
-		"category":"item",
+		"category":"metal_material",
 		"trueName":"Iron Bar",
 		"texture":"metal_bar",
 		"desc":"A bar of Iron.",
@@ -254,7 +241,7 @@
                 "durability":1
 	},
 	{
-		"category":"item",
+		"category":"metal_material",
 		"trueName":"Steel Bar",
 		"texture":"metal_bar_2",
 		"desc":"A bar of Steel.",
@@ -267,7 +254,7 @@
                 "durability":1
 	},
 	{
-		"category":"item",
+		"category":"metal_material",
 		"trueName":"Bronze Bar",
 		"texture":"metal_bar_2",
 		"desc":"A bar of Bronze.",

@@ -480,6 +480,11 @@ public class Item
         return -1;
     }
     
+    public String getUnidentifiedName()
+    {
+        return name;
+    }
+    
     public boolean isMetalMaterial()
     {
         return properties.contains(52);

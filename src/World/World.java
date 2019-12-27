@@ -196,6 +196,7 @@ public class World
         
         
         gameConsole = new GameConsole(this);
+        gameConsole.getTextfield().setFocus(false);
         consoleActive = false;
     }
     
@@ -208,6 +209,9 @@ public class World
             if(consoleActive)
             {
                 gameConsole.startState();
+            }else
+            {
+                gameConsole.getTextfield().setFocus(false);
             }
         }
         

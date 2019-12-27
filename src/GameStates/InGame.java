@@ -160,8 +160,10 @@ public class InGame extends BasicGameState
     {
 
         keys[key] = true;
-        keys[255] = true;
-        
+        if(key!=Input.KEY_F1)
+        {
+            keys[255] = true;
+        }
         
     }
 

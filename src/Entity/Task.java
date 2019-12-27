@@ -16,6 +16,14 @@ public class Task
     
     private Entity target;
     private String info;
+    private int priority;
+    
+    //type
+    //nothing
+    //grab_item
+    //follow_target
+    //craft
+    //attack
     
     
     public Task(int x, int y, int id, int index,String type) 
