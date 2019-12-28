@@ -9,6 +9,7 @@ import Camera.Camera;
 import Entity.Entity;
 import Entity.Furniture;
 import Entity.Pawn;
+import Entity.Plant.Plant;
 import Item.Item;
 import Item.ItemLibrary;
 import Item.ItemPile;
@@ -65,6 +66,8 @@ public class LocalMap implements TileBasedMap, ILosBoard
     
     private ArrayList<Furniture> furnitures;
     
+    private ArrayList<Plant> plants;
+    
     public LocalMap(int id,int width,int height,Res res,World world,GameContainer container,ItemLibrary itemLibrary)
     {
         this.wm = world.getWm();
@@ -78,6 +81,10 @@ public class LocalMap implements TileBasedMap, ILosBoard
         tiles = new Tile[height][width];
         cam = new Camera(width,height,container);
         this.itemLibrary = itemLibrary;
+        
+        
+        plants = new ArrayList<Plant>();
+        plants.add(new Plant(0,7,4,world.getEntityLibrary().getPlantTemplateByName("Tree")));
         
         furnitures = new ArrayList<Furniture>();
         
@@ -170,6 +177,11 @@ public class LocalMap implements TileBasedMap, ILosBoard
             f.tick(k, m, input, world);
         }
 
+        for(Plant p:plants)
+        {
+            p.tick(k, m, input, world);
+        }
+        
         cam.tick(k,m,world);
         
         
@@ -231,10 +243,18 @@ public class LocalMap implements TileBasedMap, ILosBoard
             f.render(cam, this, animate);
         }
         
+        for(Plant p:plants)
+        {
+            p.render(cam, this, animate);
+        }
+        
         for(Entity e:pawns)
         {
             e.render(cam,this, animate);
         }
+        
+        
+        
         if(optionTab!=null)
         {
             optionTab.render(g);

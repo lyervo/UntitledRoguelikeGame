@@ -5,10 +5,12 @@
  */
 package Entity;
 
+import Entity.Plant.PlantTemplate;
 import Res.Res;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,6 +28,8 @@ public class EntityLibrary
     private Res res;
     
     private ArrayList<FurnitureTemplate> furnitures;
+    private ArrayList<PlantTemplate> plants;
+    
     
     private ArrayList<Creature> creatures;
     
@@ -33,7 +37,9 @@ public class EntityLibrary
     {
         this.res = res;
         this.furnitures = new ArrayList<FurnitureTemplate>();
+        this.plants = new ArrayList<PlantTemplate>();
         initFurniture();
+        initPlant();
     }
     
     public void initFurniture()
@@ -67,6 +73,41 @@ public class EntityLibrary
         
         
     }
+    
+    public void initPlant()
+    {
+        
+        try {
+            File file = new File("res/data/entity/plants.json");
+            Scanner fileReader = new Scanner(file);
+            
+            String jsonString = "";
+            
+            while(fileReader.hasNext())
+            {
+                jsonString+=fileReader.nextLine();
+            }
+            
+            JSONParser jsonParser = new JSONParser();
+            Object obj = jsonParser.parse(jsonString);
+            JSONArray jsonArr = (JSONArray)obj;
+            
+            for(int i=0;i<jsonArr.size();i++)
+            {
+                plants.add(new PlantTemplate((JSONObject)jsonArr.get(i),res));
+            }
+            
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(EntityLibrary.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(EntityLibrary.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+    }
+    
+    
+    
     public FurnitureTemplate getFurnitureTemplateByName(String name)
     {
         for(FurnitureTemplate ft:furnitures)
@@ -102,6 +143,18 @@ public class EntityLibrary
             }
         }
         
+        return null;
+    }
+    
+    public PlantTemplate getPlantTemplateByName(String name)
+    {
+        for(PlantTemplate pt:plants)
+        {
+            if(pt.getNames().get(pt.getNames().size()-1).equals(name))
+            {
+                return pt;
+            }
+        }
         return null;
     }
     

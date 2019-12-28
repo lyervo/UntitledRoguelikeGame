@@ -78,6 +78,7 @@ public class Game extends StateBasedGame
             app.setFullscreen(true);   
             app.start();
             
+            
 //        }catch(IOException e)
 //        {
 //            
@@ -95,6 +96,7 @@ public class Game extends StateBasedGame
     public Game(String title) throws IOException, SlickException
     {
         super(title);
+   
     }
     
 

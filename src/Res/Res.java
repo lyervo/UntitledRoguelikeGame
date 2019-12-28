@@ -102,6 +102,10 @@ public class Res
         this.container = container;
         SpriteSheet ss = new SpriteSheet("res/texture/entities/player0.png",32,32);
         
+        SpriteSheet tree_s = new SpriteSheet("res/texture/entities/trees_1.png",32,32);
+        
+        
+
         human1 = ss.getSubImage(0, 0, 32, 32);
         human2 = ss.getSubImage(32, 32, 32, 32);
         basicTile = new Image("res/texture/map/tile/basic_tile.png");
@@ -200,6 +204,7 @@ public class Res
         images.put("axe_template",sword_template);
         
         sprites.add(new Pair("camp_fire",camp_fire));
+        sprites.add((new Pair("tree_1",tree_s)));
         
         Graphics g = basicItem.getGraphics();
         g.setColor(Color.green);
