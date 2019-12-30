@@ -33,6 +33,36 @@ public class HarvestResult
         }
         itemName = (String)jsonObj.get("itemName");
     }
+
+    public int getMinAmount()
+    {
+        return minAmount;
+    }
+
+    public void setMinAmount(int minAmount)
+    {
+        this.minAmount = minAmount;
+    }
+
+    public int getMaxAmount()
+    {
+        return maxAmount;
+    }
+
+    public void setMaxAmount(int maxAmount)
+    {
+        this.maxAmount = maxAmount;
+    }
+
+    public String getItemName()
+    {
+        return itemName;
+    }
+
+    public void setItemName(String itemName)
+    {
+        this.itemName = itemName;
+    }
     
     
 }

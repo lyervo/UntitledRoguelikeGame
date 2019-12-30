@@ -73,6 +73,7 @@ public class Inventory
         }
     }
     
+   
     
     public void dropItem(int x,int y,String itemName,LocalMap lm,int amount)
     {
@@ -232,6 +233,7 @@ public class Inventory
         addItem(new Item(itemLibrary.getItemByTrueName("Wood")));
         addItem(new Item(itemLibrary.getItemByTrueName("Wood")));
         addItem(new Item(itemLibrary.getItemByTrueName("Crafting Knife")));
+        addItem(new Item(itemLibrary.getItemByTrueName("Bronze Axe")));
         for(int i=0;i<20;i++)
         {
             addItem(new Item(itemLibrary.getItemByTrueName("Wood")));
@@ -273,6 +275,19 @@ public class Inventory
         }
         return count;
         
+    }
+    
+    public boolean hasItemType(int type)
+    {
+        for(Item i:items)
+        {
+            
+            if(i.getProperties().contains(type))
+            {
+                return true;
+            }
+        }
+        return false;
     }
     
     public ArrayList<Item> getItems() {

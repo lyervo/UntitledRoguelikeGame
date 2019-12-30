@@ -99,6 +99,11 @@ public class TileOptionTab extends OptionTab
             case 5:
                 lm.getPlayer().setTask(new Task(0,0,options.get(hoveringIndex).getId(),0,"talk_to_target"));
                 break;
+            case 6:
+                Task task = new Task(t.getX(),t.getY(),t.getPlant().getId(),options.get(hoveringIndex).getId(),"harvest_plant");
+                task.setTarget(t.getPlant());
+                lm.getPlayer().setTask(task);
+                break;
         }
     }
 
@@ -143,6 +148,42 @@ public class TileOptionTab extends OptionTab
             if(furniture.isFuelable()&&furniture.withinDistance(1, lm.getPlayer()))
             {
                 options.add(new Option("Interact",3));
+            }
+        }
+        
+        if(t.getPlant()!=null)
+        {
+            for(Integer i:t.getPlant().getCurrentTools())
+            {
+                Option o;
+                switch(i)
+                {
+                    case 100:
+                        o = new Option("Use hands",6);
+                        o.setId(i);
+                        options.add(o);
+                        break;
+                    case 101:
+                        o = new Option("Use axe",6);
+                        o.setId(i);
+                        options.add(o);
+                        break;
+                    case 102:
+                        o = new Option("Use pickaxe",6);
+                        o.setId(i);
+                        options.add(o);
+                        break;
+                    case 103:
+                        o = new Option("Use hammer",6);
+                        o.setId(i);
+                        options.add(o);
+                        break;
+                    case 104:
+                        o = new Option("Use hoe",6);
+                        o.setId(i);
+                        options.add(o);
+                        break;
+                }
             }
         }
         

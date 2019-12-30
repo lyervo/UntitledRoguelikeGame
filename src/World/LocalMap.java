@@ -66,7 +66,6 @@ public class LocalMap implements TileBasedMap, ILosBoard
     
     private ArrayList<Furniture> furnitures;
     
-    private ArrayList<Plant> plants;
     
     public LocalMap(int id,int width,int height,Res res,World world,GameContainer container,ItemLibrary itemLibrary)
     {
@@ -83,8 +82,7 @@ public class LocalMap implements TileBasedMap, ILosBoard
         this.itemLibrary = itemLibrary;
         
         
-        plants = new ArrayList<Plant>();
-        plants.add(new Plant(0,7,4,world.getEntityLibrary().getPlantTemplateByName("Tree")));
+        
         
         furnitures = new ArrayList<Furniture>();
         
@@ -93,6 +91,9 @@ public class LocalMap implements TileBasedMap, ILosBoard
         
         
         generateTiles();
+        
+        spawnPlant(5,5,"Tree");
+        
         hoveringTab = false;
         fov = new PrecisePermissive();
        
@@ -147,7 +148,7 @@ public class LocalMap implements TileBasedMap, ILosBoard
         {
             for(int ix=0;ix<width;ix++)
             {
-                tiles[iy][ix] = new Tile(ix,iy,51,res.basicTile,cam.getTile_size());
+                tiles[iy][ix] = new Tile(ix,iy,51,res.basicTile,cam.getTile_size(),this);
                 if(ix==4&&iy>=3&&iy<=10)
                 {
                     tiles[iy][ix].setWall(new Wall(ix,iy,0,res.basicWall));
@@ -177,11 +178,6 @@ public class LocalMap implements TileBasedMap, ILosBoard
             f.tick(k, m, input, world);
         }
 
-        for(Plant p:plants)
-        {
-            p.tick(k, m, input, world);
-        }
-        
         cam.tick(k,m,world);
         
         
@@ -243,10 +239,6 @@ public class LocalMap implements TileBasedMap, ILosBoard
             f.render(cam, this, animate);
         }
         
-        for(Plant p:plants)
-        {
-            p.render(cam, this, animate);
-        }
         
         for(Entity e:pawns)
         {
@@ -324,6 +316,8 @@ public class LocalMap implements TileBasedMap, ILosBoard
         }
         return result;
     }
+    
+
     
     public Pawn getPawnById(int id)
     {
@@ -481,6 +475,13 @@ public class LocalMap implements TileBasedMap, ILosBoard
             }
         }
         return null;
+    }
+    
+    public boolean spawnPlant(int x,int y,String plantName)
+    {
+        
+        tiles[y][x].setPlant(world.getEntityLibrary().getPlantTemplateByName(plantName));
+        return true;
     }
     
     public ArrayList<Furniture> furnituresAround(int x,int y)

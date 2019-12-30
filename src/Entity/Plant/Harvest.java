@@ -85,6 +85,15 @@ public class Harvest
         }
     }
     
+    public void harvest(int progress)
+    {
+        current += progress;
+    }
+    
+    public boolean finishedHarvest()
+    {
+        return current>=max;
+    }
     
     public double getCurrent()
     {

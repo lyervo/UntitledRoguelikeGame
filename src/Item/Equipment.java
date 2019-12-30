@@ -150,6 +150,23 @@ public class Equipment
     }
     
     
+    public void equipEquipmentWithProperty(int property)
+    {
+        for(int i=inventory.getItems().size()-1;i>=0;i--)
+        {
+            if(inventory.getItems().get(i).getProperties().contains(property))
+            {
+                equip(inventory.getItems().get(i));
+            }
+        }
+    }
+    
+    public Slot getMainHandSlot()
+    {
+        return equipments.get(3);
+    }
+    
+    
 
     public ArrayList<Slot> getEquipments() {
         return equipments;

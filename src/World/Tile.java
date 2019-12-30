@@ -7,6 +7,8 @@ package World;
 
 import Camera.Camera;
 import Entity.Pawn;
+import Entity.Plant.Plant;
+import Entity.Plant.PlantTemplate;
 import java.awt.Point;
 import java.awt.Rectangle;
 import org.newdawn.slick.Color;
@@ -28,7 +30,12 @@ public class Tile {
     private boolean hover;
     private int visit;
     
-    public Tile(int x, int y, int type, Image image,int tile_size) {
+    private LocalMap lm;
+    
+    private Plant plant;
+    
+    
+    public Tile(int x, int y, int type, Image image,int tile_size,LocalMap lm) {
         this.x = x;
         this.y = y;
         this.type = type;
@@ -42,6 +49,7 @@ public class Tile {
         visit = 0;
         wall = null;
         bounds = new Rectangle(x * tile_size, y * tile_size, tile_size, tile_size);
+        this.lm = lm;
     }
     
     public void tick(boolean[] k,boolean[] m,Input input,World world,Camera cam)
@@ -70,6 +78,12 @@ public class Tile {
                 }
             }
         }
+        
+        if(world.isMoved()&&plant!=null)
+        {
+            plant.tick(k, m, input, world);
+        }
+        
     }
     
     public void resetVisit()
@@ -92,12 +106,20 @@ public class Tile {
                 } else {
                     texture.draw(x * cam.getTile_size()+cam.getXofs(), y * cam.getTile_size()+cam.getYofs(),cam.getTile_size(),cam.getTile_size(),Color.lightGray);
                 }
+                if(plant!=null)
+                {
+                    plant.render(cam, lm, false);
+                }
             }else if(visit == 1&&hover)
             {
                 if (wall != null) {
                     wall.getTexture().draw(x * cam.getTile_size()+cam.getXofs(), y * cam.getTile_size()+cam.getYofs(),cam.getTile_size(),cam.getTile_size(),Color.lightGray);
                 } else {
                     texture.draw(x * cam.getTile_size()+cam.getXofs(), y * cam.getTile_size()+cam.getYofs(),cam.getTile_size(),cam.getTile_size(),Color.lightGray);
+                }
+                if(plant!=null)
+                {
+                    plant.render(cam, lm, false);
                 }
             }
             else if(visit == 2)
@@ -107,12 +129,20 @@ public class Tile {
                 } else {
                     texture.draw(x * cam.getTile_size()+cam.getXofs(), y * cam.getTile_size()+cam.getYofs(),cam.getTile_size(),cam.getTile_size());
                 }
+                if(plant!=null)
+                {
+                    plant.render(cam, lm, false);
+                }
             }else if(visit == 1)
             {
                 if (wall != null) {
                     wall.getTexture().draw(x * cam.getTile_size()+cam.getXofs(), y * cam.getTile_size()+cam.getYofs(),cam.getTile_size(),cam.getTile_size(),Color.gray);
                 } else {
                     texture.draw(x * cam.getTile_size()+cam.getXofs(), y * cam.getTile_size()+cam.getYofs(),cam.getTile_size(),cam.getTile_size(),Color.gray);
+                }
+                if(plant!=null)
+                {
+                    plant.render(cam, lm, false);
                 }
 
             }
@@ -127,12 +157,42 @@ public class Tile {
         return (x*cam.getTile_size()+cam.getXofs()>=0&&x*cam.getTile_size()+cam.getXofs()<cam.getWidth())&&(y*cam.getTile_size()+cam.getYofs()>=0&&y*cam.getTile_size()+cam.getYofs()<cam.getHeight());
     }
 
-    public boolean isSolid() {
-        if (wall != null) {
+    public boolean isSolid() 
+    {
+        
+        if (wall != null)
+        {
             return wall.isSolid() || solid;
-        } else {
-            return solid;
+        } 
+        
+        
+        if(plant != null)
+        {
+            return plant.isSolid() || solid;
         }
+        
+        return solid;
+        
+    }
+    
+    public boolean pathfindingIsSolid()
+    {
+        if (wall != null)
+        {
+            return wall.isSolid() || solid;
+        } 
+        
+        return solid;
+    }
+    
+    public void clearPlant()
+    {
+        plant = null;
+    }
+    
+    public void setPlant(PlantTemplate pt)
+    {
+        plant = new Plant(0,x,y,pt,this);
     }
 
     public void setSolid(boolean solid) {
@@ -207,5 +267,27 @@ public class Tile {
     {
         return visit;
     }
+
+    public LocalMap getLm()
+    {
+        return lm;
+    }
+
+    public void setLm(LocalMap lm)
+    {
+        this.lm = lm;
+    }
+
+    public Plant getPlant()
+    {
+        return plant;
+    }
+
+    public void setPlant(Plant plant)
+    {
+        this.plant = plant;
+    }
+    
+    
 
 }

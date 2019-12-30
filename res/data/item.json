@@ -208,10 +208,10 @@
 		"desc":"An Axe made of <metal>, tool for cutting down trees.",
 		"unidentified_desc":null,
 		"stack":"1",
-		"properties":[20,33,7],
+		"properties":[20,33,7,101],
 		"consumed":null,
 		"baseValue":75,
-                "effects":[{"type":"slash_damage","duration":"1","value":"10"}],
+                "effects":[{"type":"slash_damage","duration":"1","value":"10"},{"type":"tool_efficiency","duration":"1","value":"1"}],
                 "durability":1
 	},
 	{

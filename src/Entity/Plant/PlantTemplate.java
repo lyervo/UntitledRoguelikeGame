@@ -36,6 +36,9 @@ public class PlantTemplate
     
     //stating the number of growth each STAGE need to advance to the next or final STAGE
     private final int[] STAGEGROWTHS;
+    
+    //whether a plant is solid at each stages
+    private final boolean[] SOLIDS;
 
     
     //whether this plant requires SUNLIGHT to grow
@@ -53,6 +56,9 @@ public class PlantTemplate
         NAMES = new ArrayList<String>();
         HARVEST = new ArrayList<Harvest>();
         STAGEGROWTHS = new int[STAGEArr.size()];
+        SOLIDS = new boolean[STAGEArr.size()];
+        
+        
         
         int max = 0;
         
@@ -74,6 +80,15 @@ public class PlantTemplate
                 JSONObject harvestObj = (JSONObject)harvestArr.get(j);
                 HARVEST.add(new Harvest(harvestObj));
             }
+            
+            if((int)(long)STAGEObj.get("solid") == 0)
+            {
+                SOLIDS[i] = false;
+            }else
+            {
+                SOLIDS[i] = true;
+            }
+            
             
         }
         
@@ -170,6 +185,48 @@ public class PlantTemplate
         return GROUND;
     }
 
+    public double getMAXGROWTH()
+    {
+        return MAXGROWTH;
+    }
+
+    public ArrayList<String> getNAMES()
+    {
+        return NAMES;
+    }
+
+    public ArrayList<Harvest> getHARVEST()
+    {
+        return HARVEST;
+    }
+
+    public SpriteSheet getSPRITES()
+    {
+        return SPRITES;
+    }
+
+    public int[] getSTAGEGROWTHS()
+    {
+        return STAGEGROWTHS;
+    }
+
+    public boolean[] getSOLIDS()
+    {
+        return SOLIDS;
+    }
+
+    public boolean isSUNLIGHT()
+    {
+        return SUNLIGHT;
+    }
+
+    public boolean isWATER()
+    {
+        return WATER;
+    }
+
+    
+    
     
     
 }

@@ -1,9 +1,9 @@
 [
     {
-        "stage":[{"growth":5,"name":"Tree sprout","harvest":[{"tool":[100,104],"postHarvest":-1,"harvestMeter":1,"products":[]}]},
-                {"growth":5,"name":"Tree seedling","harvest":[{"tool":[100,104],"postHarvest":-1,"harvestMeter":1,"products":[]}]},
-                {"growth":5,"name":"Tree sapling","harvest":[{"tool":[100,104],"postHarvest":-1,"harvestMeter":1,"products":[]}]},
-                {"growth":5,"name":"Tree","harvest":[{"tool":[101],"postHarvest":-1,"harvestMeter":10,"products":[{"itemName":"Wodd","minAmount":10}]}]}],
+        "stage":[{"growth":5,"name":"Tree sprout","solid":0,"harvest":[{"tool":[100,104],"postHarvest":-1,"harvestMeter":1,"products":[]}]},
+                {"growth":5,"name":"Tree seedling","solid":0,"harvest":[{"tool":[100,104],"postHarvest":-1,"harvestMeter":1,"products":[]}]},
+                {"growth":5,"name":"Tree sapling","solid":1,"harvest":[{"tool":[100,104],"postHarvest":-1,"harvestMeter":1,"products":[]}]},
+                {"growth":5,"name":"Tree","solid":1,"harvest":[{"tool":[101],"postHarvest":-1,"harvestMeter":10,"products":[{"itemName":"Wood","minAmount":10}]}]}],
         "texture":"tree_1",
         "ground":[1],
         "sunlight":1,

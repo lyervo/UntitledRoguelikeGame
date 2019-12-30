@@ -27,6 +27,10 @@ public class EquipmentButton extends Button
         if(!world.getDialogue().isDisplay())
         {
             world.getEquipmentWindow().setDisplay();
+            if(world.getEquipmentWindow().isDisplay())
+            {
+                world.getEquipment_ui().refreshUI();
+            }
         }
     }
     

@@ -17,7 +17,6 @@
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/res/data/dialog/dialog_regular.json</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Dialogue/Dialogue.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/GameConsole/ConsoleTextField.java</file>
-            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/sample/ContextMenuDemo.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/CraftingUI/RecipeScrollUpButton.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Entity/Entity.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/CraftingUI/MaterialUI.java</file>
@@ -37,6 +36,7 @@
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Entity/Plant/HarvestResult.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/sample/AStarTest.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Item/Item.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/sample/PopUpColorMenu.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/CraftingUI/CraftingUIWindow.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Entity/Task.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/InventoryUI/InventoryPrimaryScrollUpButton.java</file>
@@ -65,6 +65,7 @@
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Entity/Meter.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Item/ItemType.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/InventoryUI/InventorySecondaryScrollDownButton.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/sample/NewClass.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/CraftingUI/RecipeUI.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Dialogue/DialogueLibrary.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/InventoryUI/InventoryUI.java</file>

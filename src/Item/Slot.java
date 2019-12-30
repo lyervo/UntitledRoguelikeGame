@@ -23,6 +23,14 @@ public class Slot
         this.item = item;
     }
     
+    public boolean equipmentIsType(int type)
+    {
+        if(item==null)
+        {
+            return false;
+        }
+        return item.getProperties().contains(type);
+    }
     
     public boolean isEmpty()
     {

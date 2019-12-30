@@ -7,6 +7,7 @@ package GameConsole;
 
 import Entity.Entity;
 import Entity.Pawn;
+import Entity.Plant.Plant;
 import Entity.Task;
 import Item.Item;
 import Item.ItemPile;
@@ -343,14 +344,15 @@ public class GameConsole
         switch(token[1])
         {
             case "mouse":
-                
+              
                 Pair<Integer,Integer> coords = getCoordinatesByMousePos();
                 ArrayList<Pawn> pawns = world.getWm().getCurrentLocalMap().getPawnsAt(coords.getKey(), coords.getValue());
                 ItemPile ip = world.getWm().getCurrentLocalMap().getItemPileAt(coords.getKey(), coords.getValue());
-                if(pawns.isEmpty()&&ip == null)
+                if(pawns.isEmpty()&&ip == null&&world.getWm().getCurrentLocalMap().getTiles()[coords.getValue()][coords.getKey()].getPlant()==null)
                 {
                     addLine("No entity at "+coords.getKey()+","+coords.getValue());
                     return;
+                    
                 }
                 if(ip!=null)
                 {
@@ -390,6 +392,18 @@ public class GameConsole
                             addLine(getItemInfo(i));
                         }
                     }
+                }
+                if(world.getWm().getCurrentLocalMap().getTiles()[coords.getValue()][coords.getKey()].getPlant()!=null)
+                {
+                    Plant plant = world.getWm().getCurrentLocalMap().getTiles()[coords.getValue()][coords.getValue()].getPlant();
+                    addLine("Plant Name: "+plant.getCurrentName());
+                    int maxG = 0;
+                    for(int k:plant.getPlantTemplate().getSTAGEGROWTHS())
+                    {
+                        maxG += k;
+                    }
+                    addLine("Growing: ["+plant.getCurrentGrowth()+"/"+maxG+"]");
+                    
                 }
                 
                 break;
