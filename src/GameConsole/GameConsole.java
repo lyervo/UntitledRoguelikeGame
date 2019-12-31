@@ -8,6 +8,7 @@ package GameConsole;
 import Entity.Entity;
 import Entity.Pawn;
 import Entity.Plant.Plant;
+import Entity.Plant.PlantTemplate;
 import Entity.Task;
 import Item.Item;
 import Item.ItemPile;
@@ -148,6 +149,9 @@ public class GameConsole
             case "quit":
                 System.exit(0);
                 break;
+            case "spawnEntity":
+                spawnEntity(token);
+                break;
             default:
                 addLine("Unknown command line");
                 break;
@@ -162,6 +166,50 @@ public class GameConsole
         if(lines.size()>maxLines)
         {
             lines.remove(lines.size()-1);
+        }
+    }
+    
+    public void spawnEntity(String[] token)
+    {
+        if(token.length<4)
+        {
+            addLine("Invalid number of parameters");
+        }
+        
+        Pair<Integer,Integer> coords = new Pair(0,0);
+        
+        
+        if(token[1].equals("mouse"))
+        {
+            coords = getCoordinatesByMousePos();
+        }
+        
+        
+        switch(token[2])
+        {
+            case "plant":
+                String plantName = "";
+                for(int i=3;i<token.length;i++)
+                {
+                    if(i==3)
+                    {
+                        plantName = token[i];
+                    }else
+                    {
+                        plantName+= " "+token[i];
+                    }
+                }
+                
+                PlantTemplate pt = world.getEntityLibrary().getPlantTemplateByName(plantName);
+                if(pt==null)
+                {
+                    addLine("No plant with name "+plantName);
+                    return;
+                }
+                
+                world.getWm().getCurrentLocalMap().getTiles()[coords.getValue()][coords.getKey()].setPlant(pt);
+                
+                break;
         }
     }
     
@@ -322,6 +370,29 @@ public class GameConsole
                 }
             }
             task.setInfo(recipeName);
+        }else if(token[2].equals("harvest"))
+        {
+            try
+            {
+                id = Integer.parseInt(token[3]);
+                index = Integer.parseInt(token[4]);
+                Plant plant = world.getWm().getCurrentLocalMap().getPlantById(id);
+                if(plant == null)
+                {
+                    addLine("No plant with id "+id+" exists");
+                    return null;
+                }
+                
+                task = new Task(plant.getX(),plant.getY(),plant.getId(),index,"harvest_plant");
+                task.setInfo(plant.getCurrentName());
+                task.setTarget(plant);
+                
+                
+            }catch(NumberFormatException e)
+            {
+                addLine("Invalid parameter 3");
+                return null;
+            }
         }
         
         return task;
@@ -395,8 +466,8 @@ public class GameConsole
                 }
                 if(world.getWm().getCurrentLocalMap().getTiles()[coords.getValue()][coords.getKey()].getPlant()!=null)
                 {
-                    Plant plant = world.getWm().getCurrentLocalMap().getTiles()[coords.getValue()][coords.getValue()].getPlant();
-                    addLine("Plant Name: "+plant.getCurrentName());
+                    Plant plant = world.getWm().getCurrentLocalMap().getTiles()[coords.getValue()][coords.getKey()].getPlant();
+                    addLine("id "+plant.getId()+" Plant Name: "+plant.getCurrentName());
                     int maxG = 0;
                     for(int k:plant.getPlantTemplate().getSTAGEGROWTHS())
                     {

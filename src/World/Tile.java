@@ -9,6 +9,7 @@ import Camera.Camera;
 import Entity.Pawn;
 import Entity.Plant.Plant;
 import Entity.Plant.PlantTemplate;
+import Item.Item;
 import java.awt.Point;
 import java.awt.Rectangle;
 import org.newdawn.slick.Color;
@@ -187,14 +188,50 @@ public class Tile {
     
     public void clearPlant()
     {
+        lm.getPlants().remove(plant);
         plant = null;
     }
     
     public void setPlant(PlantTemplate pt)
     {
+        lm.getPlants().remove(plant);
         plant = new Plant(0,x,y,pt,this);
+        lm.getPlants().add(plant);
     }
 
+    public void setPlant(Item seed,World world)
+    {
+        if(plant!=null)
+        {
+            System.out.println("error in setPlant");
+            System.exit(-1);
+        }
+        String[] token = seed.getTrueName().split(" ");
+        
+        String plantName = "";
+        
+        for(int i=0;i<token.length;i++)
+        {
+            if(token[i].equals("Seed"))
+            {
+                break;
+            }
+            if(i==0)
+            {
+                plantName = token[i];
+            }else
+            {
+                plantName += " "+token[i];
+            }
+        }
+        System.out.println(" the plant name is "+plantName);
+        
+        this.plant = new Plant(0,x,y,world.getEntityLibrary().getPlantTemplateByName(plantName),this);
+        lm.getPlants().add(plant);
+       
+        
+    }
+    
     public void setSolid(boolean solid) {
         this.solid = solid;
     }
@@ -287,7 +324,7 @@ public class Tile {
     {
         this.plant = plant;
     }
-    
+
     
 
 }

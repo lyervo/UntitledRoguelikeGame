@@ -5,6 +5,8 @@
  */
 package Item;
 
+import Entity.Plant.PlantTemplate;
+import Res.Res;
 import World.World;
 import java.util.ArrayList;
 
@@ -90,6 +92,40 @@ public class Item
     
     //determines the ownership of an item,use to check if an item is stolen
     private String ownership;
+    
+    
+    //constructor for seed items
+    public Item(PlantTemplate pt,ItemLibrary itemLibrary)
+    {
+        this.trueName = pt.getName()+" Seed";
+        this.name = pt.getName()+" Seed";
+        this.properties = new HashSet<Integer>();
+        
+        //is a seed
+        this.properties.add(201);
+        //is stackable
+        this.properties.add(4);
+        
+        this.effects = new ArrayList<Effect>();
+        //gives the effect for planting a plant on a tile
+        this.effects.add(new Effect(1,1,"plant&&"+pt.getName()));
+        
+        this.postConsume = new ArrayList<String>();
+        this.itemLibrary = itemLibrary;
+        this.stack = 1;
+        this.durability = 1;
+        this.maxDurability = 1;
+        this.expire = null;
+        this.desc = "A seed for "+pt.getName();
+        this.texture = itemLibrary.getRes().getTextureByName("seed");
+        
+        for(int i:pt.getGROUND())
+        {
+            properties.add(i);
+        }
+        
+        
+    }
     
     public Item(Item item)
     {

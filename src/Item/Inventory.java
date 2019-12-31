@@ -277,6 +277,19 @@ public class Inventory
         
     }
     
+    
+    public Item getItemByName(String name)
+    {
+        for(Item i:items)
+        {
+            if(i.getTrueName().equals(name))
+            {
+                return i;
+            }
+        }
+        return null;
+    }
+            
     public boolean hasItemType(int type)
     {
         for(Item i:items)
@@ -288,6 +301,19 @@ public class Inventory
             }
         }
         return false;
+    }
+    
+    public ArrayList<Item> getItemsOfType(int type)
+    {
+        ArrayList<Item> result = new ArrayList<Item>();
+        for(Item i:items)
+        {
+            if(i.getProperties().contains(type))
+            {
+                result.add(i);
+            }
+        }
+        return result;
     }
     
     public ArrayList<Item> getItems() {

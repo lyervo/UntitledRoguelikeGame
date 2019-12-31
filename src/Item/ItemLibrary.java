@@ -5,6 +5,8 @@
  */
 package Item;
 
+import Entity.EntityLibrary;
+import Entity.Plant.PlantTemplate;
 import Res.Res;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -54,7 +56,7 @@ public class ItemLibrary
     
     private ArrayList<Item> itemPreload;
     
-    public ItemLibrary(String seed,Res res)
+    public ItemLibrary(String seed,Res res,EntityLibrary entityLibrary)
     {
         this.res = res;
         this.seed = seed;
@@ -74,6 +76,17 @@ public class ItemLibrary
         initRecipes();
         initItemType();
         
+        initSeeds(entityLibrary);
+        
+    }
+    
+    public void initSeeds(EntityLibrary entityLibrary)
+    {
+        ArrayList<PlantTemplate> plants = entityLibrary.getPlants();
+        for(PlantTemplate pt:plants)
+        {
+            items.put(pt.getName()+" Seed", new Item(pt,this));
+        }
     }
     
     public void initItemColour()

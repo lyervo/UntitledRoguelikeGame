@@ -48,6 +48,7 @@ public abstract class Entity
         this.x = x;
         this.y = y;
         this.id = ID + 1;
+        System.out.println("creare plant with id "+this.id);
         ID++;
         this.sprites = sprites;
         this.autoAnimate = autoAnimate;
@@ -102,6 +103,15 @@ public abstract class Entity
         
         int px = Math.abs(x - p.getX());
         int py = Math.abs(y - p.getY());
+        return px + py;
+        
+    }
+    
+    public int distanceBetween(int x,int y)
+    {
+        
+        int px = Math.abs(this.x - x);
+        int py = Math.abs(this.y - y);
         return px + py;
         
     }

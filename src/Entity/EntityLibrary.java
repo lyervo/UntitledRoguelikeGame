@@ -157,6 +157,46 @@ public class EntityLibrary
         }
         return null;
     }
+
+    public Res getRes()
+    {
+        return res;
+    }
+
+    public void setRes(Res res)
+    {
+        this.res = res;
+    }
+
+    public ArrayList<FurnitureTemplate> getFurnitures()
+    {
+        return furnitures;
+    }
+
+    public void setFurnitures(ArrayList<FurnitureTemplate> furnitures)
+    {
+        this.furnitures = furnitures;
+    }
+
+    public ArrayList<PlantTemplate> getPlants()
+    {
+        return plants;
+    }
+
+    public void setPlants(ArrayList<PlantTemplate> plants)
+    {
+        this.plants = plants;
+    }
+
+    public ArrayList<Creature> getCreatures()
+    {
+        return creatures;
+    }
+
+    public void setCreatures(ArrayList<Creature> creatures)
+    {
+        this.creatures = creatures;
+    }
     
     
 }

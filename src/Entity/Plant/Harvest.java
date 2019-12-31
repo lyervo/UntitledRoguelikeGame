@@ -79,10 +79,7 @@ public class Harvest
 
     public void depleteCurrent()
     {
-        if(current>=1)
-        {
-            current--;
-        }
+        
     }
     
     public void harvest(int progress)

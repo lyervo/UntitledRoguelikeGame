@@ -136,6 +136,10 @@ public class PlantTemplate
     }
 
 
+    public String getName()
+    {
+        return NAMES.get(NAMES.size()-1);
+    }
 
     public double getMaxGrowth()
     {

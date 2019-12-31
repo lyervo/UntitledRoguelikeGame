@@ -17,6 +17,7 @@ public class Option
     
     private int id;
 
+    private String info;
     public Option(String text,int actionType)
     {
         
@@ -48,6 +49,17 @@ public class Option
     public void setText(String text) {
         this.text = text;
     }
+
+    public String getInfo()
+    {
+        return info;
+    }
+
+    public void setInfo(String info)
+    {
+        this.info = info;
+    }
+    
     
     
     

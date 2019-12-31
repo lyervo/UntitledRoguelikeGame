@@ -53,6 +53,7 @@ public class Plant extends Entity
             if(tool.getProperties().contains(i))
             {
                 harvests.get(stage).harvest((int)tool.getEffectByName("tool_efficiency").getValue());
+                System.out.println(harvests.get(stage).getCurrent());
                 if(harvests.get(stage).finishedHarvest())
                 {
                     
@@ -68,26 +69,29 @@ public class Plant extends Entity
                         {
                             resultAmount = r.getMinAmount() + rand.nextInt(r.getMaxAmount()-r.getMinAmount()+1);
                         }
-                        if(produce.isStackable())
+                        if(resultAmount>=1)
                         {
-                            produce.setStack(resultAmount);
-                            if(user.isControl())
+                            if(produce.isStackable())
                             {
-                                world.getWm().getPlayerInventory().addItem(world.getItemLibrary().getItemByName(r.getItemName()));
-                            }else
-                            {
-                                user.getInventory().addItem(world.getItemLibrary().getItemByName(r.getItemName()));
-                            }
-                        }else
-                        {
-                            for(int a=0;a<resultAmount;a++)
-                            {
+                                produce.setStack(resultAmount);
                                 if(user.isControl())
                                 {
                                     world.getWm().getPlayerInventory().addItem(world.getItemLibrary().getItemByName(r.getItemName()));
                                 }else
                                 {
                                     user.getInventory().addItem(world.getItemLibrary().getItemByName(r.getItemName()));
+                                }
+                            }else
+                            {
+                                for(int a=0;a<resultAmount;a++)
+                                {
+                                    if(user.isControl())
+                                    {
+                                        world.getWm().getPlayerInventory().addItem(world.getItemLibrary().getItemByName(r.getItemName()));
+                                    }else
+                                    {
+                                        user.getInventory().addItem(world.getItemLibrary().getItemByName(r.getItemName()));
+                                    }
                                 }
                             }
                         }
@@ -104,8 +108,16 @@ public class Plant extends Entity
                     if(harvests.get(stage).isStageRevert())
                     {
                         stage--;
+                        int totalR = 0;
+                        for(int t=0;t<stage-1;t++)
+                        {
+                            totalR += plantTemplate.getSTAGEGROWTHS()[t];
+                        }
+                        currentGrowth = totalR;
+                        
                     }else if(harvests.get(stage).isKill())
                     {
+                        System.out.println("call");
                         tile.clearPlant();
                     }
                 }else

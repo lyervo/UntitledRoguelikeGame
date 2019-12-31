@@ -8,6 +8,7 @@ package Entity;
 import Camera.Camera;
 import Entity.Plant.Plant;
 import Item.Inventory;
+import Item.Item;
 import Item.ItemLibrary;
 import Item.ItemPile;
 import World.LocalMap;
@@ -104,6 +105,9 @@ public class Pawn extends Entity
         }else if(task.getType().equals("search_item"))
         {
             pawnSearchItemLogic(world);
+        }else if(task.getType().equals("harvest_plant"))
+        {
+            pawnHarvestPlantLogic(world);
         }
         
         
@@ -220,6 +224,9 @@ public class Pawn extends Entity
         }else if(task.getType().equals("harvest_plant"))
         {
             playerHarvestPlantLogic(k,m,input,world);
+        }else if(task.getType().equals("plant_seed"))
+        {
+            playerPlantSeedLogic(k,m,input,world);
         }
 
         if (world.isMoved())
@@ -507,6 +514,14 @@ public class Pawn extends Entity
             return;
         }
         
+        if(!world.getWm().getCurrentLocalMap().getTiles()[task.getY()][task.getX()].getPlant().getCurrentName().equals(task.getInfo()))
+        {
+            task.clearTask();
+            path = null;
+            step = 1;
+            return;
+        }
+        
         if(task.getIndex()!=100&&(!world.getWm().getPlayerInventory().hasItemType(task.getIndex())&&!world.getWm().getPlayerInventory().getEquipment().getMainHandSlot().equipmentIsType(task.getIndex())))
         {
             world.getAncestor().addText("You do not have the tools to perform this task.");
@@ -593,6 +608,175 @@ public class Pawn extends Entity
                 current = System.currentTimeMillis();
                 doPath(world.getWm().getCurrentLocalMap());
                 world.moved();
+
+                if(step == path.getLength())
+                {
+                    path = null;
+                    step = 1;
+                }
+                
+
+            }
+        }
+    }
+    
+    
+    public void playerPlantSeedLogic(boolean[] k,boolean[] m,Input input,World world)
+    {
+
+        if(world.getWm().getCurrentLocalMap().getTiles()[task.getY()][task.getX()].getPlant()!=null)
+        {
+            task.clearTask();
+            path = null;
+            step = 1;
+            return;
+        }
+        
+        if(distanceBetween(task.getX(),task.getY()) <= 1)
+        {
+            Item seed = world.getWm().getPlayerInventory().getItemByName(task.getInfo());
+            if(seed == null)
+            {
+                world.getAncestor().addText("You do not have the item for this task.");
+                
+            }else
+            {
+                world.getWm().getCurrentLocalMap().getTiles()[task.getY()][task.getX()].setPlant(world.getWm().getPlayerInventory().getItemByName(task.getInfo()),world);
+                world.getWm().getPlayerInventory().removeItem(seed);
+                world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
+            }
+            
+            task.clearTask();
+            path = null;
+            step = 1;
+            return;
+            
+        }else
+        {
+            if (path == null)
+            {
+                
+                calcPath(task.getX(), task.getY());
+                
+            }
+            
+            if(System.currentTimeMillis() - current >= 250)
+            {
+                current = System.currentTimeMillis();
+                doPath(world.getWm().getCurrentLocalMap());
+                world.moved();
+
+                if(step == path.getLength())
+                {
+                    path = null;
+                    step = 1;
+                }
+                
+
+            }
+        }
+    }
+    
+    
+    public void pawnHarvestPlantLogic(World world)
+    {
+
+        if(world.getWm().getCurrentLocalMap().getTiles()[task.getY()][task.getX()].getPlant()==null)
+        {
+            task.clearTask();
+            path = null;
+            step = 1;
+            return;
+        }
+        
+        if(!world.getWm().getCurrentLocalMap().getTiles()[task.getY()][task.getX()].getPlant().getCurrentName().equals(task.getInfo()))
+        {
+            task.clearTask();
+            path = null;
+            step = 1;
+            return;
+        }
+        
+        if(task.getIndex()!=100&&(!inventory.hasItemType(task.getIndex())&&!inventory.getEquipment().getMainHandSlot().equipmentIsType(task.getIndex())))
+        {
+            
+            task.clearTask();
+            path = null;
+            step = 1;
+            return;
+        }
+        
+        if(distanceBetween(task.getTarget()) == 1)
+        {
+            if(inventory.getEquipment().getMainHandSlot().getItem() != null)
+            {
+                if(inventory.getEquipment().getMainHandSlot().getItem().getProperties().contains(task.getIndex()))
+                {
+                    inventory.getEquipment().equipEquipmentWithProperty(task.getIndex());
+                    
+                }
+            }else
+            {
+                inventory.getEquipment().equipEquipmentWithProperty(task.getIndex());
+               
+            }
+            
+            if(world.isMoved())
+            { 
+                
+                world.getWm().getCurrentLocalMap().getTiles()[task.getY()][task.getX()].getPlant().harvest(inventory.getEquipment().getMainHandSlot().getItem(), this, world);
+                
+                
+
+                
+                
+
+            }
+            
+            
+        }else
+        {
+            if (path == null)
+            {
+                if(((Plant)task.getTarget()).getCurrentSolid())
+                {
+                    boolean foundPath = false;
+                    for(int i=-1;i<=1;i++)
+                    {
+                        for(int j=-1;j<=1;j++)
+                        {
+                            int jy = j+task.getTarget().getY();
+                            int ix = i+task.getTarget().getX();
+                            if(jy>=0&&jy<world.getWm().getCurrentLocalMap().getHeight()-1
+                            &&ix>=0&&ix<world.getWm().getCurrentLocalMap().getWidth()-1)
+                            {
+                                if(!world.getWm().getCurrentLocalMap().getTiles()[jy][ix].isSolid())
+                                {
+                                    calcPath(ix,jy);
+                                    foundPath = true;
+                                }
+                            }
+                        }
+                        
+                    }
+                    if(!foundPath)
+                    {
+                        
+                        task.clearTask();
+                        path = null;
+                        step = 1;
+                    }
+                }else
+                {
+                    calcPath(task.getTarget().getX(), task.getTarget().getY());
+                }
+            }
+            
+            if(world.isMoved())
+            {
+                
+                doPath(world.getWm().getCurrentLocalMap());
+               
 
                 if(step == path.getLength())
                 {

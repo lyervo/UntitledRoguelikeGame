@@ -121,9 +121,9 @@ public class World
     {
         this.z = 0;
         hoveringWindow = false;
-        
-        itemLibrary = new ItemLibrary("test",res);
         entityLibrary = new EntityLibrary(res);
+        itemLibrary = new ItemLibrary("test",res,entityLibrary);
+        
         
         mouse_z = 0;
         this.res = res;

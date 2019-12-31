@@ -52,6 +52,7 @@ public class TileOptionTab extends OptionTab
     @Override
     public void runOption(LocalMap lm)
     {
+        Task task;
         switch (options.get(hoveringIndex).getActionType())
         {
             case 0:
@@ -100,10 +101,17 @@ public class TileOptionTab extends OptionTab
                 lm.getPlayer().setTask(new Task(0,0,options.get(hoveringIndex).getId(),0,"talk_to_target"));
                 break;
             case 6:
-                Task task = new Task(t.getX(),t.getY(),t.getPlant().getId(),options.get(hoveringIndex).getId(),"harvest_plant");
+                task = new Task(t.getX(),t.getY(),t.getPlant().getId(),options.get(hoveringIndex).getId(),"harvest_plant");
                 task.setTarget(t.getPlant());
+                task.setInfo(t.getPlant().getCurrentName());
                 lm.getPlayer().setTask(task);
                 break;
+            case 7:
+                task = new Task(t.getX(),t.getY(),0,0,"plant_seed");
+                task.setInfo(options.get(hoveringIndex).getInfo());
+                lm.getPlayer().setTask(task);
+                break;
+                
         }
     }
 
@@ -183,6 +191,24 @@ public class TileOptionTab extends OptionTab
                         o.setId(i);
                         options.add(o);
                         break;
+                }
+            }
+        }
+        
+        if(!t.isSolid()&&t.getPlant()==null)
+        {
+            ArrayList<Item> seeds = lm.getWm().getPlayerInventory().getItemsOfType(201);
+            if(!seeds.isEmpty())
+            {
+
+                for(Item s:seeds)
+                {
+                    if(s.getProperties().contains(t.getType()))
+                    {
+                        Option seedOption = new Option("Plant "+s.getTrueName(),7);
+                        seedOption.setInfo(s.getTrueName());
+                        options.add(seedOption);
+                    }
                 }
             }
         }

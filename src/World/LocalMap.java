@@ -66,6 +66,7 @@ public class LocalMap implements TileBasedMap, ILosBoard
     
     private ArrayList<Furniture> furnitures;
     
+    private ArrayList<Plant> plants;
     
     public LocalMap(int id,int width,int height,Res res,World world,GameContainer container,ItemLibrary itemLibrary)
     {
@@ -80,6 +81,8 @@ public class LocalMap implements TileBasedMap, ILosBoard
         tiles = new Tile[height][width];
         cam = new Camera(width,height,container);
         this.itemLibrary = itemLibrary;
+        
+        plants = new ArrayList<Plant>();
         
         
         
@@ -148,10 +151,20 @@ public class LocalMap implements TileBasedMap, ILosBoard
         {
             for(int ix=0;ix<width;ix++)
             {
-                tiles[iy][ix] = new Tile(ix,iy,51,res.basicTile,cam.getTile_size(),this);
+                if(iy==0&&ix==0)
+                {
+                    tiles[iy][ix] = new Tile(ix,iy,502,res.basicTile,cam.getTile_size(),this);
+                }else
+                {
+                    tiles[iy][ix] = new Tile(ix,iy,501,res.basicTile,cam.getTile_size(),this);
+                }
+                
+                
+                
                 if(ix==4&&iy>=3&&iy<=10)
                 {
-                    tiles[iy][ix].setWall(new Wall(ix,iy,0,res.basicWall));
+                    tiles[iy][ix].setType(502);
+                    tiles[iy][ix].setWall(new Wall(ix,iy,502,res.basicWall));
                 }
             }
         }
@@ -591,6 +604,17 @@ public class LocalMap implements TileBasedMap, ILosBoard
         this.hoveringTab = hoveringTab;
     }
     
+    public Plant getPlantById(int id)
+    {
+        for(Plant p: plants)
+        {
+            if(p.getId() == id)
+            {
+                return p;
+            }
+        }
+        return null;
+    }
     
     public Pawn getPlayer()
     {
@@ -634,6 +658,16 @@ public class LocalMap implements TileBasedMap, ILosBoard
 
     public void setFurnitures(ArrayList<Furniture> furnitures) {
         this.furnitures = furnitures;
+    }
+
+    public ArrayList<Plant> getPlants()
+    {
+        return plants;
+    }
+
+    public void setPlants(ArrayList<Plant> plants)
+    {
+        this.plants = plants;
     }
     
    

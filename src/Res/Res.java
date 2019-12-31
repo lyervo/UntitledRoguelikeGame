@@ -181,7 +181,7 @@ public class Res
         SpriteSheet books = new SpriteSheet("res/texture/items/Book.png",32,32);
         
         book_1 = new Image("res/texture/items/book_1.png");
-        
+        images.put("seed", new Image("res/texture/items/seed.png"));
         images.put("raw_meat_1",meat_raw_1);
         images.put("dagger",dagger);
         images.put("dagger_template",dagger_template);
