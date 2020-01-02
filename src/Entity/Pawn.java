@@ -6,6 +6,7 @@
 package Entity;
 
 import Camera.Camera;
+import Culture.SubFaction;
 import Entity.Plant.Plant;
 import Item.Inventory;
 import Item.Item;
@@ -14,6 +15,7 @@ import Item.ItemPile;
 import World.LocalMap;
 import World.Tile;
 import World.World;
+import World.Zone;
 import java.util.ArrayList;
 
 import org.newdawn.slick.Image;
@@ -37,7 +39,7 @@ public class Pawn extends Entity
     private FOVBoard fovBoard;
     
     
-    private Task task;
+    private ArrayList<Task> tasks;
     private AStarPathFinder pf;
     private IFovAlgorithm fov;
     
@@ -52,6 +54,8 @@ public class Pawn extends Entity
 
     private ArrayList<String> recipes;
     
+    private ArrayList<SubFaction> subFactions;
+    
     
     
     public Pawn(int id, int x, int y,Image texture,IFovAlgorithm fov,String name,ItemLibrary itemLibrary)
@@ -61,12 +65,13 @@ public class Pawn extends Entity
         this.fov = fov;
         this.control = false;
         step = 1;
-        task = new Task(0,0,0,0,"nothing");
+        tasks = new ArrayList<Task>();
+        tasks.add(new Task(0,0,0,0,"nothing"));
         inventory = new Inventory(this,itemLibrary);
         this.name = name;
         current = System.currentTimeMillis();
         status = new ArrayList<Status>();
-        
+        subFactions = new ArrayList<SubFaction>();
         
     }
     
@@ -90,25 +95,62 @@ public class Pawn extends Entity
             
             inventory.getCrafting().getNearbyStations(world.getWm().getCurrentLocalMap());
             
+            
+            for(SubFaction sf:subFactions)
+            {
+                for(Zone z:sf.getZones())
+                {
+                    if(z.getId() == world.getWm().getCurrentLocalMap().getID())
+                    {
+                        for(Pawn p:world.getWm().getCurrentLocalMap().getPawns())
+                        {
+                            if(p.getId()!=this.id)
+                            {
+                                if(z.isWithinZone(p)&&!isSameFaction(sf,p.getSubFactions()))
+                                {
+                                    if(!tasks.get(0).getType().equals("follow_target"))
+                                    {
 
+                                        Task t = new Task(p.getX(),p.getY(),p.getId(),0,"follow_target");
+                                        t.setTarget(p);
+                                        addTask(t);
+                                        sortTask();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
         }
+        
+        int taskResult = 0;
 
-        if(task.getType().equals("follow_target"))
+        if(tasks.get(0).getType().equals("follow_target"))
         {
             pawnFollowLogic(world);
-        }else if(task.getType().equals("grab_item"))
+        }else if(tasks.get(0).getType().equals("grab_item"))
         {
             pawnGrabItemLogic(world);
-        }else if(task.getType().equals("craft"))
+        }else if(tasks.get(0).getType().equals("craft"))
         {
             pawnCraftingLogic(world);
-        }else if(task.getType().equals("search_item"))
+        }else if(tasks.get(0).getType().equals("search_item"))
         {
             pawnSearchItemLogic(world);
-        }else if(task.getType().equals("harvest_plant"))
+        }else if(tasks.get(0).getType().equals("harvest_plant"))
         {
             pawnHarvestPlantLogic(world);
+        }else if(tasks.get(0).getType().equals("plant_seed"))
+        {
+            pawnPlantSeedLogic(world);
         }
+        
+        
+        
+        
+        
         
         
     }
@@ -118,20 +160,20 @@ public class Pawn extends Entity
     
     public void pawnFollowLogic(World world)
     {
-        if (path == null&&distanceBetween(task.getTarget())>=1)
+        if (path == null&&distanceBetween(tasks.get(0).getTarget())>=1)
         {
             step = 1;
-            path = pf.findPath(null, x, y, task.getTarget().getX(), task.getTarget().getY());
-        }else if(task.getX()!=task.getTarget().getX()||task.getTarget().getY()!=task.getY())
+            path = pf.findPath(null, x, y, tasks.get(0).getTarget().getX(), tasks.get(0).getTarget().getY());
+        }else if(tasks.get(0).getX()!=tasks.get(0).getTarget().getX()||tasks.get(0).getTarget().getY()!=tasks.get(0).getY())
         {
             path = null;
             step = 1;
-            path = pf.findPath(null, x, y, task.getTarget().getX(), task.getTarget().getY());
+            path = pf.findPath(null, x, y, tasks.get(0).getTarget().getX(), tasks.get(0).getTarget().getY());
         }
         if(world.isMoved()&&path!=null)
         {
             
-            if(distanceBetween(task.getTarget())<=2)
+            if(distanceBetween(tasks.get(0).getTarget())<=2)
             {
                 path = null;
                 step = 1;
@@ -150,17 +192,22 @@ public class Pawn extends Entity
     {
         if(inventory.getCrafting().getTargetRecipe()==null)
         {
-            inventory.getCrafting().setCraftingTarget(task.getInfo());
+            inventory.getCrafting().setCraftingTarget(tasks.get(0).getInfo());
             
         }
 
+        if(!inventory.getCrafting().checkCraftingRecipe(inventory.getCrafting().getTargetRecipe()))
+        {
+            
+        }
+        
         if (world.isMoved())
         {
   
             inventory.getCrafting().craft();
             if (inventory.getCrafting().finishedCrafting())
             {
-                task.clearTask();
+                tasks.get(0).clearTask();
                 path = null;
                 
             }
@@ -201,7 +248,7 @@ public class Pawn extends Entity
         if(k[255])
         {
             //k[255] will be true whenever a key is pressed
-            task.clearTask();
+            tasks.get(0).clearTask();
             path = null;
             step = 1;
             current = System.currentTimeMillis();
@@ -209,22 +256,23 @@ public class Pawn extends Entity
                 
         }
         
-        if (task.getType().equals("grab_item"))
+        
+        if (tasks.get(0).getType().equals("grab_item"))
         {
             playerGrabItemLogic(k, m, input, world);
-        }else if (task.getType().equals("craft"))
+        }else if (tasks.get(0).getType().equals("craft"))
         {
             playerCraftingLogic(k, m, input, world);
-        }else if (task.getType().equals("talk_to_target"))
+        }else if (tasks.get(0).getType().equals("talk_to_target"))
         {
             playerMoveToTalkLogic(k, m, input, world);
-        }else if (task.getType().equals("walk_to"))
+        }else if (tasks.get(0).getType().equals("walk_to"))
         {
             playerWalkLogic(k, m, input, world);
-        }else if(task.getType().equals("harvest_plant"))
+        }else if(tasks.get(0).getType().equals("harvest_plant"))
         {
             playerHarvestPlantLogic(k,m,input,world);
-        }else if(task.getType().equals("plant_seed"))
+        }else if(tasks.get(0).getType().equals("plant_seed"))
         {
             playerPlantSeedLogic(k,m,input,world);
         }
@@ -291,15 +339,36 @@ public class Pawn extends Entity
     
     public void walkTo(int x,int y)
     {
-        task = new Task(x,y,0,0,"walk_to");
+        Task task = new Task(x,y,0,0,"walk_to");
+        addTask(task);
     }
     
     public void grabItemAt(int x,int y,int id,int index,String itemName)
     {
-        task = new Task(x,y,id,index,"grab_item");
+        Task task = new Task(x,y,id,index,"grab_item");
         task.setInfo(itemName);
+        addTask(task);
         
     }
+    
+    public void sortTask()
+    {
+        tasks.sort(new TaskComparator());
+    }
+    
+    public void addTask(Task task)
+    {
+        if(control)
+        {
+            tasks.clear();
+            tasks.add(task);
+        }else
+        {
+            tasks.add(0,task);
+            sortTask();
+        }
+    }
+    
     
     public void checkVision()
     {
@@ -424,12 +493,12 @@ public class Pawn extends Entity
     {
         if(path == null)
         {
-            calcPath(task.getX(),task.getY());
+            calcPath(tasks.get(0).getX(),tasks.get(0).getY());
         }
         if (world.getWm().getPlayerInventory().getCrafting().isCrafting())
         {
             world.getWm().getPlayerInventory().getCrafting().clearCraftingTarget();
-            task.clearTask();
+            tasks.get(0).clearTask();
             path = null;
         }
         if (System.currentTimeMillis() - current >= 250)
@@ -439,7 +508,7 @@ public class Pawn extends Entity
             world.moved();
             if (step == path.getLength()) {
                 path = null;
-                task.clearTask();
+                tasks.get(0).clearTask();
                 step = 1;
             }
 
@@ -448,32 +517,32 @@ public class Pawn extends Entity
     
     public void playerGrabItemLogic(boolean[] k,boolean[] m,Input input,World world)
     {
-        if(task.getTarget() == null)
+        if(tasks.get(0).getTarget() == null)
         {
-            task.setTarget(world.getWm().getCurrentLocalMap().getItemPileById(task.getId()));
+            tasks.get(0).setTarget(world.getWm().getCurrentLocalMap().getItemPileById(tasks.get(0).getId()));
         }
         
-        if(!task.getTarget().hasItem(task.getInfo()))
+        if(!tasks.get(0).getTarget().hasItem(tasks.get(0).getInfo()))
         {
-            task.clearTask();
+            tasks.get(0).clearTask();
             path = null;
             return;
         }
         
-        if(distanceBetween(task.getTarget()) == 0)
+        if(distanceBetween(tasks.get(0).getTarget()) == 0)
         {
             if (world.getWm().getCurrentLocalMap().getItemPileAt(x, y) != null)
             {
 
                 
-                    if (world.getWm().getCurrentLocalMap().getItemPileAt(x, y).getId() == task.getId())
+                    if (world.getWm().getCurrentLocalMap().getItemPileAt(x, y).getId() == tasks.get(0).getId())
                     {
 
-                        world.getAncestor().addText(world.getWm().getCurrentLocalMap().getItemPileAt(x, y).getItems().get(task.getIndex()).getName() + " added to inventory.");
+                        world.getAncestor().addText(world.getWm().getCurrentLocalMap().getItemPileAt(x, y).getItems().get(tasks.get(0).getIndex()).getName() + " added to inventory.");
 
-                        world.getWm().getCurrentLocalMap().getItemPileAt(x, y).takeFrom(world.getWm().getPlayerInventory(), task.getInfo(), world.getWm().getCurrentLocalMap(), -1);
+                        world.getWm().getCurrentLocalMap().getItemPileAt(x, y).takeFrom(world.getWm().getPlayerInventory(), tasks.get(0).getInfo(), world.getWm().getCurrentLocalMap(), -1);
         //                            world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
-                        task.clearTask();
+                        tasks.get(0).clearTask();
                         path = null;
                         world.moved();
                     }
@@ -483,7 +552,7 @@ public class Pawn extends Entity
         {
             if (path == null)
             {
-                calcPath(task.getTarget().getX(), task.getTarget().getY());
+                calcPath(tasks.get(0).getTarget().getX(), tasks.get(0).getTarget().getY());
             }
             
             if(System.currentTimeMillis() - current >= 250)
@@ -506,44 +575,46 @@ public class Pawn extends Entity
     public void playerHarvestPlantLogic(boolean[] k,boolean[] m,Input input,World world)
     {
 
-        if(world.getWm().getCurrentLocalMap().getTiles()[task.getY()][task.getX()].getPlant()==null)
+        Tile tile = world.getWm().getCurrentLocalMap().getTiles()[tasks.get(0).getY()][tasks.get(0).getX()];
+        
+        if(tile.getPlant()==null)
         {
-            task.clearTask();
+            tasks.get(0).clearTask();
             path = null;
             step = 1;
             return;
         }
         
-        if(!world.getWm().getCurrentLocalMap().getTiles()[task.getY()][task.getX()].getPlant().getCurrentName().equals(task.getInfo()))
+        if(!tile.getPlant().getCurrentName().equals(tasks.get(0).getInfo()))
         {
-            task.clearTask();
+            tasks.get(0).clearTask();
             path = null;
             step = 1;
             return;
         }
         
-        if(task.getIndex()!=100&&(!world.getWm().getPlayerInventory().hasItemType(task.getIndex())&&!world.getWm().getPlayerInventory().getEquipment().getMainHandSlot().equipmentIsType(task.getIndex())))
+        if(tasks.get(0).getIndex()!=100&&(!world.getWm().getPlayerInventory().hasItemType(tasks.get(0).getIndex())&&!world.getWm().getPlayerInventory().getEquipment().getMainHandSlot().equipmentIsType(tasks.get(0).getIndex())))
         {
-            world.getAncestor().addText("You do not have the tools to perform this task.");
-            task.clearTask();
+            world.getAncestor().addText("You do not have the tools to perform this tasks.get(0).");
+            tasks.get(0).clearTask();
             path = null;
             step = 1;
             return;
         }
         
-        if(distanceBetween(task.getTarget()) == 1)
+        if(distanceBetween(tasks.get(0).getTarget()) == 1)
         {
             if(world.getWm().getPlayerInventory().getEquipment().getMainHandSlot().getItem() != null)
             {
-                if(!world.getWm().getPlayerInventory().getEquipment().getMainHandSlot().getItem().getProperties().contains(task.getIndex()))
+                if(!world.getWm().getPlayerInventory().getEquipment().getMainHandSlot().getItem().getProperties().contains(tasks.get(0).getIndex()))
                 {
-                    world.getWm().getPlayerInventory().getEquipment().equipEquipmentWithProperty(task.getIndex());
+                    world.getWm().getPlayerInventory().getEquipment().equipEquipmentWithProperty(tasks.get(0).getIndex());
                     world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
                     world.getEquipment_ui().refreshUI();
                 }
             }else
             {
-                world.getWm().getPlayerInventory().getEquipment().equipEquipmentWithProperty(task.getIndex());
+                world.getWm().getPlayerInventory().getEquipment().equipEquipmentWithProperty(tasks.get(0).getIndex());
                 world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
                 world.getEquipment_ui().refreshUI();
             }
@@ -553,8 +624,8 @@ public class Pawn extends Entity
                 current = System.currentTimeMillis();
                 
                 world.getAncestor().addText("You used "+world.getWm().getPlayerInventory().getEquipment().getMainHandSlot().getItem().getName()
-                                            +" on "+ world.getWm().getCurrentLocalMap().getTiles()[task.getY()][task.getX()].getPlant().getCurrentName());
-                world.getWm().getCurrentLocalMap().getTiles()[task.getY()][task.getX()].getPlant().harvest(world.getWm().getPlayerInventory().getEquipment().getMainHandSlot().getItem(), this, world);
+                                            +" on "+ tile.getPlant().getCurrentName());
+                tile.getPlant().harvest(world.getWm().getPlayerInventory().getEquipment().getMainHandSlot().getItem(), this, world);
                 
                 
                 world.moved();
@@ -569,15 +640,15 @@ public class Pawn extends Entity
         {
             if (path == null)
             {
-                if(((Plant)task.getTarget()).getCurrentSolid())
+                if(((Plant)tasks.get(0).getTarget()).getCurrentSolid())
                 {
                     boolean foundPath = false;
                     for(int i=-1;i<=1;i++)
                     {
                         for(int j=-1;j<=1;j++)
                         {
-                            int jy = j+task.getTarget().getY();
-                            int ix = i+task.getTarget().getX();
+                            int jy = j+tasks.get(0).getTarget().getY();
+                            int ix = i+tasks.get(0).getTarget().getX();
                             if(jy>=0&&jy<world.getWm().getCurrentLocalMap().getHeight()-1
                             &&ix>=0&&ix<world.getWm().getCurrentLocalMap().getWidth()-1)
                             {
@@ -593,13 +664,13 @@ public class Pawn extends Entity
                     if(!foundPath)
                     {
                         world.getAncestor().addText("No path can reach the target");
-                        task.clearTask();
+                        tasks.get(0).clearTask();
                         path = null;
                         step = 1;
                     }
                 }else
                 {
-                    calcPath(task.getTarget().getX(), task.getTarget().getY());
+                    calcPath(tasks.get(0).getTarget().getX(), tasks.get(0).getTarget().getY());
                 }
             }
             
@@ -624,39 +695,49 @@ public class Pawn extends Entity
     public void playerPlantSeedLogic(boolean[] k,boolean[] m,Input input,World world)
     {
 
-        if(world.getWm().getCurrentLocalMap().getTiles()[task.getY()][task.getX()].getPlant()!=null)
+        Tile tile = world.getWm().getCurrentLocalMap().getTiles()[tasks.get(0).getY()][tasks.get(0).getX()];
+        Item seed = world.getWm().getPlayerInventory().getItemByName(tasks.get(0).getInfo());
+        if(tile.getPlant()!=null||tile.isSolid()||!seed.getProperties().contains(tile.getType()))
         {
-            task.clearTask();
+            tasks.get(0).clearTask();
             path = null;
             step = 1;
             return;
         }
         
-        if(distanceBetween(task.getX(),task.getY()) <= 1)
+        if(distanceBetween(tasks.get(0).getX(),tasks.get(0).getY()) <= 1)
         {
-            Item seed = world.getWm().getPlayerInventory().getItemByName(task.getInfo());
-            if(seed == null)
+            if(System.currentTimeMillis() - current >= 250)
             {
-                world.getAncestor().addText("You do not have the item for this task.");
+                current = System.currentTimeMillis();
+
                 
-            }else
-            {
-                world.getWm().getCurrentLocalMap().getTiles()[task.getY()][task.getX()].setPlant(world.getWm().getPlayerInventory().getItemByName(task.getInfo()),world);
-                world.getWm().getPlayerInventory().removeItem(seed);
-                world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
+
+            
+                
+                if(seed == null)
+                {
+                    world.getAncestor().addText("You do not have the item for this tasks.get(0).");
+
+                }else
+                {
+                    tile.setPlant(world.getWm().getPlayerInventory().getItemByName(tasks.get(0).getInfo()),world);
+                    world.getWm().getPlayerInventory().removeItem(seed);
+                    world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
+                }
+
+                tasks.get(0).clearTask();
+                path = null;
+                step = 1;
+                world.moved();
+                return;
             }
-            
-            task.clearTask();
-            path = null;
-            step = 1;
-            return;
-            
         }else
         {
             if (path == null)
             {
                 
-                calcPath(task.getX(), task.getY());
+                calcPath(tasks.get(0).getX(), tasks.get(0).getY());
                 
             }
             
@@ -677,54 +758,128 @@ public class Pawn extends Entity
         }
     }
     
+    public void pawnPlantSeedLogic(World world)
+    {
+
+        Tile tile = world.getWm().getCurrentLocalMap().getTiles()[tasks.get(0).getY()][tasks.get(0).getX()];
+        
+        Item seed = inventory.getItemByName(tasks.get(0).getInfo());
+        
+        if(seed == null)
+        {
+            tasks.remove(0);
+            path = null;
+            step = 1;
+            System.out.println(tasks.get(0).getInfo());
+            return;
+        }
+        
+        if(tile.getPlant()!=null||tile.isSolid()||!seed.getProperties().contains(tile.getType()))
+        {
+            tasks.remove(0);
+            path = null;
+            step = 1;
+            return;
+        }
+        
+        if(distanceBetween(tasks.get(0).getX(),tasks.get(0).getY()) <= 1)
+        {
+            if(world.isMoved())
+            {
+                
+                if(seed == null)
+                {
+
+
+                }else
+                {
+                    tile.setPlant(inventory.getItemByName(tasks.get(0).getInfo()),world);
+                    inventory.removeItem(seed);
+
+                }
+
+                tasks.remove(0);
+                path = null;
+                step = 1;
+                return;
+            }
+            
+        }else
+        {
+            if (path == null)
+            {
+                
+                calcPath(tasks.get(0).getX(), tasks.get(0).getY());
+                
+            }
+            
+            if(world.isMoved())
+            {
+                
+                doPath(world.getWm().getCurrentLocalMap());
+                
+
+                if(step == path.getLength())
+                {
+                    path = null;
+                    step = 1;
+                }
+                
+
+            }
+        }
+    }
+    
     
     public void pawnHarvestPlantLogic(World world)
     {
 
-        if(world.getWm().getCurrentLocalMap().getTiles()[task.getY()][task.getX()].getPlant()==null)
+        Tile tile  = world.getWm().getCurrentLocalMap().getTiles()[tasks.get(0).getY()][tasks.get(0).getX()];
+        
+        if(tile.getPlant()==null)
         {
-            task.clearTask();
+            tasks.remove(0);
             path = null;
             step = 1;
             return;
         }
         
-        if(!world.getWm().getCurrentLocalMap().getTiles()[task.getY()][task.getX()].getPlant().getCurrentName().equals(task.getInfo()))
+        if(!tile.getPlant().getCurrentName().equals(tasks.get(0).getInfo()))
         {
-            task.clearTask();
+            tasks.get(0).clearTask();
             path = null;
             step = 1;
             return;
         }
         
-        if(task.getIndex()!=100&&(!inventory.hasItemType(task.getIndex())&&!inventory.getEquipment().getMainHandSlot().equipmentIsType(task.getIndex())))
+        if(tasks.get(0).getIndex()!=100&&(!inventory.hasItemType(tasks.get(0).getIndex())&&!inventory.getEquipment().getMainHandSlot().equipmentIsType(tasks.get(0).getIndex())))
         {
             
-            task.clearTask();
+            tasks.get(0).clearTask();
             path = null;
             step = 1;
             return;
         }
         
-        if(distanceBetween(task.getTarget()) == 1)
+        if(distanceBetween(tasks.get(0).getTarget()) == 1)
         {
             if(inventory.getEquipment().getMainHandSlot().getItem() != null)
             {
-                if(inventory.getEquipment().getMainHandSlot().getItem().getProperties().contains(task.getIndex()))
+                if(inventory.getEquipment().getMainHandSlot().getItem().getProperties().contains(tasks.get(0).getIndex()))
                 {
-                    inventory.getEquipment().equipEquipmentWithProperty(task.getIndex());
+                    inventory.getEquipment().equipEquipmentWithProperty(tasks.get(0).getIndex());
                     
                 }
             }else
             {
-                inventory.getEquipment().equipEquipmentWithProperty(task.getIndex());
+                inventory.getEquipment().equipEquipmentWithProperty(tasks.get(0).getIndex());
                
             }
             
             if(world.isMoved())
             { 
                 
-                world.getWm().getCurrentLocalMap().getTiles()[task.getY()][task.getX()].getPlant().harvest(inventory.getEquipment().getMainHandSlot().getItem(), this, world);
+                tile.getPlant().harvest(inventory.getEquipment().getMainHandSlot().getItem(), this, world);
                 
                 
 
@@ -738,15 +893,15 @@ public class Pawn extends Entity
         {
             if (path == null)
             {
-                if(((Plant)task.getTarget()).getCurrentSolid())
+                if(((Plant)tasks.get(0).getTarget()).getCurrentSolid())
                 {
                     boolean foundPath = false;
                     for(int i=-1;i<=1;i++)
                     {
                         for(int j=-1;j<=1;j++)
                         {
-                            int jy = j+task.getTarget().getY();
-                            int ix = i+task.getTarget().getX();
+                            int jy = j+tasks.get(0).getTarget().getY();
+                            int ix = i+tasks.get(0).getTarget().getX();
                             if(jy>=0&&jy<world.getWm().getCurrentLocalMap().getHeight()-1
                             &&ix>=0&&ix<world.getWm().getCurrentLocalMap().getWidth()-1)
                             {
@@ -762,13 +917,13 @@ public class Pawn extends Entity
                     if(!foundPath)
                     {
                         
-                        task.clearTask();
+                        tasks.get(0).clearTask();
                         path = null;
                         step = 1;
                     }
                 }else
                 {
-                    calcPath(task.getTarget().getX(), task.getTarget().getY());
+                    calcPath(tasks.get(0).getTarget().getX(), tasks.get(0).getTarget().getY());
                 }
             }
             
@@ -791,31 +946,31 @@ public class Pawn extends Entity
     
     public void pawnGrabItemLogic(World world)
     {
-        if(task.getTarget() == null)
+        if(tasks.get(0).getTarget() == null)
         {
-            task.setTarget(world.getWm().getCurrentLocalMap().getItemPileById(task.getId()));
+            tasks.get(0).setTarget(world.getWm().getCurrentLocalMap().getItemPileById(tasks.get(0).getId()));
         }
         
-        if(!task.getTarget().hasItem(task.getInfo()))
+        if(!tasks.get(0).getTarget().hasItem(tasks.get(0).getInfo()))
         {
-            task.clearTask();
+            tasks.get(0).clearTask();
             path = null;
             return;
         }
         
-        if(distanceBetween(task.getTarget()) == 0)
+        if(distanceBetween(tasks.get(0).getTarget()) == 0)
         {
             if (world.getWm().getCurrentLocalMap().getItemPileAt(x, y) != null)
             {
 
                 
-                    if (world.getWm().getCurrentLocalMap().getItemPileAt(x, y).getId() == task.getId())
+                    if (world.getWm().getCurrentLocalMap().getItemPileAt(x, y).getId() == tasks.get(0).getId())
                     {
 
 
-                        world.getWm().getCurrentLocalMap().getItemPileAt(x, y).takeFrom(inventory, task.getInfo(), world.getWm().getCurrentLocalMap(), -1);
+                        world.getWm().getCurrentLocalMap().getItemPileAt(x, y).takeFrom(inventory, tasks.get(0).getInfo(), world.getWm().getCurrentLocalMap(), -1);
         //                            world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
-                        task.clearTask();
+                        tasks.get(0).clearTask();
                         path = null;
                         world.moved();
                     }
@@ -825,7 +980,7 @@ public class Pawn extends Entity
         {
             if (path == null)
             {
-                calcPath(task.getTarget().getX(), task.getTarget().getY());
+                calcPath(tasks.get(0).getTarget().getX(), tasks.get(0).getTarget().getY());
             }
             
             if(world.isMoved())
@@ -847,40 +1002,40 @@ public class Pawn extends Entity
     
     public void pawnSearchItemLogic(World world)
     {
-        if(task.getTarget() == null)
+        if(tasks.get(0).getTarget() == null)
         {
-            ArrayList<ItemPile> ips = world.getWm().getCurrentLocalMap().getItemPilesWithItemByName(task.getInfo());
+            ArrayList<ItemPile> ips = world.getWm().getCurrentLocalMap().getItemPilesWithItemByName(tasks.get(0).getInfo());
             if(ips.isEmpty())
             {
-                task.clearTask();
+                tasks.get(0).clearTask();
             }
             int itemPileID = getClosestItemPile(ips);
             
-            task.setId(itemPileID);
-            task.setTarget(world.getWm().getCurrentLocalMap().getItemPileById(task.getId()));
+            tasks.get(0).setId(itemPileID);
+            tasks.get(0).setTarget(world.getWm().getCurrentLocalMap().getItemPileById(tasks.get(0).getId()));
             
         }
         
-        if(!task.getTarget().hasItem(task.getInfo()))
+        if(!tasks.get(0).getTarget().hasItem(tasks.get(0).getInfo()))
         {
-            task.clearTask();
+            tasks.get(0).clearTask();
             path = null;
             return;
         }
         
-        if(distanceBetween(task.getTarget()) == 0)
+        if(distanceBetween(tasks.get(0).getTarget()) == 0)
         {
             if (world.getWm().getCurrentLocalMap().getItemPileAt(x, y) != null)
             {
 
                 
-                    if (world.getWm().getCurrentLocalMap().getItemPileAt(x, y).getId() == task.getId())
+                    if (world.getWm().getCurrentLocalMap().getItemPileAt(x, y).getId() == tasks.get(0).getId())
                     {
 
 
-                        world.getWm().getCurrentLocalMap().getItemPileAt(x, y).takeFrom(inventory, task.getInfo(), world.getWm().getCurrentLocalMap(), -1);
+                        world.getWm().getCurrentLocalMap().getItemPileAt(x, y).takeFrom(inventory, tasks.get(0).getInfo(), world.getWm().getCurrentLocalMap(), -1);
         //                            world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
-                        task.clearTask();
+                        tasks.get(0).clearTask();
                         path = null;
                         world.moved();
                     }
@@ -890,7 +1045,7 @@ public class Pawn extends Entity
         {
             if (path == null)
             {
-                calcPath(task.getTarget().getX(), task.getTarget().getY());
+                calcPath(tasks.get(0).getTarget().getX(), tasks.get(0).getTarget().getY());
             }
             
             if(world.isMoved())
@@ -913,7 +1068,7 @@ public class Pawn extends Entity
     public void playerCraftingLogic(boolean[] k,boolean[] m,Input input,World world)
     {
         if (k[255] || (m[19] && world.getZ() != world.getCraftingWindow().getZ())) {
-            task.clearTask();
+            tasks.get(0).clearTask();
             path = null;
             world.getWm().getPlayerInventory().getCrafting().clearCraftingTarget();
         }
@@ -922,7 +1077,7 @@ public class Pawn extends Entity
             current = System.currentTimeMillis();
             world.getWm().getPlayerInventory().getCrafting().craft();
             if (world.getWm().getPlayerInventory().getCrafting().finishedCrafting()) {
-                task.clearTask();
+                tasks.get(0).clearTask();
                 path = null;
                 world.getCrafting_ui().refreshUI(world.getWm().getCurrentLocalMap());
                 world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
@@ -935,21 +1090,21 @@ public class Pawn extends Entity
     
     public void playerMoveToTalkLogic(boolean[] k,boolean[] m,Input input,World world)
     {
-        if(task.getTarget() == null)
+        if(tasks.get(0).getTarget() == null)
         {
-            task.setTarget(world.getWm().getCurrentLocalMap().getPawnById(task.getId()));
+            tasks.get(0).setTarget(world.getWm().getCurrentLocalMap().getPawnById(tasks.get(0).getId()));
         }
-        if(distanceBetween(task.getTarget()) <= 1)
+        if(distanceBetween(tasks.get(0).getTarget()) <= 1)
         {
             world.getDialogue().switchDialog(6, world);
             world.getDialogue().display();
-            task.clearTask();
+            tasks.get(0).clearTask();
             path = null;
         }else
         {
             if (path == null)
             {
-                calcPath(task.getTarget().getX(), task.getTarget().getY());
+                calcPath(tasks.get(0).getTarget().getX(), tasks.get(0).getTarget().getY());
             }
             
             if(System.currentTimeMillis() - current >= 250)
@@ -968,6 +1123,35 @@ public class Pawn extends Entity
             }
 
         }
+    }
+    
+    public boolean isSameFaction(SubFaction sf,ArrayList<SubFaction> sfs)
+    {
+        if(sfs.isEmpty())
+        {
+            return false;
+        }
+        for(SubFaction s:sfs)
+        {
+            if(s.getSubFactionName().equals(sf))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public void removeTask()
+    {
+        if(tasks.size()>1)
+        {
+            tasks.remove(0);
+        }
+    }
+    
+    public Task getCurrentTask()
+    {
+        return tasks.get(0);
     }
 
     public Path getPath() {
@@ -996,13 +1180,7 @@ public class Pawn extends Entity
 
     
 
-    public Task getTask() {
-        return task;
-    }
 
-    public void setTask(Task task) {
-        this.task = task;
-    }
 
     public IFovAlgorithm getFov() {
         return fov;
@@ -1055,6 +1233,36 @@ public class Pawn extends Entity
     @Override
     public boolean hasItem(String name) {
         return true;
+    }
+
+    public ArrayList<Task> getTasks()
+    {
+        return tasks;
+    }
+
+    public void setTasks(ArrayList<Task> tasks)
+    {
+        this.tasks = tasks;
+    }
+
+    public ArrayList<String> getRecipes()
+    {
+        return recipes;
+    }
+
+    public void setRecipes(ArrayList<String> recipes)
+    {
+        this.recipes = recipes;
+    }
+
+    public ArrayList<SubFaction> getSubFactions()
+    {
+        return subFactions;
+    }
+
+    public void setSubFactions(ArrayList<SubFaction> subFactions)
+    {
+        this.subFactions = subFactions;
     }
 
     

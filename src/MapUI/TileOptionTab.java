@@ -98,18 +98,18 @@ public class TileOptionTab extends OptionTab
                 }
                 break;
             case 5:
-                lm.getPlayer().setTask(new Task(0,0,options.get(hoveringIndex).getId(),0,"talk_to_target"));
+                lm.getPlayer().addTask(new Task(0,0,options.get(hoveringIndex).getId(),0,"talk_to_target"));
                 break;
             case 6:
                 task = new Task(t.getX(),t.getY(),t.getPlant().getId(),options.get(hoveringIndex).getId(),"harvest_plant");
                 task.setTarget(t.getPlant());
                 task.setInfo(t.getPlant().getCurrentName());
-                lm.getPlayer().setTask(task);
+                lm.getPlayer().addTask(task);
                 break;
             case 7:
                 task = new Task(t.getX(),t.getY(),0,0,"plant_seed");
                 task.setInfo(options.get(hoveringIndex).getInfo());
-                lm.getPlayer().setTask(task);
+                lm.getPlayer().addTask(task);
                 break;
                 
         }

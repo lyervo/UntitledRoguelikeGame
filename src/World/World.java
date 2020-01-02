@@ -10,6 +10,7 @@ import Entity.EntityLibrary;
 import CraftingUI.CraftingButton;
 import CraftingUI.CraftingUI;
 import CraftingUI.CraftingUIWindow;
+import Culture.CultureManager;
 import Dialogue.DialogueLibrary;
 import Dialogue.DialogueWindow;
 import Entity.Furniture;
@@ -112,13 +113,23 @@ public class World
     private DialogueWindow dialogue;
     private DialogueLibrary dialogueLibrary;
     
+    
+    private CultureManager cm;
+    
+    
+    
     private boolean consoleActive;
     private GameConsole gameConsole;
    
     
     
+    
+    
     public World(Res res,GameContainer container,Input input)
     {
+        
+        cm = new CultureManager();
+        
         this.z = 0;
         hoveringWindow = false;
         entityLibrary = new EntityLibrary(res);
@@ -810,6 +821,16 @@ public class World
     public void setGameConsole(GameConsole gameConsole)
     {
         this.gameConsole = gameConsole;
+    }
+
+    public CultureManager getCm()
+    {
+        return cm;
+    }
+
+    public void setCm(CultureManager cm)
+    {
+        this.cm = cm;
     }
     
     

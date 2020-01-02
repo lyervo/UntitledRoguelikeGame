@@ -231,7 +231,7 @@ public class GameConsole
                 
                 for(Pawn p:ps)
                 {
-                    p.setTask(task);
+                    p.addTask(task);
                 }
                 break;
             default:
@@ -393,6 +393,34 @@ public class GameConsole
                 addLine("Invalid parameter 3");
                 return null;
             }
+        }else if(token[2].equals("plantSeed"))
+        {
+            try
+            {
+                int x = Integer.parseInt(token[3]);
+                int y = Integer.parseInt(token[4]);
+                
+                
+                task = new Task(x,y,0,0,"plant_seed");
+                String seedName = "";
+                for(int i=5;i<token.length;i++)
+                {
+                    if(i==5)
+                    {
+                        seedName = token[i];
+                    }else
+                    {
+                        seedName += " "+token[i];
+                    }
+                }
+                task.setInfo(seedName);
+            }catch(NumberFormatException e)
+            {
+                addLine("Invalid parameter 3 or 2");
+            }
+            
+            
+            
         }
         
         return task;
@@ -438,7 +466,7 @@ public class GameConsole
                 {
                     addLine("id"+p.getId()+"   name:"+p.getName());
                     
-                    addLine("Current task:  "+p.getTask().getType()+"  target:"+p.getTask().getId()+"   index:"+p.getTask().getIndex()+"   info:"+p.getTask().getInfo());
+                    addLine("Current task:  "+p.getCurrentTask().getType()+"  target:"+p.getCurrentTask().getId()+"   index:"+p.getCurrentTask().getIndex()+"   info:"+p.getCurrentTask().getInfo());
                     addLine("| Items:");
                     if(p.isControl())
                     {

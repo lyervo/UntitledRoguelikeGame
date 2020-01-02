@@ -18,6 +18,9 @@ public class Task
     private String info;
     private int priority;
     
+    
+    
+    
     //type
     //nothing
     //grab_item
@@ -33,8 +36,80 @@ public class Task
         this.id = id;
         this.index = index;
         this.type = type;
+        determinePriority();
     }
-
+    
+    public void setTask(Task task)
+    {
+        this.x = task.getX();
+        this.y = task.getY();
+        this.id = task.getId();
+        this.index = task.getIndex();
+        this.type = task.getType();
+        this.priority = task.getPriority();
+    }
+    
+    public void determinePriority()
+    {
+        switch(type)
+        {
+            case "nothing":
+                priority = 0;
+                break;
+            case "plant_seed":
+                priority = 1;
+                break;
+            case "harvest_plant":
+                priority = 2;
+                break;
+            case "grab_item":
+                priority = 3;
+                break;
+            case "craft":
+                priority = 4;
+                break;
+            case "follow_target":
+                priority = 5;
+                break;
+            case "walk_to":
+                priority = 5;
+            case "maintain":
+                priority = 1;
+                break;
+            case "plant_seed_on_farmland":
+                priority = 2;
+                break;
+            case "find":
+                priority = 3;
+                break;
+            case "search_item":
+                priority = 4;
+                break;
+            case "buy_item":
+                priority = 4;
+                break;
+            case "manage_farm":
+                priority = 5;
+                break;
+            case "protect_land":
+                priority = 8;
+                break;
+            case "call_guards":
+                priority = 9;
+                break;
+            case "fufill_need":
+                priority = 7;
+                break;
+            case "beg_or_buy":
+                priority = 8;
+                break;
+            case "rest":
+                priority = 6;
+                break;
+            
+        }
+    }
+    
     public void clearTask()
     {
         this.x = 0;
@@ -43,6 +118,7 @@ public class Task
         this.index = 0;
         this.target = null;
         this.type = "nothing";
+        this.priority = 0;
     }
     
     public void setCordsToTarget()
@@ -106,6 +182,17 @@ public class Task
     public void setInfo(String info) {
         this.info = info;
     }
+
+    public int getPriority()
+    {
+        return priority;
+    }
+
+    public void setPriority(int priority)
+    {
+        this.priority = priority;
+    }
+    
     
     
     

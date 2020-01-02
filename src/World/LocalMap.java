@@ -139,7 +139,9 @@ public class LocalMap implements TileBasedMap, ILosBoard
             p.getInventory().getCrafting().getNearbyStations(this);
         }
         
-        
+        getPawnById(9).getSubFactions().add(world.getCm().getSubFactionByName("House Hora"));
+        getPawnById(9).getSubFactions().add(world.getCm().getSubFactionByName("Honest man farm"));
+        world.getCm().getSubFactionByName("Honest man farm").getZones().add(new Zone(0,0,5,4,this.id));
     }
     
     

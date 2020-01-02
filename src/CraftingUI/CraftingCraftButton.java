@@ -36,7 +36,7 @@ public class CraftingCraftButton extends Button
         if(crafting.getSelectIndex()!=-1)
         {
             crafting.clearCraftingTarget();
-            world.getWm().getPlayer().setTask(new Task(0,0,-1,-1,"craft"));
+            world.getWm().getPlayer().addTask(new Task(0,0,-1,-1,"craft"));
             crafting.setCraftingTarget();
             world.getCrafting_ui().refreshUI(world.getWm().getCurrentLocalMap());
             world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
