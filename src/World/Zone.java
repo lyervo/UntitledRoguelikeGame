@@ -6,6 +6,8 @@
 package World;
 
 import Entity.Entity;
+import Entity.Plant.Plant;
+import java.util.ArrayList;
 
 
 /**
@@ -15,15 +17,86 @@ import Entity.Entity;
 public class Zone
 {
     
-    int x,y,width,height,id;
+    private int x,y,width,height,mapId;
     
-    public Zone(int x,int y,int width,int height,int id)
+    private static int ID = 0;
+    private int zoneId;
+    
+    //plants in this zone
+    private ArrayList<Plant> plants;
+    
+    private String plantName;
+    
+    private int type;
+    //1 - House
+    //2 - Shop
+    //3 - 
+    //4 - Farm
+    
+    
+    public Zone(int x,int y,int width,int height,int mapId,int type)
     {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.id = id;
+        this.mapId = mapId;
+        zoneId = ID;
+        ID++;
+        plants = new ArrayList<Plant>();
+       
+    }
+    
+    public Zone(int x,int y,int width,int height,int mapId,String plantName)
+    {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.mapId = mapId;
+        this.type = 4;
+        this.plantName = plantName;
+        zoneId = ID;
+        ID++;
+        plants = new ArrayList<Plant>();
+    }
+    
+    public boolean notEnoughPlants(String name)
+    {
+        if(plants.size()<((width*height)/2))
+        {
+            return true;
+        }else
+        {
+            int count = 0;
+            for(Plant p:plants)
+            {
+                if(p.getPlantTemplate().getName().equals(name))
+                {
+                    count++;
+                }
+            }
+            return count < (width*height)/2;
+        }
+    }
+    
+    public boolean notEnoughPlants()
+    {
+        if(plants.size()<((width*height)/2))
+        {
+            return true;
+        }else
+        {
+            int count = 0;
+            for(Plant p:plants)
+            {
+                if(p.getPlantTemplate().getName().equals(plantName))
+                {
+                    count++;
+                }
+            }
+            return count < (width*height)/2;
+        }
     }
 
     public boolean isWithinZone(Entity entity)
@@ -71,14 +144,64 @@ public class Zone
         this.height = height;
     }
 
-    public int getId()
+    public int getMapId()
     {
-        return id;
+        return mapId;
     }
 
-    public void setId(int id)
+    public void setMapId(int id)
     {
-        this.id = id;
+        this.mapId = id;
+    }
+
+    public static int getID()
+    {
+        return ID;
+    }
+
+    public static void setID(int ID)
+    {
+        Zone.ID = ID;
+    }
+
+    public int getZoneId()
+    {
+        return zoneId;
+    }
+
+    public void setZoneId(int zoneId)
+    {
+        this.zoneId = zoneId;
+    }
+
+    public ArrayList<Plant> getPlants()
+    {
+        return plants;
+    }
+
+    public void setPlants(ArrayList<Plant> plants)
+    {
+        this.plants = plants;
+    }
+
+    public String getPlantName()
+    {
+        return plantName;
+    }
+
+    public void setPlantName(String plantName)
+    {
+        this.plantName = plantName;
+    }
+
+    public int getType()
+    {
+        return type;
+    }
+
+    public void setType(int type)
+    {
+        this.type = type;
     }
     
     

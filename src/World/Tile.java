@@ -190,6 +190,12 @@ public class Tile {
     {
         lm.getPlants().remove(plant);
         plant = null;
+        if(lm.getPlayer().distanceBetween(x, y)<6)
+        {
+            lm.getPlayer().resetVisit(lm.getWorld());
+        }
+        
+        
     }
     
     public void setPlant(PlantTemplate pt)
@@ -197,6 +203,17 @@ public class Tile {
         lm.getPlants().remove(plant);
         plant = new Plant(0,x,y,pt,this);
         lm.getPlants().add(plant);
+        for(Zone z:lm.getZones())
+        {
+            if(z.isWithinZone(plant))
+            {
+                z.getPlants().add(plant);
+            }
+        }
+        if(lm.getPlayer().distanceBetween(x, y)<6)
+        {
+            lm.getPlayer().resetVisit(lm.getWorld());
+        }
     }
 
     public void setPlant(Item seed,World world)
@@ -224,11 +241,20 @@ public class Tile {
                 plantName += " "+token[i];
             }
         }
-        System.out.println(" the plant name is "+plantName);
         
         this.plant = new Plant(0,x,y,world.getEntityLibrary().getPlantTemplateByName(plantName),this);
         lm.getPlants().add(plant);
-       
+        for(Zone z:lm.getZones())
+        {
+            if(z.isWithinZone(plant))
+            {
+                z.getPlants().add(plant);
+            }
+        }
+        if(lm.getPlayer().distanceBetween(x, y)<6)
+        {
+            lm.getPlayer().resetVisit(lm.getWorld());
+        }
         
     }
     

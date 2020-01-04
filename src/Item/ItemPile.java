@@ -29,6 +29,21 @@ public class ItemPile extends Entity
         items = new ArrayList<Item>();
         items.add(item);
     }
+    
+    public ItemPile(int id, int x, int y, Item item,int stack)
+    {
+        super(id, x, y, item.getTexture());
+        items = new ArrayList<Item>();
+        if(item.isStackable())
+        {
+            item.setStack(stack);
+        }
+        items.add(item);
+    }
+    
+    
+    
+    
 
     @Override
     public void tick(boolean[] k, boolean[] m, Input input, World world)
@@ -133,7 +148,19 @@ public class ItemPile extends Entity
         }
     }
 
-
+    public Item getItemByType(int type)
+    {
+        for(Item i:items)
+        {
+            if(i.getProperties().contains(type))
+            {
+                return i;
+            }
+        }
+        return null;
+    }
+    
+    
     public ArrayList<Item> getItems() {
         return items;
     }
@@ -148,6 +175,20 @@ public class ItemPile extends Entity
         for(int i=0;i<items.size();i++)
         {
             if(items.get(i).getTrueName().equals(name))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    
+    @Override
+    public boolean hasItem(int type)
+    {
+        for(int i=0;i<items.size();i++)
+        {
+            if(items.get(i).getProperties().contains(type))
             {
                 return true;
             }

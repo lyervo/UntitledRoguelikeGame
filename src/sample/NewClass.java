@@ -13,13 +13,7 @@ public class NewClass
 {
     public static void main(String[] args)
     {
-        int tick = 0;
-        long last = System.currentTimeMillis();
-        while(System.currentTimeMillis()-last<1000)
-        {
-            tick++;
-        }
-        System.out.println(tick);
+        System.out.println(7/5);
         
     }
 }

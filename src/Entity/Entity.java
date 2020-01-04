@@ -57,7 +57,15 @@ public abstract class Entity
     
     public abstract void tick(boolean[] k,boolean[] m,Input input,World world);
     
-    public abstract boolean hasItem(String name);
+    public boolean hasItem(String name)
+    {
+        return false;
+    }
+    
+    public boolean hasItem(int type)
+    {
+        return false;
+    }
     
     public void render(Camera cam,LocalMap map,boolean animate)
     {

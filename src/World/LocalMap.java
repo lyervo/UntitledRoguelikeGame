@@ -6,6 +6,7 @@
 package World;
 
 import Camera.Camera;
+import Culture.SubFaction;
 import Entity.Entity;
 import Entity.Furniture;
 import Entity.Pawn;
@@ -68,6 +69,10 @@ public class LocalMap implements TileBasedMap, ILosBoard
     
     private ArrayList<Plant> plants;
     
+    private ArrayList<Zone> zones;
+    
+    private ArrayList<SubFaction> subFactions;
+    
     public LocalMap(int id,int width,int height,Res res,World world,GameContainer container,ItemLibrary itemLibrary)
     {
         this.wm = world.getWm();
@@ -84,7 +89,9 @@ public class LocalMap implements TileBasedMap, ILosBoard
         
         plants = new ArrayList<Plant>();
         
-        
+        Zone z1 = new Zone(0,0,10,5,this.id,"Tree");
+        zones = new ArrayList<Zone>();
+        zones.add(z1);
         
         
         furnitures = new ArrayList<Furniture>();
@@ -95,7 +102,7 @@ public class LocalMap implements TileBasedMap, ILosBoard
         
         generateTiles();
         
-        spawnPlant(5,5,"Tree");
+        
         
         hoveringTab = false;
         fov = new PrecisePermissive();
@@ -108,7 +115,9 @@ public class LocalMap implements TileBasedMap, ILosBoard
         itemPiles.add(new ItemPile(3,4,0,itemLibrary.getItemByTrueName("Poison")));
         itemPiles.add(new ItemPile(4,3,0,itemLibrary.getItemByTrueName("Healing Potion")));
         
+        itemPiles.add(new ItemPile(2,6,6,itemLibrary.getItemByTrueName("Steel Axe")));
         
+        itemPiles.add(new ItemPile(2,10,6,itemLibrary.getItemByTrueName("Tree Seed"),10));
         
         pawns = new ArrayList<Pawn>();
         
@@ -122,8 +131,8 @@ public class LocalMap implements TileBasedMap, ILosBoard
         
         pf = new AStarPathFinder(this,100,true);
         
-        pawns.add(new Pawn(2,2,2,res.human2,fov,"Adam",world.getItemLibrary()));
-        pawns.add(new Pawn(0,3,5,res.human2,fov,"Henry",world.getItemLibrary()));
+        pawns.add(new Pawn(2,2,2,res.human2,fov,"Adam",world.getItemLibrary(),"Farmer"));
+        pawns.add(new Pawn(0,3,5,res.human2,fov,"Henry",world.getItemLibrary(),"Farmer"));
        
         optionTab = null;
         
@@ -141,7 +150,25 @@ public class LocalMap implements TileBasedMap, ILosBoard
         
         getPawnById(9).getSubFactions().add(world.getCm().getSubFactionByName("House Hora"));
         getPawnById(9).getSubFactions().add(world.getCm().getSubFactionByName("Honest man farm"));
-        world.getCm().getSubFactionByName("Honest man farm").getZones().add(new Zone(0,0,5,4,this.id));
+        spawnPlant(5,5,"Tree");
+
+        
+        world.getCm().getSubFactionByName("Honest man farm").getZones().add(zones.get(0));
+        
+        subFactions = new ArrayList<SubFaction>();
+        for(Pawn p:pawns)
+        {
+            for(SubFaction sf: p.getSubFactions())
+            {
+                if(!subFactions.contains(sf))
+                {
+                    subFactions.add(sf);
+                }
+            }
+        }
+        pawns.get(1).getSubFactions().add(world.getCm().getSubFactionByName("Honest man farm"));
+        pawns.get(2).getSubFactions().add(world.getCm().getSubFactionByName("Honest man farm"));
+        
     }
     
     
@@ -183,9 +210,18 @@ public class LocalMap implements TileBasedMap, ILosBoard
         }
         
         
+        
         for(Entity e:pawns)
         {
             e.tick(k, m,input, world);
+        }
+        
+        if(world.isMoved())
+        {
+            for(SubFaction sf:subFactions)
+            {
+                sf.tick(world);
+            }
         }
         
         for(Furniture f:furnitures)
@@ -233,6 +269,8 @@ public class LocalMap implements TileBasedMap, ILosBoard
        
     }
     
+    
+
     public void render(Graphics g,boolean animate)
     {
         
@@ -388,6 +426,64 @@ public class LocalMap implements TileBasedMap, ILosBoard
         }
         return ips;
     }
+    
+    public ArrayList<ItemPile> getItemPilesWithItemByType(int type)
+    {
+        ArrayList<ItemPile> ips = new ArrayList<ItemPile>();
+        for(ItemPile ip:itemPiles)
+        {
+            if(ip.hasItem(type))
+            {
+                ips.add(ip);
+            }
+        }
+        return ips;
+    }
+    
+    public ArrayList<Pawn> getPawnsBySubFaction(SubFaction sf)
+    {
+        ArrayList<Pawn> results = new ArrayList<Pawn>();
+        for(Pawn p:pawns)
+        {
+            if(p.isControl())
+            {
+                continue;
+            }
+            
+            for(SubFaction subF:p.getSubFactions())
+            {
+                if(subF.getSubFactionName().equals(sf.getSubFactionName()))
+                {
+                    results.add(p);
+                }
+            }
+        }
+        return results;
+    }
+    
+    public ArrayList<Pawn> getPawnsBySubFactionAndJobTitle(SubFaction sf,String jobTitle)
+    {
+        ArrayList<Pawn> results = new ArrayList<Pawn>();
+        for(Pawn p:pawns)
+        {
+            
+            if(!p.getJobTitle().equals(jobTitle)||p.isControl())
+            {
+                continue;
+            }
+           
+            
+            for(SubFaction subF:p.getSubFactions())
+            {
+                if(subF.getSubFactionName().equals(sf.getSubFactionName()))
+                {
+                   
+                    results.add(p);
+                }
+            }
+        }
+        return results;
+    }
 
     @Override
     public int getWidthInTiles()
@@ -521,6 +617,37 @@ public class LocalMap implements TileBasedMap, ILosBoard
     }
     
     
+    public int countAccessibleTiles(int x,int y)
+    {
+        int result = 0;
+        for(int i=-1;i<=1;i++)
+        {
+            for(int j=-1;j<=1;j++)
+            {
+                if(isAccessible(x+i,y+j))
+                {
+                    result++;
+                }
+            }
+            
+        }
+        return result;
+        
+    }
+    
+    public boolean isAccessible(int x,int y)
+    {
+        if(x<0||y<0||x>width||y>height)
+        {
+            return false;
+        }else
+        {
+            return !tiles[y][x].isSolid();
+        }
+        
+    }
+    
+    
     @Override
     public boolean contains(int x, int y) {
         
@@ -544,6 +671,18 @@ public class LocalMap implements TileBasedMap, ILosBoard
         }
     }
 
+    public Zone getZoneById(int id)
+    {
+        for(Zone z:zones)
+        {
+            if(z.getZoneId() == id)
+            {
+                return z;
+            }
+        }
+        return null;
+    }
+    
     @Override
     public void visit(int x, int y)
     {
@@ -670,6 +809,16 @@ public class LocalMap implements TileBasedMap, ILosBoard
     public void setPlants(ArrayList<Plant> plants)
     {
         this.plants = plants;
+    }
+
+    public ArrayList<Zone> getZones()
+    {
+        return zones;
+    }
+
+    public void setZones(ArrayList<Zone> zones)
+    {
+        this.zones = zones;
     }
     
    

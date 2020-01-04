@@ -152,10 +152,28 @@ public class GameConsole
             case "spawnEntity":
                 spawnEntity(token);
                 break;
+            case "countAccessibleTiles":
+                countAccessibleTiles(token);
+                break;
             default:
                 addLine("Unknown command line");
                 break;
         }
+        
+    }
+    
+    public void countAccessibleTiles(String[] token)
+    {
+        Pair<Integer,Integer> coords;
+        switch(token[1])
+        {
+            case "mouse":
+                coords = getCoordinatesByMousePos();
+                int result = world.getWm().getCurrentLocalMap().countAccessibleTiles(coords.getKey(), coords.getValue());
+                addLine(result+" tile(s) accessible");
+                break;
+        }
+        
         
     }
     
@@ -421,6 +439,59 @@ public class GameConsole
             
             
             
+        }else if(token[2].equals("plantSeedInZone"))
+        {
+            try
+            {
+                int zoneId = Integer.parseInt(token[3]);
+                
+                
+                task = new Task(0,0,0,0,"plant_seed_in_zone");
+                String seedName = "";
+                for(int i=4;i<token.length;i++)
+                {
+                    if(i==4)
+                    {
+                        seedName = token[i];
+                    }else
+                    {
+                        seedName += " "+token[i];
+                    }
+                }
+                task.setInfo(seedName);
+                task.setZone(world.getWm().getCurrentLocalMap().getZoneById(zoneId));
+            }catch(NumberFormatException e)
+            {
+                addLine("Invalid parameter 2");
+                return null;
+            }
+        }else if(token[2].equals("manageFarm"))
+        {
+            try
+            {
+                int zoneId = Integer.parseInt(token[3]);
+                
+                
+                task = new Task(0,0,0,0,"manage_farm");
+                
+                task.setZone(world.getWm().getCurrentLocalMap().getZoneById(zoneId));
+                String pName = "";
+                for(int i=4;i<token.length;i++)
+                {
+                    if(i==4)
+                    {
+                        pName = token[i];
+                    }else
+                    {
+                        pName += " "+token[i];
+                    }
+                }
+                task.setInfo(pName);
+            }catch(NumberFormatException e)
+            {
+                addLine("Invalid parameter 2");
+                return null;
+            }
         }
         
         return task;
@@ -465,8 +536,11 @@ public class GameConsole
                 for(Pawn p:pawns)
                 {
                     addLine("id"+p.getId()+"   name:"+p.getName());
-                    
-                    addLine("Current task:  "+p.getCurrentTask().getType()+"  target:"+p.getCurrentTask().getId()+"   index:"+p.getCurrentTask().getIndex()+"   info:"+p.getCurrentTask().getInfo());
+                    addLine("Tasks:");
+                    for(Task task:p.getTasks())
+                    {
+                        addLine(task.getType()+"   priority:"+task.getPriority()+"  target:"+task.getId()+"   index:"+task.getIndex()+"   info:"+task.getInfo());
+                    }
                     addLine("| Items:");
                     if(p.isControl())
                     {

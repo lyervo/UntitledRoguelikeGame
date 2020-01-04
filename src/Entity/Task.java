@@ -5,6 +5,9 @@
  */
 package Entity;
 
+import World.Zone;
+import java.util.Objects;
+
 /**
  *
  * @author Timot
@@ -18,7 +21,7 @@ public class Task
     private String info;
     private int priority;
     
-    
+    private Zone zone;
     
     
     //type
@@ -39,6 +42,15 @@ public class Task
         determinePriority();
     }
     
+    public Task(int x, int y, int id, int index,String type,int priority) 
+    {
+        this.x = x;
+        this.y = y;
+        this.id = id;
+        this.index = index;
+        this.type = type;
+    }
+    
     public void setTask(Task task)
     {
         this.x = task.getX();
@@ -57,10 +69,10 @@ public class Task
                 priority = 0;
                 break;
             case "plant_seed":
-                priority = 1;
+                priority = 5;
                 break;
             case "harvest_plant":
-                priority = 2;
+                priority = 7;
                 break;
             case "grab_item":
                 priority = 3;
@@ -76,20 +88,23 @@ public class Task
             case "maintain":
                 priority = 1;
                 break;
-            case "plant_seed_on_farmland":
+            case "plant_seed_in_zone":
                 priority = 2;
                 break;
             case "find":
                 priority = 3;
                 break;
             case "search_item":
-                priority = 4;
+                priority = 6;
+                break;
+            case "search_item_type":
+                priority = 8;
                 break;
             case "buy_item":
                 priority = 4;
                 break;
             case "manage_farm":
-                priority = 5;
+                priority = 8;
                 break;
             case "protect_land":
                 priority = 8;
@@ -108,6 +123,55 @@ public class Task
                 break;
             
         }
+    }
+    
+    @Override
+    public boolean equals(Object object)
+    {
+
+        if (object != null && object instanceof Task)
+        {
+            Task t = (Task)object;
+            if(!(x==t.getX()&&y==t.getY()&&id==t.getId()&&index==t.getIndex()&&type.equals(t.getType())))
+            {
+                return false;
+            }
+            
+            if(t.getTarget()!=null&&target!=null)
+            {
+                if(!target.equals(t.getTarget()))
+                {
+                    System.out.println("target equal false called");
+                    return false;
+                }
+            }else if(t.getTarget()!=null||target!=null)
+            {
+                return false;
+            }
+            
+            if(t.getInfo()!=null&&info!=null)
+            {
+                if(!info.equals(t.getInfo()))
+                {
+                    System.out.println(type+"+"+info+"  vs  "+t.getType()+"+"+t.getInfo());
+                    System.out.println("info equal false called");
+                    return false;
+                }
+            }else if(t.getInfo()!=null||info!=null)
+            {
+                return false;
+            }
+            
+            
+            
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x,y,id,index,target,type,priority);
     }
     
     public void clearTask()
@@ -191,6 +255,16 @@ public class Task
     public void setPriority(int priority)
     {
         this.priority = priority;
+    }
+
+    public Zone getZone()
+    {
+        return zone;
+    }
+
+    public void setZone(Zone zone)
+    {
+        this.zone = zone;
     }
     
     

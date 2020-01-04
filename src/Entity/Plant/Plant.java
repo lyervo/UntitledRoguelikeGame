@@ -12,6 +12,7 @@ import Item.Item;
 import World.LocalMap;
 import World.Tile;
 import World.World;
+import World.Zone;
 import java.util.ArrayList;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SpriteSheet;
@@ -34,6 +35,7 @@ public class Plant extends Entity
     
     private Tile tile;
     
+    
     public Plant(int id, int x, int y, PlantTemplate template,Tile tile)
     {
         super(id, x, y, template.getSprites(), false);
@@ -53,7 +55,7 @@ public class Plant extends Entity
             if(tool.getProperties().contains(i))
             {
                 harvests.get(stage).harvest((int)tool.getEffectByName("tool_efficiency").getValue());
-                System.out.println(harvests.get(stage).getCurrent());
+                
                 if(harvests.get(stage).finishedHarvest())
                 {
                     
@@ -150,6 +152,10 @@ public class Plant extends Entity
                         if(currentGrowth>=plantTemplate.getStageGrowths()[i])
                         {
                             stage = i;
+                            if(plantTemplate.getSOLIDS()[stage]&&distanceBetween(world.getWm().getPlayer())<6)
+                            {
+                                world.getWm().getPlayer().resetVisit(world);
+                            }
 
                         }else
                         {
@@ -169,6 +175,11 @@ public class Plant extends Entity
         }
     }
     
+    public Harvest getCurrentHarvest()
+    {
+        return harvests.get(stage);
+    }
+    
     public void resetHarvest()
     {
         for(Harvest h:harvests)
@@ -182,6 +193,11 @@ public class Plant extends Entity
         return plantTemplate.getNAMES().get(stage);
     }
     
+    public boolean isFinishedGrowing()
+    {
+        return stage == plantTemplate.getSTAGEGROWTHS().length-1;
+    }
+    
     @Override
     public void render(Camera cam,LocalMap map,boolean animate)
     {
@@ -189,11 +205,11 @@ public class Plant extends Entity
         {
             if(sprites == null)
             {
-                texture.draw(x*cam.getTile_size()+cam.getXofs(),y*cam.getTile_size()+cam.getYofs());
+                texture.draw(x*cam.getTile_size()+cam.getXofs(),y*cam.getTile_size()+cam.getYofs(),cam.getTile_size(),cam.getTile_size());
             }else
             {
 
-                sprites.getSprite(stage,0).draw(x*cam.getTile_size()+cam.getXofs(),y*cam.getTile_size()+cam.getYofs());
+                sprites.getSprite(stage,0).draw(x*cam.getTile_size()+cam.getXofs(),y*cam.getTile_size()+cam.getYofs(),cam.getTile_size(),cam.getTile_size());
 
 
 
@@ -276,8 +292,5 @@ public class Plant extends Entity
     {
         this.tile = tile;
     }
-    
-    
-    
-    
+
 }
