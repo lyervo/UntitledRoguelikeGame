@@ -492,6 +492,22 @@ public class GameConsole
                 addLine("Invalid parameter 2");
                 return null;
             }
+        }else if(token[2].equals("talk"))
+        {
+            try
+            {
+                int dialogueId = Integer.parseInt(token[3]);
+                int targetId = Integer.parseInt(token[4]);
+                
+                task = new Task(0,0,targetId,dialogueId,"talk_to_target");
+                
+                task.setTarget(world.getWm().getCurrentLocalMap().getPawnById(id));
+  
+            }catch(NumberFormatException e)
+            {
+                addLine("Invalid parameter 2 or 3");
+                return null;
+            }
         }
         
         return task;

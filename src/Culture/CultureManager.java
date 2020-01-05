@@ -34,14 +34,14 @@ public class CultureManager
     public void init()
     {
         factions.put("Kingdom of Augonn", new Faction("Kingdom of Augonn"));
-        subFactions.put("Honest man farm", new SubFaction("Honest man farm",factions.get("Kingdom of Augonn")));
-        subFactions.put("House Hora", new SubFaction("House Hora",factions.get("Kingdom of Augonn")));
+        subFactions.put("Honest man farm", new SubFaction("Honest man farm",factions.get("Kingdom of Augonn"),"farm"));
+        subFactions.put("House Hora", new SubFaction("Hora",factions.get("Kingdom of Augonn"),"family"));
         
     }
     
-    public void createSubFaction(String name,String factionName)
+    public void createSubFaction(String name,String factionName,String type)
     {
-        subFactions.put(name, new SubFaction(name,getFactionByName(factionName)));
+        subFactions.put(name, new SubFaction(name,getFactionByName(factionName),type));
     }
     
     public void createFaction(String name)

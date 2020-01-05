@@ -23,6 +23,9 @@ public class Task
     
     private Zone zone;
     
+    private String subFaction;
+    
+    private String additionalInfo;
     
     //type
     //nothing
@@ -97,6 +100,9 @@ public class Task
             case "search_item":
                 priority = 6;
                 break;
+            case "search_item_seed":
+                priority = 6;
+                break;
             case "search_item_type":
                 priority = 8;
                 break;
@@ -107,10 +113,10 @@ public class Task
                 priority = 8;
                 break;
             case "protect_land":
-                priority = 8;
+                priority = 11;
                 break;
             case "call_guards":
-                priority = 9;
+                priority = 12;
                 break;
             case "fufill_need":
                 priority = 7;
@@ -120,6 +126,15 @@ public class Task
                 break;
             case "rest":
                 priority = 6;
+                break;
+            case "ask_for_item":
+                priority = 10;
+                break;
+            case "wait":
+                priority = 10;
+                break;
+            case "talk_to_target":
+                priority = 11;
                 break;
             
         }
@@ -265,6 +280,26 @@ public class Task
     public void setZone(Zone zone)
     {
         this.zone = zone;
+    }
+
+    public String getSubFaction()
+    {
+        return subFaction;
+    }
+
+    public void setSubFaction(String subFaction)
+    {
+        this.subFaction = subFaction;
+    }
+
+    public String getAdditionalInfo()
+    {
+        return additionalInfo;
+    }
+
+    public void setAdditionalInfo(String additionalInfo)
+    {
+        this.additionalInfo = additionalInfo;
     }
     
     

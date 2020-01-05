@@ -27,12 +27,15 @@ public class SubFaction
     
     private int taskCoolDown;
     
-    public SubFaction(String subFactionName,Faction faction)
+    private String subFactionType;
+    
+    public SubFaction(String subFactionName,Faction faction,String subFactionType)
     {
         this.subFactionName = subFactionName;
         this.faction = faction;
         zones = new ArrayList<Zone>();
         taskCoolDown = 0;
+        this.subFactionType = subFactionType;
     }
     
     public void tick(World world)

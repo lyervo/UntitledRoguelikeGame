@@ -93,6 +93,26 @@
                     {"reply":"Ok then.","effect":[],"next":-1}
 		]
 		
+	},
+	{
+		"id":9,
+		"content":"Please don't touch our crops.",
+		"replies":
+		[
+                    {"reply":"I'm sorry.","effect":[],"next":-1},
+                    {"reply":"You can't tell me what to do!.","effect":[],"next":-1}
+		]
+		
+	},
+	{
+		"id":10,
+		"content":"Keep your hands off our property, this is your last warning.",
+		"replies":
+		[
+                    {"reply":"It won't happen again.","effect":[],"next":-1},
+                    {"reply":"You can't tell me what to do!.","effect":[],"next":-1}
+		]
+		
 	}
 	
 	

@@ -6,6 +6,7 @@
 package Entity.Plant;
 
 import Camera.Camera;
+import Culture.SubFaction;
 import Entity.Entity;
 import Entity.Pawn;
 import Item.Item;
@@ -35,6 +36,7 @@ public class Plant extends Entity
     
     private Tile tile;
     
+    private String subFaction;
     
     public Plant(int id, int x, int y, PlantTemplate template,Tile tile)
     {
@@ -217,6 +219,11 @@ public class Plant extends Entity
         }
     }
     
+    public void setSubFaction(String subFaction)
+    {
+        this.subFaction = subFaction;
+    }
+    
     public boolean getCurrentSolid()
     {
         return plantTemplate.getSOLIDS()[stage];
@@ -293,4 +300,12 @@ public class Plant extends Entity
         this.tile = tile;
     }
 
+    public String getSubFaction()
+    {
+        return this.subFaction;
+    }
+    
+
+    
+    
 }

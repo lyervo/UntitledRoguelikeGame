@@ -17,6 +17,7 @@ import World.Tile;
 import World.World;
 import World.Zone;
 import java.util.ArrayList;
+import javafx.util.Pair;
 
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
@@ -58,6 +59,8 @@ public class Pawn extends Entity
     
     private String jobTitle;
     
+    private ArrayList<GameEvent> events;
+    
     public Pawn(int id, int x, int y,Image texture,IFovAlgorithm fov,String name,ItemLibrary itemLibrary)
     {
         super(id, x, y,texture);
@@ -73,6 +76,7 @@ public class Pawn extends Entity
         status = new ArrayList<Status>();
         subFactions = new ArrayList<SubFaction>();
         jobTitle = "Civilian";
+        events = new ArrayList<GameEvent>();
     }
     
     public Pawn(int id, int x, int y,Image texture,IFovAlgorithm fov,String name,ItemLibrary itemLibrary,String jobTitle)
@@ -90,6 +94,7 @@ public class Pawn extends Entity
         status = new ArrayList<Status>();
         subFactions = new ArrayList<SubFaction>();
         this.jobTitle = jobTitle;
+        events = new ArrayList<GameEvent>();
     }
     
     
@@ -116,69 +121,81 @@ public class Pawn extends Entity
             inventory.getCrafting().getNearbyStations(world.getWm().getCurrentLocalMap());
             
             
-            for(SubFaction sf:subFactions)
+            for(Pawn p:world.getWm().getCurrentLocalMap().getPawns())
             {
-                for(Zone z:sf.getZones())
+                
+                //if the pawn can see this pawn and it is not himself
+                if(fovBoard.pawnInVision(p, 7, world.getWm().getCurrentLocalMap())&&p.getId()!=id)
                 {
-                    if(z.getMapId() == world.getWm().getCurrentLocalMap().getID())
+                    if(!p.getEvents().isEmpty())
                     {
-                        for(Pawn p:world.getWm().getCurrentLocalMap().getPawns())
+                        boolean sameFaction = false;
+                        if(p.isSameFaction(subFactions))
                         {
-                            if(p.getId()!=this.id)
-                            {
-                                if(z.isWithinZone(p)&&!isSameFaction(sf,p.getSubFactions()))
-                                {
-//                                    if(!tasks.get(0).getType().equals("follow_target"))
-//                                    {
-//
-//                                        Task t = new Task(p.getX(),p.getY(),p.getId(),0,"follow_target");
-//                                        t.setTarget(p);
-//                                        addTask(t);
-//                                        sortTask();
-//                                    }
-                                }
-                            }
+                            sameFaction = true;
                         }
+                        
+                        for(GameEvent e:p.getEvents())
+                        {
+                            processGameEvent(p,e,sameFaction);
+                        }
+                        
                     }
                 }
             }
             
-        }
         
-        int taskResult = 0;
+        
+            int taskResult = 0;
 
-        if(tasks.isEmpty())
-        {
-            tasks.add(new Task(0,0,0,0,"nothing"));
-        }
-        
-        if(tasks.get(0).getType().equals("follow_target"))
-        {
-            pawnFollowLogic(world);
-        }else if(tasks.get(0).getType().equals("grab_item"))
-        {
-            pawnGrabItemLogic(world,tasks.get(0));
-        }else if(tasks.get(0).getType().equals("craft"))
-        {
-            pawnCraftingLogic(world);
-        }else if(tasks.get(0).getType().equals("search_item"))
-        {
-            pawnSearchItemLogic(world,tasks.get(0));
-        }else if(tasks.get(0).getType().equals("harvest_plant"))
-        {
-            pawnHarvestPlantLogic(world,tasks.get(0));
-        }else if(tasks.get(0).getType().equals("plant_seed"))
-        {
-            pawnPlantSeedLogic(world,tasks.get(0));
-        }else if(tasks.get(0).getType().equals("plant_seed_in_zone"))
-        {
-            pawnPlantSeedInZoneLogic(world);
-        }else if(tasks.get(0).getType().equals("manage_farm"))
-        {
-            pawnManageFarmLogic(world,tasks.get(0));
-        }else if(tasks.get(0).getType().equals("search_item_type"))
-        {
-            pawnSearchItemByTypeLogic(world,tasks.get(0));
+            if(tasks.isEmpty())
+            {
+                tasks.add(new Task(0,0,0,0,"nothing"));
+            }
+
+            if(tasks.get(0).getType().equals("follow_target"))
+            {
+                pawnFollowLogic(world);
+            }else if(tasks.get(0).getType().equals("grab_item"))
+            {
+                pawnGrabItemLogic(world,tasks.get(0));
+            }else if(tasks.get(0).getType().equals("craft"))
+            {
+                pawnCraftingLogic(world);
+            }else if(tasks.get(0).getType().equals("search_item"))
+            {
+                pawnSearchItemLogic(world,tasks.get(0));
+            }else if(tasks.get(0).getType().equals("harvest_plant"))
+            {
+                pawnHarvestPlantLogic(world,tasks.get(0));
+            }else if(tasks.get(0).getType().equals("plant_seed"))
+            {
+                pawnPlantSeedLogic(world,tasks.get(0));
+            }else if(tasks.get(0).getType().equals("plant_seed_in_zone"))
+            {
+                pawnPlantSeedInZoneLogic(world);
+            }else if(tasks.get(0).getType().equals("manage_farm"))
+            {
+                pawnManageFarmLogic(world,tasks.get(0));
+            }else if(tasks.get(0).getType().equals("search_item_type"))
+            {
+                pawnSearchItemByTypeLogic(world,tasks.get(0));
+            }else if(tasks.get(0).getType().equals("wait"))
+            {
+                pawnWaitingLogic(world,tasks.get(0));
+            }else if(tasks.get(0).getType().equals("ask_for_item"))
+            {
+                pawnAskForItemLogic(world,tasks.get(0));
+            }else if(tasks.get(0).getType().equals("offer_to_trade"))
+            {
+
+            }else if(tasks.get(0).getType().equals("search_item_seed"))
+            {
+                pawnSearchItemSeedLogic(world,tasks.get(0));
+            }else if(tasks.get(0).getType().equals("talk_to_target"))
+            {
+                pawnMoveToTalkLogic(world,tasks.get(0));
+            }
         }
         
         
@@ -191,64 +208,303 @@ public class Pawn extends Entity
     
     public void doTask(Task task,World world)
     {
-        if(task.getType().equals("follow_target"))
+        if(world.isMoved())
         {
-            pawnFollowLogic(world);
-        }else if(task.getType().equals("grab_item"))
-        {
-            pawnGrabItemLogic(world,task);
-        }else if(task.getType().equals("craft"))
-        {
-            pawnCraftingLogic(world);
-        }else if(task.getType().equals("search_item"))
-        {
-            pawnSearchItemLogic(world,task);
-        }else if(task.getType().equals("harvest_plant"))
-        {
-            pawnHarvestPlantLogic(world,task);
-        }else if(task.getType().equals("plant_seed"))
-        {
-            pawnPlantSeedLogic(world,task);
-        }else if(task.getType().equals("plant_seed_in_zone"))
-        {
-            pawnPlantSeedInZoneLogic(world);
-        }else if(task.getType().equals("manage_farm"))
-        {
-            pawnManageFarmLogic(world,task);
-        }else if(task.equals("search_item_type"))
-        {
-            pawnSearchItemByTypeLogic(world,task);
+            if(task.getType().equals("follow_target"))
+            {
+                pawnFollowLogic(world);
+            }else if(task.getType().equals("grab_item"))
+            {
+                pawnGrabItemLogic(world,task);
+            }else if(task.getType().equals("craft"))
+            {
+                pawnCraftingLogic(world);
+            }else if(task.getType().equals("search_item"))
+            {
+                pawnSearchItemLogic(world,task);
+            }else if(task.getType().equals("harvest_plant"))
+            {
+                pawnHarvestPlantLogic(world,task);
+            }else if(task.getType().equals("plant_seed"))
+            {
+                pawnPlantSeedLogic(world,task);
+            }else if(task.getType().equals("plant_seed_in_zone"))
+            {
+                pawnPlantSeedInZoneLogic(world);
+            }else if(task.getType().equals("manage_farm"))
+            {
+                pawnManageFarmLogic(world,task);
+            }else if(task.equals("search_item_type"))
+            {
+                pawnSearchItemByTypeLogic(world,task);
+            }else if(task.getType().equals("wait"))
+            {
+                pawnWaitingLogic(world,task);
+            }else if(task.getType().equals("ask_for_item"))
+            {
+                pawnAskForItemLogic(world,task);
+            }else if(task.getType().equals("offer_to_trade"))
+            {
+
+            }else if(task.getType().equals("search_item_seed"))
+            {
+                pawnSearchItemSeedLogic(world,task);
+            }else if(task.getType().equals("talk_to_target"))
+            {
+                pawnMoveToTalkLogic(world,task);
+            }
         }
         
+    }
+    
+    public void pawnAskForItemLogic(World world,Task task)
+    {
+
+        if(!((Pawn)task.getTarget()).hasItem(task.getInfo(),task.getIndex()))
+        {
+            tasks.remove(task);
+            path = null;
+            return;
+        }
+        
+        if(task.getX()!=task.getTarget().getX()||task.getY()!=task.getTarget().getY())
+        {
+            boolean foundPath = false;
+            if (world.getWm().getCurrentLocalMap().getTiles()[task.getTarget().getY()][task.getTarget().getX()].isSolid())
+            {
+                foundPath = calcPathNear(task.getTarget().getX(), task.getTarget().getY(), world, task);
+                if (!foundPath)
+                {
+                    tasks.remove(task);
+                    path = null;
+                    step = 1;
+                }
+
+            } else
+            {
+                calcPath(tasks.get(0).getTarget().getX(), tasks.get(0).getTarget().getY());
+                if (path == null)
+                {
+                    tasks.remove(task);
+                    path = null;
+                    step = 1;
+                }
+            }
+            task.setX(task.getTarget().getX());
+            task.setY(task.getTarget().getY());
+            if(world.isMoved())
+            {
+                
+                doPath(world.getWm().getCurrentLocalMap());
+                
+
+                if(step == path.getLength())
+                {
+                    path = null;
+                    step = 1;
+                }
+                
+
+            }
+        }
+        
+        if(distanceBetween(task.getTarget()) <= 1)
+        {
+            if(world.isMoved())
+            {
+                ((Pawn)task.getTarget()).getInventory().transferItem(inventory, task.getInfo(), task.getIndex());
+                path = null;
+                step = 1;
+                tasks.remove(task);
+            }
+        } else if (distanceBetween(task.getTarget()) == 5)
+        {
+             
+            
+            
+            if(world.isMoved())
+            {
+                
+                ((Pawn)task.getTarget()).askToWait(6);
+                doPath(world.getWm().getCurrentLocalMap());
+                
+
+                if(step == path.getLength())
+                {
+                    path = null;
+                    step = 1;
+                }
+                
+
+            }
+        
+
+        } else
+        {
+            if (path == null)
+            {
+                boolean foundPath = false;
+                if(world.getWm().getCurrentLocalMap().getTiles()[task.getTarget().getY()][task.getTarget().getX()].isSolid())
+                {
+                    foundPath = calcPathNear(task.getTarget().getX(),task.getTarget().getY(),world,task);
+                    if(!foundPath)
+                    {
+                        
+                        tasks.remove(task);
+                        path = null;
+                        step = 1;
+                    }
+                           
+                }else
+                {
+                    calcPath(tasks.get(0).getTarget().getX(), tasks.get(0).getTarget().getY());
+                    if(path == null)
+                    {
+                        tasks.remove(task);
+                        path = null;
+                        step = 1;
+                    }
+                }
+            
+            }
+            
+            if(world.isMoved())
+            {
+                
+                doPath(world.getWm().getCurrentLocalMap());
+                
+
+                if(step == path.getLength())
+                {
+                    path = null;
+                    step = 1;
+                }
+                
+
+            }
+        }
+    }
+    
+    public void pawnWaitingLogic(World world,Task task)
+    {
+        if(world.isMoved())
+        {
+            if(task.getIndex() <= 0)
+            {
+                tasks.remove(task);
+                return;
+            }
+            task.setIndex(task.getIndex()-1);
+            
+        }
+    }
+    
+    public void askToWait(int waitTime)
+    {
+        tasks.add(new Task(0,0,0,waitTime,"wait"));
+        sortTask();
     }
     
     public void pawnPlantSeedInZoneLogic(World world)
     {
         Zone z = tasks.get(0).getZone();
         ArrayList<Task> ts = new ArrayList<Task>();
-          
-            
-            
-            for(int i=0;i<(z.getWidth()/2);i++)
+
+        for (int i = 0; i < (z.getWidth() / 2); i++)
+        {
+            for (int j = 0; j < (z.getHeight() / 2); j++)
             {
-                for(int j=0;j<(z.getHeight()/2);j++)
+                if (world.getWm().getCurrentLocalMap().countAccessibleTiles(z.getX() + i, z.getY() + j) >= 2)
                 {
-                    if(world.getWm().getCurrentLocalMap().countAccessibleTiles(z.getX()+i, z.getY()+j)>=2)
-                    {
-                        Task newPlantingTask = new Task(z.getX()+(i*2),z.getY()+(j*2),0,0,"plant_seed");
-                        newPlantingTask.setInfo(tasks.get(0).getInfo());
-                        ts.add(newPlantingTask);
-                       
-                        
-                    }
+                    Task newPlantingTask = new Task(z.getX() + (i * 2), z.getY() + (j * 2), 0, 0, "plant_seed");
+                    newPlantingTask.setInfo(tasks.get(0).getInfo());
+                    ts.add(newPlantingTask);
+
                 }
             }
-            tasks.remove(0);
-            for(Task t:ts)
-            {
-                addTask(t);
-            }
+        }
+        tasks.remove(0);
+        for (Task t : ts)
+        {
+            addTask(t);
+        }
+        sortTask();
+        
+    }
+    
+    public boolean createGetItemFromPawnTask(World world,String itemName,int amount)
+    {
+        //select the ideal pawn to ask item from, also with a boolean value 
+        //stating whether it is the same faction
+        Pair<Pawn,Boolean> result = lookForItemsFromPawn(world,itemName,amount);
+        
+        if(result == null)
+        {
+            return false;
+        }
+        
+        Task t;
+        
+        if(result.getValue())
+        {
+            t = new Task(result.getKey().getX(),result.getKey().getY(),result.getKey().getId(),amount,"ask_for_item");
+            t.setInfo(itemName);
+            t.setTarget(result.getKey());
+            addTask(t);
             sortTask();
+        }else
+        {
+            t = new Task(result.getKey().getX(),result.getKey().getY(),result.getKey().getId(),amount,"offer_to_trade");
+            t.setInfo(itemName);
+            t.setTarget(result.getKey());
+            addTask(t);
+            sortTask();
+        }
+        
+        return true;
+        
+    }
+    
+    public Pair<Pawn,Boolean> lookForItemsFromPawn(World world,String itemName,int amount)
+    {
+        //pawns from the same sub faction so that no trading is required
+        ArrayList<Entity> firstChoices = new ArrayList<Entity>();
+        
+        //pawns from a different sub faction so that trading is required
+        ArrayList<Entity> secondaryChoices = new ArrayList<Entity>();
+        
+        boolean isFaction = false;
+        
+        for(Pawn p:world.getWm().getCurrentLocalMap().getPawns())
+        {
+            if(p.isControl())
+            {
+                continue;
+            }
+            if(p.hasItem(itemName, amount)&&p.isSameFaction(subFactions))
+            {
+                firstChoices.add(p);
+            }else if(p.hasItem(itemName,amount))
+            {
+                secondaryChoices.add(p);
+            }
+        }
+        int targetId = -1;
+        if(!firstChoices.isEmpty())
+        {
+            targetId = getClosestEntity(firstChoices);
+            isFaction = true;
+        }else if(!secondaryChoices.isEmpty())
+        {
+            targetId = getClosestEntity(secondaryChoices);
+            isFaction = false;
+        }else
+        {
+            return null;
+        }
+        
+        return new Pair(world.getWm().getCurrentLocalMap().getPawnById(targetId),isFaction);
+        
         
     }
     
@@ -786,6 +1042,47 @@ public class Pawn extends Entity
                 
                 world.getAncestor().addText("You used "+world.getWm().getPlayerInventory().getEquipment().getMainHandSlot().getItem().getName()
                                             +" on "+ tile.getPlant().getCurrentName());
+                String plantSubFactionName;
+                int state = 0;
+                GameEvent removeEvent = null;
+                if((plantSubFactionName = ((Plant)tasks.get(0).getTarget()).getSubFaction())!=null)
+                {
+                    for(int i=events.size()-1;i>=0;i--)
+                    {
+                        if(events.get(i).getType().equals("harvested_plant")&&events.get(i).getSubFaction().equals(plantSubFactionName)&&state<=1)
+                        {
+                            state = 1;
+                            removeEvent = events.get(i);
+                        }else if(events.get(i).getType().equals("warned_harvested_plant")&&events.get(i).getSubFaction().equals(plantSubFactionName)&&state<=2)
+                        {
+                            state = 2;
+                            removeEvent = events.get(i);
+                        }else if(events.get(i).getType().equals("warned_harvested_plant_final")&&events.get(i).getSubFaction().equals(plantSubFactionName))
+                        {
+                            state = 3;
+                            removeEvent = events.get(i);
+                        }
+                    }
+                    if(state<=0)
+                    {
+                        GameEvent newEvent = new GameEvent("harvested_plant",plantSubFactionName,1);
+                        events.add(newEvent);
+                    }else if(state == 1)
+                    {
+                       
+                    }else if(state == 2)
+                    {
+                        events.remove(removeEvent);
+                        events.add(new GameEvent("harvested_plant_again",plantSubFactionName,1));
+                    }else if(state == 3)
+                    {
+                        events.remove(removeEvent);
+                        events.add(new GameEvent("harvested_plant_final",plantSubFactionName,1));
+                    }
+                }
+                
+                
+                
                 tile.getPlant().harvest(world.getWm().getPlayerInventory().getEquipment().getMainHandSlot().getItem(), this, world);
                 
                 
@@ -840,6 +1137,14 @@ public class Pawn extends Entity
                 
 
             }
+        }
+    }
+    
+    public void addGameEvent(GameEvent event)
+    {
+        if(!events.contains(event))
+        {
+            events.add(event);
         }
     }
     
@@ -949,12 +1254,28 @@ public class Pawn extends Entity
         {
             path = null;
             step = 1;
+            
+            //count how many seed the pawn needs
+            int seedAmountRequired = 0;
+            for(Task t:tasks)
+            {
+                if(t.getType().equals(task.getType())&&t.getInfo().equals(t.getInfo()))
+                {
+                    seedAmountRequired++;
+                }
+            }
 
-            Task lookForSeed = new Task(0,0,0,0,"search_item");
-            lookForSeed.setInfo(task.getInfo());
-            addTask(lookForSeed);
-            sortTask();
+            //returns true if the pawn manage to find someone with the seed
+            if(createGetItemFromPawnTask(world,task.getInfo(),seedAmountRequired))
+            {
                 
+            }else
+            {
+                Task lookForSeed = new Task(0,0,0,0,"search_item_seed");
+                lookForSeed.setInfo(task.getInfo());
+                addTask(lookForSeed);
+                sortTask();
+            }
             return;
         }
         
@@ -1071,7 +1392,10 @@ public class Pawn extends Entity
             { 
                 
                 tile.getPlant().harvest(inventory.getEquipment().getMainHandSlot().getItem(), this, world);
-                
+                if(((Plant)task.getTarget()).getSubFaction()!=null)
+                {
+                    addGameEvent(new GameEvent("harvested_plant",((Plant)task.getTarget()).getSubFaction(),((Plant)task.getTarget())));
+                }
                 
 
                 
@@ -1352,6 +1676,111 @@ public class Pawn extends Entity
         }
     }
     
+    public void pawnSearchItemSeedLogic(World world,Task task)
+    {
+        if(task.getTarget() == null)
+        {
+            ArrayList<ItemPile> ips = world.getWm().getCurrentLocalMap().getItemPilesWithItemByName(task.getInfo());
+            if(ips.isEmpty())
+            {
+                
+                tasks.remove(task);
+                //count how many seed the pawn needs
+                int seedAmountRequired = 0;
+                for(Task t:tasks)
+                {
+                    if(t.getType().equals(task.getType())&&t.getInfo().equals(t.getInfo()))
+                    {
+                        seedAmountRequired++;
+                    }
+                }
+
+                //returns true if the pawn manage to find someone with the seed
+                if(createGetItemFromPawnTask(world,task.getInfo(),seedAmountRequired))
+                {
+
+                }else
+                {
+                    Task lookForSeed = new Task(0,0,0,0,"search_item_seed");
+                    lookForSeed.setInfo(task.getInfo());
+                    addTask(lookForSeed);
+                    sortTask();
+                }
+
+                
+                return;
+            }
+            int itemPileID = getClosestItemPile(ips);
+            
+            task.setId(itemPileID);
+            task.setTarget(world.getWm().getCurrentLocalMap().getItemPileById(task.getId()));
+            
+        }
+        
+        if(!task.getTarget().hasItem(task.getInfo()))
+        {
+            tasks.remove(task);
+            path = null;
+            return;
+        }
+        
+        if(distanceBetween(task.getTarget()) <= 1)
+        {
+            if (task.getTarget() != null)
+            {
+
+                if(world.isMoved())
+                {
+                    if (((ItemPile)task.getTarget()).hasItem(task.getInfo()))
+                    {
+
+
+                        ((ItemPile)task.getTarget()).takeFrom(inventory, task.getInfo(), world.getWm().getCurrentLocalMap(), -1);
+                        tasks.remove(task);
+                        step = 1;
+                        path = null;
+                        sortTask();
+                    }
+                }
+
+            }
+        }else
+        {
+            if (path == null)
+            {
+                if(world.getWm().getCurrentLocalMap().getTiles()[task.getTarget().getY()][task.getTarget().getX()].isSolid())
+                {
+                    if(!calcPathNear(task.getTarget().getX(), task.getTarget().getY(),world,task))
+                    {
+                        tasks.remove(task);
+                    }
+                }else
+                {
+                    calcPath(task.getTarget().getX(), task.getTarget().getY());
+                    if(path == null)
+                    {
+                        tasks.remove(task);
+                    }
+                }
+            }
+            
+            if(world.isMoved())
+            {
+                
+                doPath(world.getWm().getCurrentLocalMap());
+                
+
+                if(step == path.getLength())
+                {
+                    path = null;
+                    step = 1;
+                }
+                
+
+            }
+        }
+    }
+    
     public void pawnSearchItemLogic(World world,Task task)
     {
         if(task.getTarget() == null)
@@ -1359,7 +1788,9 @@ public class Pawn extends Entity
             ArrayList<ItemPile> ips = world.getWm().getCurrentLocalMap().getItemPilesWithItemByName(task.getInfo());
             if(ips.isEmpty())
             {
+                
                 tasks.remove(task);
+                
                 return;
             }
             int itemPileID = getClosestItemPile(ips);
@@ -1493,6 +1924,58 @@ public class Pawn extends Entity
         }
     }
     
+    public void pawnMoveToTalkLogic(World world,Task task)
+    {
+        if(task.getTarget() == null)
+        {
+            task.setTarget(world.getWm().getCurrentLocalMap().getPawnById(task.getId()));
+        }
+        if(distanceBetween(task.getTarget()) <= 1)
+        {
+            if(((Pawn)task.getTarget()).isControl())
+            {
+                world.getDialogue().switchDialog(task.getIndex(), world);
+                world.getDialogue().display();
+                ((Pawn)task.getTarget()).clearTask();
+            }
+            if(task.getInfo()!=null)
+            {
+                ((Pawn)task.getTarget()).getEvents().add(new GameEvent(task.getInfo(),task.getSubFaction(),1));
+                ((Pawn)task.getTarget()).removeEvent(task.getAdditionalInfo(),task.getSubFaction());
+            }
+            tasks.remove(task);
+            path = null;
+            step = 1;
+            return;
+        }else
+        {
+            if (path == null)
+            {
+                calcPath(task.getTarget().getX(), task.getTarget().getY());
+            }
+
+            doPath(world.getWm().getCurrentLocalMap());
+
+            if (step == path.getLength())
+            {
+                path = null;
+                step = 1;
+            }
+            path = null;
+            step = 1;
+
+            
+
+        }
+    }
+    
+    public void clearTask()
+    {
+        tasks.get(0).clearTask();
+        step = 1;
+        path = null;
+    }
+    
     public boolean isSameFaction(SubFaction sf,ArrayList<SubFaction> sfs)
     {
         if(sfs.isEmpty())
@@ -1507,6 +1990,92 @@ public class Pawn extends Entity
             }
         }
         return false;
+    }
+    
+    public boolean isSameFaction(String subFactionName)
+    {
+        for(SubFaction sf:subFactions)
+        {
+            if(sf.getSubFactionName().equals(subFactionName))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean isSameFaction(ArrayList<SubFaction> sfs)
+    {
+        if(sfs.isEmpty())
+        {
+            return false;
+        }
+        for(SubFaction s:sfs)
+        {
+            if(subFactions.contains(s))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public void processGameEvent(Pawn pawn,GameEvent event,boolean sameFaction)
+    {
+        String subFactionName = "none";
+        if(pawn.isControl())
+        {
+            subFactionName = "player";
+        }
+        
+        if(event.getType().equals("harvested_plant")&&!sameFaction&&!hasEvent(event.getType(),subFactionName))
+        {
+            Task newTask = new Task(0,0,pawn.getId(),9,"talk_to_target");
+            newTask.setInfo("warned_harvested_plant");
+            newTask.setSubFaction(event.getSubFaction());
+            newTask.setAdditionalInfo(event.getType());
+            addTask(newTask);
+            sortTask();
+            events.add(new GameEvent(event.getType(),subFactionName,1));
+        }else if(event.getType().equals("harvested_plant_again")&&!sameFaction&&!hasEvent(event.getType(),subFactionName))
+        {
+            Task newTask = new Task(0,0,pawn.getId(),10,"talk_to_target");
+            newTask.setInfo("warned_harvested_plant_final");
+            newTask.setSubFaction(event.getSubFaction());
+            newTask.setAdditionalInfo(event.getType());
+            addTask(newTask);
+            sortTask();
+            events.add(new GameEvent(event.getType(),subFactionName,1));
+        }else if(event.getType().equals("harvested_plant_final")&&!sameFaction&&!hasEvent(event.getType(),subFactionName))
+        {
+            
+        }
+    }
+    
+    public boolean hasEvent(String eventType,String subFactionName)
+    {
+        for(int i=events.size()-1;i>=0;i--)
+        {
+            System.out.println("loop");
+            if(events.get(i).getType().equals(eventType)&&events.get(i).getSubFaction().equals(subFactionName))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public void removeEvent(String eventType,String subFactionName)
+    {
+        for(int i=events.size()-1;i>=0;i--)
+        {
+            System.out.println("loop");
+            if(events.get(i).getType().equals(eventType)&&events.get(i).getSubFaction().equals(subFactionName))
+            {
+                System.out.println("removed");
+                events.remove(i);
+            }
+        }
     }
     
     public void removeTask()
@@ -1547,7 +2116,47 @@ public class Pawn extends Entity
     }
 
     
-
+    @Override
+    public boolean hasItem(String itemName)
+    {
+        if(control)
+        {
+            return false;
+        }else
+        {
+            for(Item i:inventory.getItems())
+            {
+                if(i.getTrueName().equals(itemName))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    @Override
+    public boolean hasItem(String itemName,int amount)
+    {
+        int count = 0;
+        if(control)
+        {
+            return false;
+        }else
+        {
+            for(Item i:inventory.getItems())
+            {
+                if(i.getTrueName().equals(itemName)&&i.isStackable())
+                {
+                    return i.getStack() >= amount;
+                }else
+                {
+                    count++;
+                }
+            }
+        }
+        return count >= amount;
+    }
 
 
     public IFovAlgorithm getFov() {
@@ -1598,10 +2207,6 @@ public class Pawn extends Entity
         this.status = status;
     }
 
-    @Override
-    public boolean hasItem(String name) {
-        return true;
-    }
 
     public ArrayList<Task> getTasks()
     {
@@ -1641,6 +2246,16 @@ public class Pawn extends Entity
     public void setJobTitle(String jobTitle)
     {
         this.jobTitle = jobTitle;
+    }
+
+    public ArrayList<GameEvent> getEvents()
+    {
+        return events;
+    }
+
+    public void setEvents(ArrayList<GameEvent> events)
+    {
+        this.events = events;
     }
 
     

@@ -147,6 +147,48 @@ public class Inventory
        
     }
     
+    public void transferItem(Inventory inventory,String itemName,int amount)
+    {
+        for(int i=items.size()-1;i>=0;i--)
+        {
+            if(items.get(i).getTrueName().equals(itemName))
+            {
+                if(items.get(i).isStackable())
+                {
+                    Item transferItem = new Item(items.get(i));
+                    
+                    if(items.get(i).getStack()>=amount)
+                    {
+                        transferItem.setStack(amount);
+                        items.get(i).addStack(-amount);
+                    }else
+                    {
+                        transferItem.setStack(items.get(i).getStack());
+                        items.get(i).setStack(0);
+                    }
+                    
+                    inventory.addItem(transferItem);
+                    
+                    if(items.get(i).getStack()==0)
+                    {
+                        items.remove(i);
+                    }
+                    
+                }else
+                {
+                    Item transferItem = new Item(items.get(i));
+                    inventory.addItem(transferItem);
+                    items.remove(i);
+                    amount--;
+                    if(amount<=0)
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    
     public void removeItem(Item item)
     {
         

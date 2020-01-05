@@ -90,6 +90,7 @@ public class LocalMap implements TileBasedMap, ILosBoard
         plants = new ArrayList<Plant>();
         
         Zone z1 = new Zone(0,0,10,5,this.id,"Tree");
+        z1.setSubFaction("Honest man farm");
         zones = new ArrayList<Zone>();
         zones.add(z1);
         
@@ -117,7 +118,7 @@ public class LocalMap implements TileBasedMap, ILosBoard
         
         itemPiles.add(new ItemPile(2,6,6,itemLibrary.getItemByTrueName("Steel Axe")));
         
-        itemPiles.add(new ItemPile(2,10,6,itemLibrary.getItemByTrueName("Tree Seed"),10));
+//        itemPiles.add(new ItemPile(2,10,6,itemLibrary.getItemByTrueName("Tree Seed"),10));
         
         pawns = new ArrayList<Pawn>();
         

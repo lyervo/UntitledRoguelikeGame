@@ -42,28 +42,9 @@ public class FOVBoard implements ILosBoard
         }
     }
     
-    public boolean playerInVision(int x,int y,int range,LocalMap lm)
+    public boolean pawnInVision(Pawn pawn,int range,LocalMap lm)
     {
-        for(int iy=y-(range+2);iy<=y+range+2;iy++)
-        {
-            for(int ix=x-(range+2);ix<=x+range+2;ix++)
-            {
-                if(contains(ix,iy))
-                {
-                    if(vision[iy][ix] == 1)
-                    {
-                        if(((Pawn)lm.entityAt(ix, iy)) == null)
-                        {
-
-                        }else if(((Pawn)lm.entityAt(ix, iy)).isControl())
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
+        return vision[pawn.getY()][pawn.getX()]==1;
     }
     
     

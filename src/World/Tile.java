@@ -207,7 +207,9 @@ public class Tile {
         {
             if(z.isWithinZone(plant))
             {
+                plant.setSubFaction(z.getSubFaction());
                 z.getPlants().add(plant);
+                
             }
         }
         if(lm.getPlayer().distanceBetween(x, y)<6)
@@ -248,6 +250,7 @@ public class Tile {
         {
             if(z.isWithinZone(plant))
             {
+                plant.setSubFaction(z.getSubFaction());
                 z.getPlants().add(plant);
             }
         }

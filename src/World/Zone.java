@@ -27,6 +27,8 @@ public class Zone
     
     private String plantName;
     
+    private String subFaction;
+    
     private int type;
     //1 - House
     //2 - Shop
@@ -59,6 +61,11 @@ public class Zone
         zoneId = ID;
         ID++;
         plants = new ArrayList<Plant>();
+    }
+    
+    public void setSubFaction(String subFaction)
+    {
+        this.subFaction = subFaction;
     }
     
     public boolean notEnoughPlants(String name)
@@ -202,6 +209,11 @@ public class Zone
     public void setType(int type)
     {
         this.type = type;
+    }
+
+    public String getSubFaction()
+    {
+        return subFaction;
     }
     
     

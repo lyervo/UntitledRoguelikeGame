@@ -48,7 +48,6 @@ public abstract class Entity
         this.x = x;
         this.y = y;
         this.id = ID + 1;
-        System.out.println("creare plant with id "+this.id);
         ID++;
         this.sprites = sprites;
         this.autoAnimate = autoAnimate;
@@ -63,6 +62,11 @@ public abstract class Entity
     }
     
     public boolean hasItem(int type)
+    {
+        return false;
+    }
+    
+    public boolean hasItem(String name,int amount)
     {
         return false;
     }
@@ -114,6 +118,8 @@ public abstract class Entity
         return px + py;
         
     }
+    
+    
     
     public int distanceBetween(int x,int y)
     {
