@@ -34,8 +34,10 @@ public class CultureManager
     public void init()
     {
         factions.put("Kingdom of Augonn", new Faction("Kingdom of Augonn"));
+        subFactions.put("player",new SubFaction("player",null,"player"));
         subFactions.put("Honest man farm", new SubFaction("Honest man farm",factions.get("Kingdom of Augonn"),"farm"));
         subFactions.put("House Hora", new SubFaction("Hora",factions.get("Kingdom of Augonn"),"family"));
+        subFactions.put("Augonnian Army", new SubFaction("Augonnian Army",factions.get("Kingdom of Augonn"),"army"));
         
     }
     

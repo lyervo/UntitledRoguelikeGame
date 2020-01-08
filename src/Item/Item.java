@@ -118,7 +118,7 @@ public class Item
         this.expire = null;
         this.desc = "A seed for "+pt.getName();
         this.texture = itemLibrary.getRes().getTextureByName("seed");
-        
+        this.ownership = "no_one";
         for(int i:pt.getGROUND())
         {
             properties.add(i);
@@ -144,12 +144,15 @@ public class Item
         this.durability = item.getDurability();
         this.maxDurability = item.getMaxDurability();
         this.expire = item.getExpire();
+        this.ownership = item.getOwnership();
+        
     }
     
     
 
     public Item(JSONObject json,ItemLibrary itemLibrary)
     {
+        this.ownership = "no_one";
         this.itemLibrary = itemLibrary;
         properties = new HashSet<Integer>();
         effects = new ArrayList<Effect>();
@@ -588,6 +591,21 @@ public class Item
 
     public void setExpire(ArrayList<String> expire) {
         this.expire = expire;
+    }
+
+    public String getOwnership()
+    {
+        return ownership;
+    }
+
+    public void setOwnership(String ownership)
+    {
+        this.ownership = ownership;
+        if(!ownership.equals("player")&&!ownership.equals("no_one"))
+        {
+            this.desc += " Belongs to "+ownership;
+        }
+        
     }
     
     

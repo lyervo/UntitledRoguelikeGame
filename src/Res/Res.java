@@ -108,6 +108,7 @@ public class Res
 
         human1 = ss.getSubImage(0, 0, 32, 32);
         human2 = ss.getSubImage(32, 32, 32, 32);
+        
         basicTile = new Image("res/texture/map/tile/basic_tile.png");
         basicWall = new Image("res/texture/map/tile/basic_wall.png");
 
@@ -181,6 +182,7 @@ public class Res
         SpriteSheet books = new SpriteSheet("res/texture/items/Book.png",32,32);
         
         book_1 = new Image("res/texture/items/book_1.png");
+        images.put("guard", ss.getSubImage(32, 96, 32, 32));
         images.put("seed", new Image("res/texture/items/seed.png"));
         images.put("raw_meat_1",meat_raw_1);
         images.put("dagger",dagger);

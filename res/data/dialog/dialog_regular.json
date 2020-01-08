@@ -70,7 +70,7 @@
 		"content":"Hello, would you like to have a freebie?",
 		"replies":
 		[
-			{"reply":"Yes please.","effect":[{"type":"spawn_item%Iron Bar","duration":"1","value":"1"}],"condition":[{"type":"no_item%Iron Bar","value":"1"}],"next":7},
+			{"reply":"Yes please.","effect":[{"type":"spawn_item_player%Iron Bar","duration":"1","value":"1"}],"condition":[{"type":"no_item%Iron Bar","value":"1"}],"next":7},
                         {"reply":"Yes please.","effect":[],"condition":[{"type":"got_item%Iron Bar","value":"1"}],"next":8},
 			{"reply":"Nah goodbye.","effect":[],"next":-1}
 		]
@@ -99,7 +99,7 @@
 		"content":"Please don't touch our crops.",
 		"replies":
 		[
-                    {"reply":"I'm sorry.","effect":[],"next":-1},
+                    {"reply":"I'm sorry.","effect":[{"type":"turn_in_faction_item","duration":"1","value":"1"}],"next":-1},
                     {"reply":"You can't tell me what to do!.","effect":[],"next":-1}
 		]
 		
@@ -109,7 +109,7 @@
 		"content":"Keep your hands off our property, this is your last warning.",
 		"replies":
 		[
-                    {"reply":"It won't happen again.","effect":[],"next":-1},
+                    {"reply":"It won't happen again.","effect":[{"type":"turn_in_faction_item","duration":"1","value":"1"}],"next":-1},
                     {"reply":"You can't tell me what to do!.","effect":[],"next":-1}
 		]
 		

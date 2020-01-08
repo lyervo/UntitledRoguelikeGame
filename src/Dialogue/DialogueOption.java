@@ -6,6 +6,7 @@
 package Dialogue;
 
 import Item.Effect;
+import Item.Item;
 import UI.Button;
 import World.World;
 import java.util.ArrayList;
@@ -30,8 +31,9 @@ public class DialogueOption extends Button
     private ArrayList<Pair<String,Integer>> condition;
     private boolean valid;
 
+    private DialogueWindow dw;
     
-    public DialogueOption(int index,int previousHeight,JSONObject jsonObj,GameContainer container,TrueTypeFont font)
+    public DialogueOption(int index,int previousHeight,JSONObject jsonObj,GameContainer container,TrueTypeFont font,DialogueWindow dw)
     {
         super(index,previousHeight,jsonObj,container,font);
         choice = (int)((long)jsonObj.get("next"));
@@ -57,11 +59,12 @@ public class DialogueOption extends Button
                 effects.add(new Effect(effectObj));
             }
         }
+        this.dw = dw;
         
         
     }
     
-    public DialogueOption(int index,int previousHeight,DialogueOption dialogueOption,GameContainer container,TrueTypeFont font)
+    public DialogueOption(int index,int previousHeight,DialogueOption dialogueOption,GameContainer container,TrueTypeFont font,DialogueWindow dw)
     {
         super(index,previousHeight,dialogueOption.getText(),container,font);
         choice = dialogueOption.getChoice();
@@ -71,6 +74,8 @@ public class DialogueOption extends Button
         
         
         effects = new ArrayList<Effect>(dialogueOption.getEffects());
+        
+        this.dw = dw;
         
         
         
@@ -83,16 +88,43 @@ public class DialogueOption extends Button
     {
         for(int i=0;i<effects.size();i++)
         {
-            if(effects.get(i).getType().startsWith("spawn_item"))
-            {
-                String[] splitter = effects.get(i).getType().split("%");
-               
-                world.getWm().getPlayerInventory().addItem(world.getItemLibrary().getItemByTrueName(splitter[1]));
-            }
+            processEffect(effects.get(i),world);
         }
         world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
         world.getDialogue(). switchDialog(choice,world);
         Arrays.fill(m, false);
+    }
+    
+    
+    public void processEffect(Effect effect,World world)
+    {
+        if (effect.getType().startsWith("spawn_item_player"))
+        {
+            String[] splitter = effect.getType().split("%");
+
+            world.getWm().getPlayerInventory().addItem(world.getItemLibrary().getItemByTrueName(splitter[1]));
+        }else if(effect.getType().equals("turn_in_faction_item"))
+        {
+            System.out.println("run");
+            boolean changed = false;
+            for(int i=world.getWm().getPlayerInventory().getItems().size()-1;i>=0;i--)
+            {
+               
+                if(world.getWm().getPlayerInventory().getItems().get(i).getOwnership()==null)
+                {
+                    System.out.println("null");
+                }
+                if(dw.getPawn().isSameFaction(world.getWm().getPlayerInventory().getItems().get(i).getOwnership()))
+                {
+                    world.getWm().getPlayerInventory().transferItem(dw.getPawn().getInventory(), i, -1);
+                    changed = true;
+                }
+            }
+            if(changed)
+            {
+                world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
+            }
+        }
     }
     
     public boolean valid(World world)

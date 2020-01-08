@@ -6,6 +6,7 @@
 package GameConsole;
 
 import Entity.Entity;
+import Entity.GameEvent;
 import Entity.Pawn;
 import Entity.Plant.Plant;
 import Entity.Plant.PlantTemplate;
@@ -49,6 +50,7 @@ public class GameConsole
         width = world.getContainer().getWidth();
         maxLines = 100;
         maxDisplayLines = (height-40)/font.getHeight();
+        textfield.setAcceptingInput(false);
     }
     
     
@@ -580,6 +582,11 @@ public class GameConsole
                         {
                             addLine(getItemInfo(i));
                         }
+                    }
+                    addLine("Game Events:");
+                    for(GameEvent e:p.getEvents())
+                    {
+                        addLine(e.getType()+"    :    "+e.getSubFaction());
                     }
                 }
                 if(world.getWm().getCurrentLocalMap().getTiles()[coords.getValue()][coords.getKey()].getPlant()!=null)

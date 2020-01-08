@@ -54,7 +54,7 @@ public class DialogueLibrary
             {
                 JSONObject jsonObj = (JSONObject)jsonArr.get(i);
                 int id = (int)((long)jsonObj.get("id"));
-                dialogs.put(id,new Dialogue(jsonObj,world));
+                dialogs.put(id,new Dialogue(jsonObj,world,world.getDialogue()));
             }
             
             

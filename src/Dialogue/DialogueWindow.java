@@ -5,6 +5,7 @@
  */
 package Dialogue;
 
+import Entity.Pawn;
 import World.World;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -29,6 +30,8 @@ public class DialogueWindow
     
     private Dialogue dialogue;
     private DialogueLibrary dialogLibrary;
+    
+    private Pawn pawn;
     
     public DialogueWindow(DialogueLibrary dialogLibrary,World world)
     {
@@ -94,11 +97,30 @@ public class DialogueWindow
             dialogue = null;
             world.setHoveringWindow(false);
             display = false;
-            
+            pawn = null;
             return;
         }
         
-        dialogue = new Dialogue(dialogLibrary.getDialogById(id),world);
+        
+        dialogue = new Dialogue(dialogLibrary.getDialogById(id),world,this);
+       
+        
+       
+    }
+    
+    public void switchDialog(int id,World world,Pawn pawn)
+    {
+        if(id<=-1)
+        {
+            dialogue = null;
+            world.setHoveringWindow(false);
+            display = false;
+            pawn = null;
+            return;
+        }
+        this.pawn = pawn;
+        System.out.println(pawn.getName());
+        dialogue = new Dialogue(dialogLibrary.getDialogById(id),world,this);
        
         
        
@@ -135,5 +157,37 @@ public class DialogueWindow
     public void setDisplay(boolean display) {
         this.display = display;
     }
+
+    public Dialogue getDialogue()
+    {
+        return dialogue;
+    }
+
+    public void setDialogue(Dialogue dialogue)
+    {
+        this.dialogue = dialogue;
+    }
+
+    public DialogueLibrary getDialogLibrary()
+    {
+        return dialogLibrary;
+    }
+
+    public void setDialogLibrary(DialogueLibrary dialogLibrary)
+    {
+        this.dialogLibrary = dialogLibrary;
+    }
+
+    public Pawn getPawn()
+    {
+        return pawn;
+    }
+
+    public void setPawn(Pawn pawn)
+    {
+        this.pawn = pawn;
+    }
+    
+    
     
 }

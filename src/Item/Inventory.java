@@ -6,6 +6,7 @@
 package Item;
 
 import Entity.Entity;
+import Entity.Pawn;
 
 import World.LocalMap;
 import World.World;
@@ -128,7 +129,7 @@ public class Inventory
             boolean stacked = false;
             for(int i=0;i<items.size();i++)
             {
-                if(itemA.getTrueName().equals(items.get(i).getTrueName()))
+                if(itemA.getTrueName().equals(items.get(i).getTrueName())&&itemA.getOwnership().equals(items.get(i).getOwnership()))
                 {
                     items.get(i).addStack(itemA.getStack());
                     stacked = true;
@@ -161,10 +162,15 @@ public class Inventory
                     {
                         transferItem.setStack(amount);
                         items.get(i).addStack(-amount);
-                    }else
+                    }else if(amount==-1)
                     {
                         transferItem.setStack(items.get(i).getStack());
                         items.get(i).setStack(0);
+                    }else
+                    {
+                            transferItem.setStack(items.get(i).getStack());
+                            items.get(i).setStack(0);
+                    
                     }
                     
                     inventory.addItem(transferItem);
@@ -187,6 +193,50 @@ public class Inventory
                 }
             }
         }
+    }
+    
+    
+    public void transferItem(Inventory inventory,int index,int amount)
+    {
+        System.out.println(((Pawn)inventory.getOwner()).getName());
+        if (items.get(index).isStackable())
+        {
+            Item transferItem = new Item(items.get(index));
+
+            if (amount == -1)
+            {
+                transferItem.setStack(items.get(index).getStack());
+                items.get(index).setStack(0);
+            } else if (items.get(index).getStack() >= amount)
+            {
+                transferItem.setStack(amount);
+                items.get(index).addStack(-amount);
+            } else
+            {
+                transferItem.setStack(items.get(index).getStack());
+                items.get(index).setStack(0);
+
+            }
+
+            inventory.addItem(transferItem);
+
+            if (items.get(index).getStack() == 0)
+            {
+                items.remove(index);
+            }
+
+        } else
+        {
+            Item transferItem = new Item(items.get(index));
+            inventory.addItem(transferItem);
+            items.remove(index);
+            amount--;
+            if (amount <= 0)
+            {
+                return;
+            }
+        }
+           
     }
     
     public void removeItem(Item item)

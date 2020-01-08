@@ -29,6 +29,8 @@ public class SubFaction
     
     private String subFactionType;
     
+    private ArrayList<Relationship> relationships;
+    
     public SubFaction(String subFactionName,Faction faction,String subFactionType)
     {
         this.subFactionName = subFactionName;
@@ -36,6 +38,7 @@ public class SubFaction
         zones = new ArrayList<Zone>();
         taskCoolDown = 0;
         this.subFactionType = subFactionType;
+        relationships = new ArrayList<Relationship>();
     }
     
     public void tick(World world)
@@ -204,6 +207,21 @@ public class SubFaction
         this.zones = zones;
     }
     
-    
+    public void setRelationship(String subFactionName,int goodwill)
+    {
+        boolean found = false;
+        for(Relationship r:relationships)
+        {
+            if(r.getSubFaction().equals(subFactionName))
+            {
+                r.setGoodwill(goodwill);
+                found = true;
+            }
+        }
+        if(!found)
+        {
+            relationships.add(new Relationship(subFactionName,goodwill));
+        }
+    }
     
 }

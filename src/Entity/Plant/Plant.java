@@ -73,17 +73,22 @@ public class Plant extends Entity
                         {
                             resultAmount = r.getMinAmount() + rand.nextInt(r.getMaxAmount()-r.getMinAmount()+1);
                         }
+                        if (subFaction != null)
+                        {
+                            produce.setOwnership(subFaction);
+                        }
                         if(resultAmount>=1)
                         {
                             if(produce.isStackable())
                             {
                                 produce.setStack(resultAmount);
+                                
                                 if(user.isControl())
                                 {
-                                    world.getWm().getPlayerInventory().addItem(world.getItemLibrary().getItemByName(r.getItemName()));
+                                    world.getWm().getPlayerInventory().addItem(produce);
                                 }else
                                 {
-                                    user.getInventory().addItem(world.getItemLibrary().getItemByName(r.getItemName()));
+                                    user.getInventory().addItem(produce);
                                 }
                             }else
                             {
@@ -91,10 +96,10 @@ public class Plant extends Entity
                                 {
                                     if(user.isControl())
                                     {
-                                        world.getWm().getPlayerInventory().addItem(world.getItemLibrary().getItemByName(r.getItemName()));
+                                        world.getWm().getPlayerInventory().addItem(produce);
                                     }else
                                     {
-                                        user.getInventory().addItem(world.getItemLibrary().getItemByName(r.getItemName()));
+                                        user.getInventory().addItem(produce);
                                     }
                                 }
                             }

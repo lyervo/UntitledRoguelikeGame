@@ -29,35 +29,14 @@ public class GameEvent
     private ItemPile itemPile;
     private Item item;
     
+    private boolean remove;
     
-    
-    public GameEvent(String type,String subFaction,Pawn p)
+    public GameEvent(String type,String subFaction,int coolDown,boolean remove)
     {
         this.type = type;
         this.subFaction = subFaction;
-        this.pawn = p;
-    }
-    
-    public GameEvent(String type,String subFaction,int count)
-    {
-        this.type = type;
-        this.subFaction = subFaction;
-        this.count = count;
-    }
-    
-    public GameEvent(String type,String subFaction,Plant p)
-    {
-        this.type = type;
-        this.subFaction = subFaction;
-        this.plant = p;
-        this.count = 1;
-    }
-    
-    public GameEvent(String type,Pawn p,int count)
-    {
-        this.type = type;
-        this.pawn = p;
-        this.count = count;
+        this.coolDown = coolDown;
+        this.remove = remove;
     }
 
     public String getType()
@@ -173,8 +152,15 @@ public class GameEvent
         return true;
     }
 
+    public void coolDown()
+    {
+        coolDown--;
+    }
     
-    
+    public boolean isExpired()
+    {
+        return count <= 0;
+    }
 
     public String getSubFaction()
     {
@@ -184,6 +170,16 @@ public class GameEvent
     public void setSubFaction(String subFaction)
     {
         this.subFaction = subFaction;
+    }
+
+    public boolean isRemove()
+    {
+        return remove;
+    }
+
+    public void setRemove(boolean remove)
+    {
+        this.remove = remove;
     }
     
     

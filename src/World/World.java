@@ -219,13 +219,8 @@ public class World
         if(k[Input.KEY_F1])
         {
             consoleActive = !consoleActive;
-            if(consoleActive)
-            {
-                gameConsole.startState();
-            }else
-            {
-                gameConsole.getTextfield().setFocus(false);
-            }
+            gameConsole.getTextfield().setAcceptingInput(consoleActive);
+            gameConsole.getTextfield().setFocus(consoleActive);
         }
         
         

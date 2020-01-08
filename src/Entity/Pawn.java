@@ -111,6 +111,7 @@ public class Pawn extends Entity
     }
     
     
+    
     public void pawnAction(Input input,World world)
     {
         if (world.isMoved())
@@ -137,7 +138,11 @@ public class Pawn extends Entity
                         
                         for(GameEvent e:p.getEvents())
                         {
-                            processGameEvent(p,e,sameFaction);
+                            if(isSameFaction(e.getSubFaction()))
+                            {
+                                System.out.println("pass");
+                                processGameEvent(p,e,sameFaction,world);
+                            }
                         }
                         
                     }
@@ -174,9 +179,6 @@ public class Pawn extends Entity
             }else if(tasks.get(0).getType().equals("plant_seed_in_zone"))
             {
                 pawnPlantSeedInZoneLogic(world);
-            }else if(tasks.get(0).getType().equals("manage_farm"))
-            {
-                pawnManageFarmLogic(world,tasks.get(0));
             }else if(tasks.get(0).getType().equals("search_item_type"))
             {
                 pawnSearchItemByTypeLogic(world,tasks.get(0));
@@ -206,6 +208,11 @@ public class Pawn extends Entity
         
     }
     
+    public void pawnCallGuardsLogic(Task task,World world)
+    {
+        
+    }
+    
     public void doTask(Task task,World world)
     {
         if(world.isMoved())
@@ -231,9 +238,6 @@ public class Pawn extends Entity
             }else if(task.getType().equals("plant_seed_in_zone"))
             {
                 pawnPlantSeedInZoneLogic(world);
-            }else if(task.getType().equals("manage_farm"))
-            {
-                pawnManageFarmLogic(world,task);
             }else if(task.equals("search_item_type"))
             {
                 pawnSearchItemByTypeLogic(world,task);
@@ -292,7 +296,7 @@ public class Pawn extends Entity
             }
             task.setX(task.getTarget().getX());
             task.setY(task.getTarget().getY());
-            if(world.isMoved())
+            if(path!=null)
             {
                 
                 doPath(world.getWm().getCurrentLocalMap());
@@ -590,6 +594,18 @@ public class Pawn extends Entity
                 world.getWm().getPlayerInventory().tick(k, m, input, world);
             }
             
+            for(int i=events.size()-1;i>=0;i--)
+            {
+                if(events.get(i).isRemove())
+                {
+                    events.get(i).coolDown();
+                    if(events.get(i).getCoolDown()<=0)
+                    {
+                        events.remove(i);
+                    }
+                }
+            }
+            
         }
         
     }
@@ -667,6 +683,16 @@ public class Pawn extends Entity
                 }
             }
             fov.visitFieldOfView(world.getWm().getCurrentLocalMap(), x, y, 7);
+//            
+//            for(int i=events.size()-1;i>=0;i--)
+//            {
+//                events.get(i).decreaseCount();
+//                if(events.get(i).isExpired())
+//                {
+//                    events.remove(0);
+//                }
+//                
+//            }
 
         }
     }
@@ -843,6 +869,10 @@ public class Pawn extends Entity
 
     public void setControl(boolean control) {
         this.control = control;
+        if(control)
+        {
+            jobTitle = "player";
+        }
     }
 
 
@@ -1065,7 +1095,7 @@ public class Pawn extends Entity
                     }
                     if(state<=0)
                     {
-                        GameEvent newEvent = new GameEvent("harvested_plant",plantSubFactionName,1);
+                        GameEvent newEvent = new GameEvent("harvested_plant",plantSubFactionName,2,true);
                         events.add(newEvent);
                     }else if(state == 1)
                     {
@@ -1073,11 +1103,11 @@ public class Pawn extends Entity
                     }else if(state == 2)
                     {
                         events.remove(removeEvent);
-                        events.add(new GameEvent("harvested_plant_again",plantSubFactionName,1));
+                        events.add(new GameEvent("harvested_plant_again",plantSubFactionName,2,true));
                     }else if(state == 3)
                     {
                         events.remove(removeEvent);
-                        events.add(new GameEvent("harvested_plant_final",plantSubFactionName,1));
+                        events.add(new GameEvent("harvested_plant_final",plantSubFactionName,2,true));
                     }
                 }
                 
@@ -1394,7 +1424,7 @@ public class Pawn extends Entity
                 tile.getPlant().harvest(inventory.getEquipment().getMainHandSlot().getItem(), this, world);
                 if(((Plant)task.getTarget()).getSubFaction()!=null)
                 {
-                    addGameEvent(new GameEvent("harvested_plant",((Plant)task.getTarget()).getSubFaction(),((Plant)task.getTarget())));
+                    addGameEvent(new GameEvent("harvested_plant",((Plant)task.getTarget()).getSubFaction(),2,true));
                 }
                 
 
@@ -1534,64 +1564,6 @@ public class Pawn extends Entity
 
             }
         }
-    }
-    
-    public void pawnManageFarmLogic(World world,Task task)
-    {
-        if(task.getIndex() == 0)
-        {
-            ArrayList<Task> ts = new ArrayList<Task>();
-            Zone z = world.getWm().getCurrentLocalMap().getZoneById(task.getId());
-            for(Plant p:z.getPlants())
-            {
-                Task t;
-                if(p.isFinishedGrowing())
-                {
-                    t = new Task(p.getX(),p.getY(),p.getId(),p.getCurrentHarvest().getTool()[0],"harvest_plant");
-                    t.setTarget(p);
-                    t.setInfo(p.getCurrentName());
-                    
-                    ts.add(t);
-                    
-                }
-            }
-            
-            if(z.notEnoughPlants(task.getInfo()))
-            {
-                String seedName = task.getInfo()+" Seed";
-                for(int i=0;i<(z.getWidth()/2);i++)
-                {
-                    for(int j=0;j<(z.getHeight()/2);j++)
-                    {
-                        if(world.getWm().getCurrentLocalMap().countAccessibleTiles(z.getX()+i, z.getY()+j)>=2
-                            &&world.getWm().getCurrentLocalMap().getTiles()[j][i].getPlant() == null)
-                        {
-                            Task newPlantingTask = new Task(z.getX()+(i*2),z.getY()+(j*2),0,0,"plant_seed");
-                            newPlantingTask.setInfo(seedName);
-                            ts.add(newPlantingTask);
-
-
-                        }
-                    }
-                }
-            }
-            for(Task tt:ts)
-            {
-                addTask(tt);
-            }
-            task.setIndex(10);
-            sortTask();
-        }else
-        {
-            //cool down this task and perform the task before it instead
-            task.setIndex(task.getIndex()-1);
-            if(tasks.indexOf(task)+1<tasks.size())
-            {
-                doTask(tasks.get(tasks.indexOf(task)+1),world);
-            }
-        }
-
-        
     }
     
     public void pawnSearchItemByTypeLogic(World world,Task task)
@@ -1934,13 +1906,17 @@ public class Pawn extends Entity
         {
             if(((Pawn)task.getTarget()).isControl())
             {
-                world.getDialogue().switchDialog(task.getIndex(), world);
+                world.getDialogue().switchDialog(task.getIndex(), world,this);
                 world.getDialogue().display();
                 ((Pawn)task.getTarget()).clearTask();
             }
             if(task.getInfo()!=null)
             {
-                ((Pawn)task.getTarget()).getEvents().add(new GameEvent(task.getInfo(),task.getSubFaction(),1));
+                for(Pawn p:world.getWm().getCurrentLocalMap().getPawnsBySubFaction(task.getSubFaction()))
+                {
+                    p.removeTask(task);
+                }
+                ((Pawn)task.getTarget()).getEvents().add(new GameEvent(task.getInfo(),task.getSubFaction(),100,true));
                 ((Pawn)task.getTarget()).removeEvent(task.getAdditionalInfo(),task.getSubFaction());
             }
             tasks.remove(task);
@@ -1967,6 +1943,11 @@ public class Pawn extends Entity
             
 
         }
+    }
+    
+    public void removeTask(Task task)
+    {
+        tasks.remove(task);
     }
     
     public void clearTask()
@@ -2020,7 +2001,7 @@ public class Pawn extends Entity
         return false;
     }
     
-    public void processGameEvent(Pawn pawn,GameEvent event,boolean sameFaction)
+    public void processGameEvent(Pawn pawn,GameEvent event,boolean sameFaction,World world)
     {
         String subFactionName = "none";
         if(pawn.isControl())
@@ -2036,7 +2017,7 @@ public class Pawn extends Entity
             newTask.setAdditionalInfo(event.getType());
             addTask(newTask);
             sortTask();
-            events.add(new GameEvent(event.getType(),subFactionName,1));
+            events.add(new GameEvent(event.getType(),subFactionName,100,true));
         }else if(event.getType().equals("harvested_plant_again")&&!sameFaction&&!hasEvent(event.getType(),subFactionName))
         {
             Task newTask = new Task(0,0,pawn.getId(),10,"talk_to_target");
@@ -2045,10 +2026,15 @@ public class Pawn extends Entity
             newTask.setAdditionalInfo(event.getType());
             addTask(newTask);
             sortTask();
-            events.add(new GameEvent(event.getType(),subFactionName,1));
+            events.add(new GameEvent(event.getType(),subFactionName,100,true));
         }else if(event.getType().equals("harvested_plant_final")&&!sameFaction&&!hasEvent(event.getType(),subFactionName))
         {
-            
+            Task newTask = new Task(0,0,pawn.getId(),1,"call_guards");
+            newTask.setInfo("harvested_plant_illegally");
+            addTask(newTask);
+            sortTask();
+            events.add(new GameEvent(event.getType(),subFactionName,100,true));
+            world.getCm().getSubFactionByName(event.getSubFaction()).setRelationship(subFactionName,-20);
         }
     }
     
@@ -2056,7 +2042,7 @@ public class Pawn extends Entity
     {
         for(int i=events.size()-1;i>=0;i--)
         {
-            System.out.println("loop");
+           
             if(events.get(i).getType().equals(eventType)&&events.get(i).getSubFaction().equals(subFactionName))
             {
                 return true;
@@ -2069,10 +2055,10 @@ public class Pawn extends Entity
     {
         for(int i=events.size()-1;i>=0;i--)
         {
-            System.out.println("loop");
+         
             if(events.get(i).getType().equals(eventType)&&events.get(i).getSubFaction().equals(subFactionName))
             {
-                System.out.println("removed");
+                
                 events.remove(i);
             }
         }

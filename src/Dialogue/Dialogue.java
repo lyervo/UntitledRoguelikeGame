@@ -32,9 +32,9 @@ public class Dialogue
     private boolean display;
     
     private TrueTypeFont font;
+        
     
-    
-    public Dialogue(JSONObject jsonObj,World world)
+    public Dialogue(JSONObject jsonObj,World world,DialogueWindow dw)
     {
         
         long longID = (long)jsonObj.get("id");
@@ -53,14 +53,14 @@ public class Dialogue
         choices = new ArrayList<DialogueOption>();
         for(int i=replyArr.size()-1;i>=0;i--)
         {
-            choices.add(new DialogueOption(i,previousHeight,(JSONObject)replyArr.get(i),world.getContainer(),world.getRes().disposableDroidBB));
+            choices.add(new DialogueOption(i,previousHeight,(JSONObject)replyArr.get(i),world.getContainer(),world.getRes().disposableDroidBB,dw));
             previousHeight += choices.get(choices.size()-1).getHeight();
         }
         
         
     }
     
-    public Dialogue(Dialogue dialogue,World world)
+    public Dialogue(Dialogue dialogue,World world,DialogueWindow dw)
     {
         this.id = dialogue.getId();
         this.font = dialogue.getFont();
@@ -72,7 +72,7 @@ public class Dialogue
         {
             if(dialogue.getChoices().get(i).valid(world))
             {
-                choices.add(new DialogueOption(i,previousHeight,dialogue.getChoices().get(i),world.getContainer(),world.getRes().disposableDroidBB));
+                choices.add(new DialogueOption(i,previousHeight,dialogue.getChoices().get(i),world.getContainer(),world.getRes().disposableDroidBB,dw));
                 previousHeight += choices.get(choices.size()-1).getHeight();
             }
         }
