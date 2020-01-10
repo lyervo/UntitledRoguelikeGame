@@ -73,8 +73,7 @@ public class LocalMap implements TileBasedMap, ILosBoard
     
     private ArrayList<SubFaction> subFactions;
     
-    
-    
+
     public LocalMap(int id,int width,int height,Res res,World world,GameContainer container,ItemLibrary itemLibrary)
     {
         this.wm = world.getWm();
@@ -175,11 +174,16 @@ public class LocalMap implements TileBasedMap, ILosBoard
                 }
             }
         }
+        
+
 
         
     }
     
-    
+    public void lookAt(int x,int y)
+    {
+        
+    }
     
     
     public void generateTiles()
@@ -271,10 +275,6 @@ public class LocalMap implements TileBasedMap, ILosBoard
         
        
        
-       
-       
-       
-       
     }
     
     
@@ -308,7 +308,7 @@ public class LocalMap implements TileBasedMap, ILosBoard
             pawns.get(i).render(cam,this, animate);
         }
         
-        
+
         
         if(optionTab!=null)
         {
@@ -854,10 +854,17 @@ public class LocalMap implements TileBasedMap, ILosBoard
     {
         this.zones = zones;
     }
-    
-   
-    
-    
+
+    public ArrayList<SubFaction> getSubFactions()
+    {
+        return subFactions;
+    }
+
+    public void setSubFactions(ArrayList<SubFaction> subFactions)
+    {
+        this.subFactions = subFactions;
+    }
+
     
     
 }

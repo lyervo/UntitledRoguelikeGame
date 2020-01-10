@@ -14,8 +14,10 @@ import UI.UIWindow;
 import World.LocalMap;
 import World.World;
 import java.awt.Point;
-import java.awt.Rectangle;
+
 import java.util.ArrayList;
+import javafx.geometry.Point2D;
+import javafx.scene.shape.Rectangle;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -135,13 +137,7 @@ public class InventoryUI extends UIComponent
         primaryUp.render(g,x,y);
         primaryDown.render(g,x,y);
         
-        g.setColor(Color.green);
-        g.drawRect(primaryBounds.x+x, primaryBounds.y+y, primaryBounds.width,primaryBounds.height);
-        
-        if(secondaryBounds!=null)
-        {
-            g.drawRect(secondaryBounds.x+x,secondaryBounds.y+y,secondaryBounds.width,secondaryBounds.height);
-        }
+      
         
         secondaryUp.render(g,x,y);
         secondaryDown.render(g,x,y);
@@ -282,24 +278,24 @@ public class InventoryUI extends UIComponent
         
             if(m[16])
             {
-                if(primaryBounds.contains(new Point(input.getMouseX()-x,input.getMouseY()-y)))
+                if(primaryBounds.contains(new Point2D(input.getMouseX()-x,input.getMouseY()-y)))
                 {
                     primaryScrollUp();
                 }else if(secondaryBounds!=null)
                 {
-                    if(secondaryBounds.contains(new Point(input.getMouseX()-x,input.getMouseY()-y)))
+                    if(secondaryBounds.contains(new Point2D(input.getMouseX()-x,input.getMouseY()-y)))
                     {
                         secondaryScrollUp();
                     }
                 }
             }else if(m[17])
             {
-                if(primaryBounds.contains(new Point(input.getMouseX()-x,input.getMouseY()-y)))
+                if(primaryBounds.contains(new Point2D(input.getMouseX()-x,input.getMouseY()-y)))
                 {
                     primaryScrollDown();
                 }else if(secondaryBounds!=null)
                 {
-                    if(secondaryBounds.contains(new Point(input.getMouseX()-x,input.getMouseY()-y)))
+                    if(secondaryBounds.contains(new Point2D(input.getMouseX()-x,input.getMouseY()-y)))
                     {
                         secondaryScrollDown();
                     }
@@ -832,6 +828,20 @@ public class InventoryUI extends UIComponent
 
     public void setSecondary_height(int secondary_height) {
         this.secondary_height = secondary_height;
+    }
+
+    @Override
+    public void clearDesc()
+    {
+        for(int i=0;i< primaryItemUI.size();i++)
+        {
+            primaryItemUI.get(i).setDesc_display(false);
+        }
+        
+        for(int i=0;i< secondaryItemUI.size();i++)
+        {
+            secondaryItemUI.get(i).setDesc_display(false);
+        }
     }
 
 

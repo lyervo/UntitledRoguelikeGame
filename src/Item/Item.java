@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.control.Tooltip;
 import javafx.util.Pair;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -93,6 +94,7 @@ public class Item
     //determines the ownership of an item,use to check if an item is stolen
     private String ownership;
     
+   
     
     //constructor for seed items
     public Item(PlantTemplate pt,ItemLibrary itemLibrary)
@@ -505,6 +507,11 @@ public class Item
         
         
         
+    }
+    
+    public boolean isConsumable()
+    {
+        return properties.contains(1);
     }
     
     public int getItemType()

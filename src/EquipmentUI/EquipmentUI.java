@@ -13,8 +13,8 @@ import Res.Res;
 import UI.UIComponent;
 import UI.UIWindow;
 import World.World;
-import java.awt.Rectangle;
 import java.util.ArrayList;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Pair;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -251,6 +251,18 @@ public class EquipmentUI extends UIComponent
 
     public void setBg(Image bg) {
         this.bg = bg;
+    }
+
+    @Override
+    public void clearDesc()
+    {
+        for(int i=0;i<itemUI.size();i++)
+        {
+            if(itemUI.get(i) != null)
+            {
+                itemUI.get(i).setDesc_display(false);
+            }
+        }
     }
 
     

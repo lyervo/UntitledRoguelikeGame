@@ -24,7 +24,7 @@ public class Task
     private Zone zone;
     
     private String subFaction;
-    
+    private int amount;
     private String additionalInfo;
     
     //type
@@ -300,6 +300,16 @@ public class Task
     public void setAdditionalInfo(String additionalInfo)
     {
         this.additionalInfo = additionalInfo;
+    }
+
+    public int getAmount()
+    {
+        return amount;
+    }
+
+    public void setAmount(int amount)
+    {
+        this.amount = amount;
     }
     
     

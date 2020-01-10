@@ -7,6 +7,7 @@ package Item;
 
 import Entity.Entity;
 import Entity.Pawn;
+import Entity.Status;
 
 import World.LocalMap;
 import World.World;
@@ -116,6 +117,47 @@ public class Inventory
                 }
             }
         }
+        
+      
+    }
+    
+    public void dropItem(int x,int y,int index,LocalMap lm,int amount)
+    {
+
+       
+            
+                if(amount>0&&amount<=items.get(index).getStack()&&items.get(index).isStackable())
+                {
+                    if(lm.getItemPileAt(owner.getX(), owner.getY())==null)
+                    {
+                        items.get(index).addStack(-amount);
+
+                        Item i = new Item(items.get(index));
+                        i.setStack(amount);
+                        lm.getItemPiles().add(new ItemPile(lm.getItemPiles().size(),owner.getX(),owner.getY(),i));
+
+                    }else
+                    {
+
+                        items.get(index).addStack(-amount);
+
+                        Item i = new Item(items.get(index));
+                        i.setStack(amount);
+                        lm.getItemPileAt(owner.getX(), owner.getY()).addItem(new Item(i));
+                    }
+                }else
+                {
+                    if(lm.getItemPileAt(owner.getX(), owner.getY())==null)
+                    {
+                        lm.getItemPiles().add(new ItemPile(lm.getItemPiles().size(),owner.getX(),owner.getY(),items.get(index)));
+                    }else
+                    {  
+                        lm.getItemPileAt(owner.getX(), owner.getY()).addItem(items.get(index));
+                    }
+                    items.remove(index);
+                    return;
+                }
+          
         
       
     }
@@ -348,6 +390,39 @@ public class Inventory
         
     }
     
+    public void consumeItem(int index,World world,boolean player)
+    {
+        if(items.get(index).isConsumable())
+        {
+            if(player)
+            {
+                for (int i = 0; i < items.get(index).getEffects().size(); i++)
+                {
+                    world.getWm().getPlayer().getStatus().add(new Status(items.get(index).getEffects().get(i)));
+
+                }
+                if (!items.get(index).getPostConsume().isEmpty())
+                {
+                    for (int i=0;i<items.get(index).getPostConsume().size();i++)
+                    {
+                        addItem(world.getItemLibrary().getItemByTrueName(items.get(index).getPostConsume().get(i)));
+                    }
+                }
+                world.getItemLibrary().identify(items.get(index).getTrueName());
+                removeItem(items.get(index));
+
+                world.moved();
+            }else
+            {
+                
+            }
+        }else
+        {
+            return;
+        }
+                
+                
+    }
     
     public int getItemCount(String name)
     {

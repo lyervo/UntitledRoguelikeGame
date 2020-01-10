@@ -124,6 +124,44 @@ public class ItemPile extends Entity
         
     }
     
+    public void takeFrom(Inventory inventory,int index,LocalMap lm,int stack)
+    {
+
+        
+           
+                if(items.get(index).isStackable()&&stack>0&&items.get(index).getStack()>=stack)
+                {
+                    Item a = new Item(items.get(index));
+                    a.setStack(stack);
+                    inventory.addItem(a);
+                    items.get(index).addStack(-stack);
+                    if(items.get(index).getStack()<=0)
+                    {
+                        items.remove(index);
+                    }
+
+                }else
+                {
+                    inventory.addItem(new Item(items.get(index)));
+                    items.remove(index);
+                }
+            
+        
+        
+        
+        if(items.isEmpty())
+        {
+            lm.getItemPiles().remove(this);
+            return;
+        }
+        
+        //once an item is removed, refresh the first item to be printed on the map
+        texture = items.get(0).getTexture();
+        
+        
+    }
+    
+    
     public void addItem(Item i)
     {
         Item a = new Item(i);

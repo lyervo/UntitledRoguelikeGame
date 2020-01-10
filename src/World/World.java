@@ -15,27 +15,43 @@ import Culture.SubFaction;
 import Dialogue.DialogueLibrary;
 import Dialogue.DialogueWindow;
 import Entity.Furniture;
+import Entity.Pawn;
+import Entity.Plant.Plant;
+import Entity.Status;
+import Entity.Task;
 import EquipmentUI.EquipmentButton;
+import EquipmentUI.EquipmentItemUI;
 import EquipmentUI.EquipmentUI;
 import EquipmentUI.EquipmentUIWindow;
 import FurnitureUI.FurnitureUI;
 import FurnitureUI.FurnitureUIWindow;
+import Game.CanvasGame;
+import UI.JMenuItemOption;
 import GameConsole.GameConsole;
 import Item.ItemLibrary;
 import Narrator.Narrator;
 import Res.Res;
 import InventoryUI.InventoryButton;
+import InventoryUI.InventoryItemUI;
 import InventoryUI.InventoryUI;
 import InventoryUI.InventoryUIWindow;
 import InventoryUI.ItemOptionTab;
+import InventoryUI.ItemUI;
 import InventoryUI.XItemTextField;
 import Item.Item;
+import Item.ItemPile;
 import Narrator.NarratorButton;
 import Narrator.NarratorUIWindow;
 import UI.OptionTab;
 
 import UI.UIWindow;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JPopupMenu;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -46,7 +62,7 @@ import org.newdawn.slick.Input;
  *
  * @author Timot
  */
-public class World
+public class World implements ActionListener
 {
     public WorldMap wm;
     
@@ -123,12 +139,16 @@ public class World
     private GameConsole gameConsole;
    
     
+    private CanvasGame game;
+    
+    private JPopupMenu popupMenu;
     
     
+    private boolean popupDisplay;
     
-    public World(Res res,GameContainer container,Input input)
+    public World(Res res,GameContainer container,CanvasGame game,Input input) 
     {
-        
+        this.game = game;
         cm = new CultureManager();
         
         this.z = 0;
@@ -211,10 +231,18 @@ public class World
         gameConsole = new GameConsole(this);
         gameConsole.getTextfield().setFocus(false);
         consoleActive = false;
+        
+        popupDisplay = false;
+        popupMenu = new JPopupMenu("Options");
+        
+        
+        
+        
     }
     
     public void tick(boolean[] k,boolean[] m,Input input)
     {
+        
         
         if(k[Input.KEY_F1])
         {
@@ -228,6 +256,17 @@ public class World
         {
             gameConsole.tick(k, m, input, this);
             return;
+        }
+        
+        if(popupDisplay)
+        {
+            if(k[255]||m[19])
+            {
+                popupDisplay = false;
+                popupMenu.setVisible(false);
+                
+            }
+            
         }
         
         if(xItemTextFieldActive)
@@ -388,11 +427,16 @@ public class World
             xItemTextField.render(container, g);
         }
         
-        for(UIWindow ui:uis)
+        if(!popupDisplay&&!consoleActive)
         {
-            ui.renderDesc(g, input);
+            for(UIWindow ui:uis)
+            {
+                if(ui.isDisplay())
+                {
+                    ui.renderDesc(g, input);
+                }
+            }
         }
-        
         if(optionTab!=null)
         {
             optionTab.render(g);
@@ -437,11 +481,13 @@ public class World
     
    
     
-    public void activateXItemTextField(String itemName,int state)
+    public void activateXItemTextField(String itemName,int index,int state,int itemPileId)
     {
         xItemTextFieldActive = true;
         xItemTextField.setItemName(itemName);
+        xItemTextField.setIndex(index);
         xItemTextField.setState(state);
+        xItemTextField.setItemPileId(itemPileId);
     }
     
     public void deactivateXItemTextField()
@@ -488,7 +534,419 @@ public class World
         
     }
     
-
+    
+    @Override
+    public void actionPerformed(ActionEvent e)
+    {
+        if(e.getSource() instanceof JMenuItemOption)
+        {
+            JMenuItemOption option = (JMenuItemOption)e.getSource();
+            
+            processTileAction((JMenuItemOption)e.getSource());
+              
+            
+        }
+        popupDisplay = false;
+    }
+    
+    
+    public void processTileAction(JMenuItemOption option)
+    {
+        int amount;
+        switch (option.getCommand())
+        {
+            case "walk_to":
+                Tile t = ((Tile)option.getTarget());
+                wm.getCurrentLocalMap().getPlayer().walkTo(t.getX(), t.getY());
+                break;
+            case "look":
+                
+                break;
+            case "grab_item":
+                int id = option.getId();
+                int index = option.getIndex();
+                amount = 1;
+                if(((Item)option.getTarget()).isStackable())
+                {
+                    switch(option.getInfo())
+                    {
+                        case "half":
+                            amount =  ((Item)option.getTarget()).getStack()/2;
+                            break;
+                        case "all":
+                            amount = -1;
+                            break;
+                        case "x":
+                            activateXItemTextField(((Item)option.getTarget()).getTrueName(),option.getIndex(),4,id);
+                            return;
+                    }
+                }
+                wm.getCurrentLocalMap().getPlayer().grabItemAt(0,0, id, index,((Item)option.getTarget()).getTrueName(),amount);
+                break;
+            
+            case "talk_to":
+                wm.getCurrentLocalMap().getPlayer().addTask(new Task(0,0,option.getId(),0,"talk_to_target"));
+                break;
+            case "harvest_plant":
+                Task task = new Task(((Tile)option.getTarget()).getX(),((Tile)option.getTarget()).getY(),((Tile)option.getTarget()).getPlant().getId(),((Tile)option.getTarget()).getPlant().getId(),"harvest_plant");
+                task.setIndex(option.getIndex());
+                task.setTarget(((Tile)option.getTarget()).getPlant());
+                task.setInfo(((Tile)option.getTarget()).getPlant().getCurrentName());
+                wm.getCurrentLocalMap().getPlayer().addTask(task);
+                break;
+            case "drop_item":
+                amount = 1;
+                if(((Item)option.getTarget()).isStackable())
+                {
+                    switch(option.getInfo())
+                    {
+                        case "all":
+                            amount = -1;
+                            break;
+                        case "half":
+                            amount = ((Item)option.getTarget()).getStack()/2;
+                            break;
+                        case "x":
+                            activateXItemTextField(((Item)option.getTarget()).getTrueName(),option.getIndex(),2,-1);
+                            return;
+                    }
+                }
+                wm.getPlayerInventory().dropItem(wm.getPlayer().getX(), wm.getPlayer().getY(), option.getIndex(),wm.getCurrentLocalMap(), amount);
+                moved();
+                break;
+            case "drink_item":
+                wm.getPlayerInventory().consumeItem(option.getIndex(), this,true);
+                break;
+            case "eat_item":
+                wm.getPlayerInventory().consumeItem(option.getIndex(), this,true);
+                break;
+            case "equip_item":
+                wm.getPlayerInventory().getEquipment().equip(((Item)option.getTarget()));
+                inventory_ui.refreshInventoryUI(wm.getCurrentLocalMap());
+                moved();
+                break;
+            case "unequip_item":
+                wm.getPlayerInventory().getEquipment().unequip(((EquipmentItemUI)option.getTarget()).getItem().getEquipmentType());
+                moved();
+                break;
+            case "read_item":
+                Item book = ((Item)option.getTarget());
+                for(int i=0;i<book.getEffects().size();i++)
+                {
+                    wm.getCurrentLocalMap().getPlayer().getStatus().add(new Status(book.getEffects().get(i)));
+                }
+                wm.getCurrentLocalMap().getWorld().moved();
+                break;
+            case "empty_item":
+                
+                break;
+            
+                
+        }
+        
+    }
+    
+    public void createPopUpMenu(Object o,Input input)
+    {
+        popupDisplay = true;
+        
+        
+        if(o instanceof Tile)
+        {
+            popupMenu = createTilePopupMenu((Tile)o);
+            
+        }else if(o instanceof InventoryItemUI)
+        {
+            popupMenu = createInventoryItemPopupMenu((InventoryItemUI)o);
+        }else if(o instanceof EquipmentItemUI)
+        {
+            popupMenu = createEquipmentItemPopupMenu((EquipmentItemUI)o);
+        }
+        popupDisplay = true;
+        popupMenu.show(game.getCanvasGameContainer(), input.getMouseX(), input.getMouseY());
+    }
+    
+    public JPopupMenu createEquipmentItemPopupMenu(EquipmentItemUI itemUI)
+    {
+        JPopupMenu menu = new JPopupMenu("Item options");
+        menu.add(createItem("Unequip",itemUI.getItem().getTrueName(),"unequip_item",0,0,itemUI));
+        if(itemUI.getItem().isStackable())
+        {
+            JLabel label = new JLabel(itemUI.getItem().getStack()+" x "+itemUI.getItem().getName());
+            label.setFont(new Font("TimesRoman",Font.BOLD,16));
+            label.setAlignmentX(0.2f);
+            menu.add(label,0);
+        }else
+        {
+            JLabel label = new JLabel(itemUI.getItem().getName());
+            label.setFont(new Font("TimesRoman",Font.BOLD,16));
+            label.setAlignmentX(0.2f);
+            menu.add(label,0);
+        }
+        return menu;
+        
+    }
+    
+    public JPopupMenu createInventoryItemPopupMenu(InventoryItemUI itemUI)
+    {
+        JPopupMenu menu = new JPopupMenu("Item options");
+        if(itemUI.getState()!=4&&itemUI.getState()!=6)
+        {
+            boolean otherOption = false;
+            for(Integer i:itemUI.getItem().getProperties())
+            {
+                switch(i)
+                {
+                    case 0:
+                        menu.add(createItem("Eat "+itemUI.getName(),itemUI.getItem().getTrueName(),"eat_item",0,itemUI.getIndex(),itemUI.getItem()));
+                        otherOption = true;
+                        break;
+                    case 1:
+                        menu.add(createItem("Drink "+itemUI.getName(),itemUI.getItem().getTrueName(),"drink_item",0,itemUI.getIndex(),itemUI.getItem()));
+                        otherOption = true;
+                        break;
+                    case 2:
+                        menu.add(createItem("Empty "+itemUI.getName(),itemUI.getItem().getTrueName(),"empty_item",0,itemUI.getIndex(),itemUI.getItem()));
+                        otherOption = true;
+                        break;
+                    case 3:
+                        break;
+                    case 5:
+     
+                        menu.add(createItem("Read "+itemUI.getName(),itemUI.getItem().getTrueName(),"read_item",0,itemUI.getIndex(),itemUI.getItem()));
+                        otherOption = true;
+                        break;
+                    case 20:
+                        menu.add(createItem("Equip "+itemUI.getName(),itemUI.getItem().getTrueName(),"equip_item",0,itemUI.getIndex(),itemUI.getItem()));
+                        otherOption = true;
+                        break;
+                }
+            }
+            if(itemUI.getItem().isStackable())
+            {
+                if(otherOption)
+                {
+                    menu.add(createDropItemSubMenu(itemUI.getItem(),0,itemUI.getIndex()));
+                }else
+                {
+                   menu.add(createItem("Drop","1","drop_item",0,itemUI.getIndex(),itemUI.getItem()));
+                   menu.add(createItem("Drop all","all","drop_item",0,itemUI.getIndex(),itemUI.getItem()));
+                   menu.add(createItem("Drop half","half","drop_item",0,itemUI.getIndex(),itemUI.getItem()));
+                   menu.add(createItem("Drop X","x","drop_item",0,itemUI.getIndex(),itemUI.getItem()));
+                }
+            }else
+            {
+                menu.add(createItem("Drop "+itemUI.getItem().getName(),"1","drop_item",0,itemUI.getIndex(),itemUI.getItem()));
+            }
+        }else if(itemUI.getState() == 4)
+        {
+            int id = wm.getCurrentLocalMap().getItemPileAt(wm.getPlayer().getX(), wm.getPlayer().getY()).getId();
+            if(itemUI.getItem().isStackable())
+            {
+                menu.add(createItemSubMenu(itemUI.getItem(),id,itemUI.getIndex()));
+            }else if(itemUI.getItem().getStack()==1)
+            {
+                menu.add(createItem("Take "+itemUI.getItem().getName(),"1","grab_item",id,itemUI.getIndex(),itemUI.getItem()));
+            }else
+            {
+                menu.add(createItem("Take "+itemUI.getItem().getName(),"1","grab_item",id,itemUI.getIndex(),itemUI.getItem()));
+            }
+            
+        }else if(itemUI.getState() == 6)
+        {
+//            options.add(new Option("Unequip",21));
+        }
+        
+        if(itemUI.getItem().isStackable())
+        {
+            JLabel label = new JLabel(itemUI.getItem().getStack()+" x "+itemUI.getItem().getName());
+            label.setFont(new Font("TimesRoman",Font.BOLD,16));
+            label.setAlignmentX(0.2f);
+            menu.add(label,0);
+        }else
+        {
+            JLabel label = new JLabel(itemUI.getItem().getName());
+            label.setFont(new Font("TimesRoman",Font.BOLD,16));
+            label.setAlignmentX(0.2f);
+            menu.add(label,0);
+        }
+        return menu;
+    }
+    
+    
+    
+    public JMenuItemOption createItem(String label,String info,String command,int id,int index,Object o)
+    {
+        JMenuItemOption item = new JMenuItemOption(label, info, command, id, index, o);
+        item.addActionListener(this);
+        item.setFont(new Font("TimesRoman", Font.PLAIN, 16));
+        
+        
+     
+        return item;
+    }
+    
+    public JMenu createPawnSubMenu(Pawn pawn)
+    {
+        JMenu subMenu = new JMenu(pawn.getName()+","+pawn.getJobTitle());
+        subMenu.setFont(new Font("TimesRoman",Font.PLAIN,16));
+        subMenu.add(createItem("Talk to","none","talk_to",pawn.getId(),0,pawn));
+        subMenu.add(createItem("Trade","none","trade",pawn.getId(),0,pawn));
+        subMenu.add(createItem("Pickpocket","none","steal",pawn.getId(),0,pawn));
+        subMenu.add(createItem("Attack","none","trade",pawn.getId(),0,pawn));
+        
+        
+        return subMenu;
+    }
+    
+    public JMenu createItemSubMenu(Item item,int id,int index)
+    {
+        
+        JMenu subMenu = new JMenu(item.getStack()+" x "+item.getName());
+        subMenu.setFont(new Font("TimesRoman",Font.PLAIN,16));
+        if(item.isStackable())
+        {
+            subMenu.add(createItem("Take","1","grab_item",id,index,item));
+            if(item.getStack()>1)
+            {
+                subMenu.add(createItem("Take all","all","grab_item",id,index,item));
+                subMenu.add(createItem("Take half","half","grab_item",id,index,item));
+                subMenu.add(createItem("Take X","x","grab_item",id,index,item));
+            }
+        }else
+        {
+            subMenu.add(createItem("Take "+item.getName(),item.getTrueName(),"grab_item",id,index,item));
+        }
+        return subMenu;
+    }
+    
+    public JMenu createGrabItemSubMenu(Item item,int id,int index)
+    {
+        JMenu subMenu = new JMenu("Take "+item.getStack()+" x "+item.getName());
+        subMenu.setFont(new Font("TimesRoman",Font.PLAIN,16));
+        if(item.isStackable())
+        {
+            subMenu.add(createItem("Take",item.getTrueName(),"grab_item",id,index,item));
+            if(item.getStack()>1)
+            {
+                subMenu.add(createItem("Take all","all","grab_item",id,index,item));
+                subMenu.add(createItem("Take half","half","grab_item",id,index,item));
+                subMenu.add(createItem("Take X","x","grab_item",id,index,item));
+            }
+        }else
+        {
+            subMenu.add(createItem("Take "+item.getName(),item.getTrueName(),"grab_item",id,index,item));
+        }
+        return subMenu;
+    }
+    
+    public JMenu createDropItemSubMenu(Item item,int id,int index)
+    {
+        
+        JMenu subMenu = new JMenu("Drop "+item.getStack()+" x "+item.getName());
+        subMenu.setFont(new Font("TimesRoman",Font.PLAIN,16));
+        if(item.isStackable())
+        {
+            subMenu.add(createItem("Drop",item.getTrueName(),"drop_item",id,index,item));
+            if(item.getStack()>1)
+            {
+                subMenu.add(createItem("Drop all","all","drop_item",id,index,item));
+                subMenu.add(createItem("Drop half","half","drop_item",id,index,item));
+                subMenu.add(createItem("Drop X","x","drop_item",id,index,item));
+            }
+        }else
+        {
+            subMenu.add(createItem("Drop "+item.getName(),item.getTrueName(),"drop_item",id,index,item));
+        }
+        return subMenu;
+    }
+    
+    public JMenu createPlantSubMenu(Tile tile,Plant plant)
+    {
+        JMenu subMenu = new JMenu(plant.getCurrentName());
+        subMenu.setFont(new Font("TimesRoman",Font.PLAIN,16));
+        for(int i=0;i<plant.getCurrentHarvest().getTool().length;i++)
+        {
+            int tool = plant.getCurrentHarvest().getTool()[i];
+            switch(tool)
+            {
+                case 100:
+                    subMenu.add(createItem("Harvest with hands",plant.getCurrentName(),"harvest_plant",plant.getId(),100,tile));
+                    break;
+                case 101:
+                    subMenu.add(createItem("Harvest with axe",plant.getCurrentName(),"harvest_plant",plant.getId(),101,tile));
+                    break;
+                case 102:
+                    subMenu.add(createItem("Harvest with pickaxe",plant.getCurrentName(),"harvest_plant",plant.getId(),102,tile));
+                    break;
+                case 103:
+                    subMenu.add(createItem("Harvest with hoe",plant.getCurrentName(),"harvest_plant",plant.getId(),103,tile));
+                    break;
+                case 104:
+                    subMenu.add(createItem("Harvest with hammer",plant.getCurrentName(),"harvest_plant",plant.getId(),104,tile));
+                    break;
+            }
+        }
+        return subMenu;
+    }
+    
+    public JPopupMenu createTilePopupMenu(Tile t)
+    {
+        JPopupMenu menu = new JPopupMenu("Tile Popup Menu");
+        ArrayList<Pawn> pawns = wm.getCurrentLocalMap().getPawnsAt(t.getX(),t.getY());
+        ItemPile ip = wm.getCurrentLocalMap().getItemPileAt(t.getX(), t.getY());
+        Furniture f = wm.getCurrentLocalMap().furnitureAt(t.getX(), t.getY());
+        
+        if(!t.isSolid())
+        {
+            menu.add(createItem("Walk to","none","walk_to",0,0,t));
+        }
+        
+        if(t.isVisit())
+        {
+            menu.add(createItem("Look","none","look",0,0,t));
+        }
+        
+        if(t.getPlant()!=null)
+        {
+            menu.add(createPlantSubMenu(t,t.getPlant()));
+        }
+        
+        if(!pawns.isEmpty())
+        {
+            for(int i=0;i<pawns.size();i++)
+            {
+                if(!pawns.get(i).isControl())
+                {
+                    menu.add(createPawnSubMenu(pawns.get(i)));
+                }
+            }
+        }
+        if(ip!=null)
+        {
+            for(int i=0;i<ip.getItems().size();i++)
+            {
+                if(ip.getItems().get(i).isStackable()&&ip.getItems().get(i).getStack()>1)
+                {
+                    menu.add(createItemSubMenu(ip.getItems().get(i),ip.getId(),i));
+                }else
+                {
+                    menu.add(createItem("Take " + ip.getItems().get(i).getName(), "1", "grab_item", ip.getId(), i, ip.getItems().get(i)));
+                }
+            }
+        }
+        
+        if(f!=null)
+        {
+            
+        }
+        
+        
+        
+        return menu;
+        
+        
+    }
     
     
     public void callMapTick()
@@ -832,6 +1290,16 @@ public class World
     public void setCm(CultureManager cm)
     {
         this.cm = cm;
+    }
+
+    public CanvasGame getGame()
+    {
+        return game;
+    }
+
+    public void setGame(CanvasGame game)
+    {
+        this.game = game;
     }
     
     

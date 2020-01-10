@@ -9,8 +9,8 @@ import InventoryUI.ItemUI;
 import Item.Item;
 import Res.Res;
 import World.World;
-import java.awt.Point;
-import java.awt.Rectangle;
+import javafx.geometry.Point2D;
+import javafx.scene.shape.Rectangle;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 
@@ -66,7 +66,7 @@ public class CraftingItemUI extends ItemUI
         
         if(!world.isDrag())
         {
-            if (bounds.contains(new Point(input.getMouseX()-x, input.getMouseY()-y)))
+            if (bounds.contains(new Point2D(input.getMouseX()-x, input.getMouseY()-y)))
             {
                 hover = true;
 
@@ -78,14 +78,15 @@ public class CraftingItemUI extends ItemUI
             {
                 world.spawnItemOptionTab(input.getMouseX(), input.getMouseY(), index, 9, item);
             } else if (input.isMouseButtonDown(0) && hover && !ui.isDrag() && !world.isDrag()) {
-                xofs = input.getMouseX() - x - bounds.x;
-                yofs = input.getMouseY() - y - bounds.y;
+                xofs = input.getMouseX() - x - (int)bounds.getX();
+                yofs = input.getMouseY() - y - (int)bounds.getY();
                 drag = true;
                 world.setDrag(true);
                 ui.setDrag(true);
             }
 
         }
+        
             
     }
     

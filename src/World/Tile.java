@@ -76,7 +76,7 @@ public class Tile {
                 }else if(hover&&m[1]&&visit!=0)
                 {
 //                    world.getWm().getCurrentLocalMap().spawnOptionTab(this);
-                    
+                    world.createPopUpMenu(this, input);
                 }
             }
         }

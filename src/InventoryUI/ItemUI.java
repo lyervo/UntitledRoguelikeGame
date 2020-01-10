@@ -11,8 +11,8 @@ import Res.Res;
 
 import World.World;
 
-import java.awt.Rectangle;
 import java.util.ArrayList;
+import javafx.scene.shape.Rectangle;
 
 import javafx.util.Pair;
 import org.newdawn.slick.Color;
@@ -557,6 +557,26 @@ public class ItemUI extends DescBox
 
     public void setFont(TrueTypeFont font) {
         this.font = font;
+    }
+
+    public ArrayList<String> getDesc_lines()
+    {
+        return desc_lines;
+    }
+
+    public void setDesc_lines(ArrayList<String> desc_lines)
+    {
+        this.desc_lines = desc_lines;
+    }
+
+    public TrueTypeFont getFontSmall()
+    {
+        return fontSmall;
+    }
+
+    public void setFontSmall(TrueTypeFont fontSmall)
+    {
+        this.fontSmall = fontSmall;
     }
     
     

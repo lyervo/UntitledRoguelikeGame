@@ -64,7 +64,7 @@ public class ItemOptionTab extends OptionTab
         switch (options.get(hoveringIndex).getActionType())
         {
             case -4:
-                lm.getWorld().activateXItemTextField(item.getTrueName(), state);
+                lm.getWorld().activateXItemTextField(item.getTrueName(),index, state,0);
                 break;
             case -3:
                 lm.getItemPileAt(lm.getPlayer().getX(), lm.getPlayer().getY()).takeFrom(lm.getWm().getPlayerInventory(), item.getTrueName(), lm,item.getStack()/2);
@@ -92,7 +92,7 @@ public class ItemOptionTab extends OptionTab
                 break;
             case 3:
                 
-                lm.getWorld().activateXItemTextField(item.getTrueName(),state);
+                lm.getWorld().activateXItemTextField(item.getTrueName(),index,state,0);
                 
                 break;
             case 4:

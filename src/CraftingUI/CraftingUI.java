@@ -391,6 +391,23 @@ public class CraftingUI extends UIComponent
     public void setTexture(Image texture) {
         this.texture = texture;
     }
+
+    @Override
+    public void clearDesc()
+    {
+        for(int i=0;i<recipes.size();i++)
+        {
+            recipes.get(i).setDescHover(0);
+            for(RecipeRequirementUI r:recipes.get(i).getReq())
+            {
+                r.setDescHover(0);
+            }
+            for(StationUI s:stations)
+            {
+                s.setDesc_hover(0);
+            }
+        }
+    }
     
     
     

@@ -5,6 +5,7 @@
  */
 package InventoryUI;
 
+import Item.Item;
 import Res.Res;
 import World.World;
 import java.awt.Point;
@@ -35,6 +36,10 @@ public class XItemTextField extends TextField
     private boolean hover;
     
     private World world;
+    
+    private int index;
+    
+    private int itemPileId;
     
     public XItemTextField(GUIContext container, Font font, int x, int y, int width, int height,World world,Res res)
     {
@@ -107,7 +112,7 @@ public class XItemTextField extends TextField
                 world.getWm().getPlayerInventory().dropItem(world.getWm().getCurrentLocalMap().getPlayer().getX(),world.getWm().getCurrentLocalMap().getPlayer().getY(), itemName, world.getWm().getCurrentLocalMap(), Integer.parseInt(getText()));
             }else if(state==4)
             {
-                world.getWm().getCurrentLocalMap().getItemPileAt(world.getWm().getCurrentLocalMap().getPlayer().getX(), world.getWm().getCurrentLocalMap().getPlayer().getY()).takeFrom(world.getWm().getPlayerInventory(), itemName, world.getWm().getCurrentLocalMap(), Integer.parseInt(getText()));
+                world.getWm().getCurrentLocalMap().getPlayer().grabItemAt(0,0, itemPileId, index,itemName,Integer.parseInt(getText()));
             }
         }
         inventoryUI.refreshInventoryUI(world.getWm().getCurrentLocalMap());
@@ -197,6 +202,36 @@ public class XItemTextField extends TextField
 
     public void setHover(boolean hover) {
         this.hover = hover;
+    }
+
+    public World getWorld()
+    {
+        return world;
+    }
+
+    public void setWorld(World world)
+    {
+        this.world = world;
+    }
+
+    public int getIndex()
+    {
+        return index;
+    }
+
+    public void setIndex(int index)
+    {
+        this.index = index;
+    }
+
+    public int getItemPileId()
+    {
+        return itemPileId;
+    }
+
+    public void setItemPileId(int itemPileId)
+    {
+        this.itemPileId = itemPileId;
     }
     
     

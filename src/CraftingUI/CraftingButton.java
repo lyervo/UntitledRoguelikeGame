@@ -29,6 +29,7 @@ public class CraftingButton extends Button
             world.getCraftingWindow().setDisplay();
             world.getCrafting_ui().refreshUI(world.getWm().getCurrentLocalMap());
         }
+        world.getCrafting_ui().clearDesc();
     }
     
 }

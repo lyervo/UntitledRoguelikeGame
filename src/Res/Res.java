@@ -82,6 +82,8 @@ public class Res
     public Image potion_template,sword_template,dagger_template;
     
     
+//    public Image progressBar;
+    
     private HashMap<String,Image> images;
     private ArrayList<Pair<String,SpriteSheet>> sprites;
     
@@ -176,6 +178,8 @@ public class Res
         sharp_object = new Image("res/texture/items/sharp_object.png");
         
         table = new Image("res/texture/furniture/table.png");
+        
+//        progressBar = new Image("res/texture/baloon/progress_baloon.png");
         
         camp_fire = new SpriteSheet("res/texture/furniture/camp_fire.png",32,32);
         

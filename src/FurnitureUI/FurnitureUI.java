@@ -10,9 +10,9 @@ import Res.Res;
 import UI.UIComponent;
 import UI.UIWindow;
 import World.World;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.util.ArrayList;
+import javafx.geometry.Point2D;
+import javafx.scene.shape.Rectangle;
 
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -116,13 +116,13 @@ public class FurnitureUI extends UIComponent{
         {
             if(m[16])
             {
-                if(bounds.contains(new Point(input.getMouseX()-x,input.getMouseY()-y)))
+                if(bounds.contains(new Point2D(input.getMouseX()-x,input.getMouseY()-y)))
                 {
                     scrollUp();
                 }
             }else if(m[17])
             {
-                if(bounds.contains(new Point(input.getMouseX()-x,input.getMouseY()-y)))
+                if(bounds.contains(new Point2D(input.getMouseX()-x,input.getMouseY()-y)))
                 {
                     scrollDown();
                 }
@@ -241,6 +241,12 @@ public class FurnitureUI extends UIComponent{
 
     public void setRes(Res res) {
         this.res = res;
+    }
+
+    @Override
+    public void clearDesc()
+    {
+        
     }
     
     

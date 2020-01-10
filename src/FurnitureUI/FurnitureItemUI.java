@@ -11,7 +11,8 @@ import Item.Item;
 import Res.Res;
 import World.World;
 import java.awt.Point;
-import java.awt.Rectangle;
+import javafx.geometry.Point2D;
+import javafx.scene.shape.Rectangle;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 
@@ -47,7 +48,7 @@ public class FurnitureItemUI extends ItemUI
     {
         if(!world.isDrag())
         {
-            if (bounds.contains(new Point(input.getMouseX()-x, input.getMouseY()-y)))
+            if (bounds.contains(new Point2D(input.getMouseX()-x, input.getMouseY()-y)))
             {
                 hover = true;
 
@@ -60,8 +61,8 @@ public class FurnitureItemUI extends ItemUI
                 world.spawnItemOptionTab(input.getMouseX(), input.getMouseY(), index, 6, item);
             } else if (input.isMouseButtonDown(0) && hover && !ui.isDrag() && !world.isDrag())
             {
-                xofs = input.getMouseX() - x - bounds.x;
-                yofs = input.getMouseY() - y - bounds.y;
+                xofs = input.getMouseX() - x - (int)bounds.getX();
+                yofs = input.getMouseY() - y - (int)bounds.getY();
                 drag = true;
                 world.setDrag(true);
                 ui.setDrag(true);
@@ -103,7 +104,7 @@ public class FurnitureItemUI extends ItemUI
     public void checkDrop(Input input,World world,int x,int y)
     {
         Rectangle inventoryDropRect = new Rectangle(input.getMouseX()-xofs-world.getInventoryWindow().getX(),input.getMouseY()-yofs-world.getInventoryWindow().getY(),64,64);
-        if(inventoryDropRect.intersects(world.getInventory_ui().getPrimaryBounds()))
+        if(inventoryDropRect.intersects(world.getInventory_ui().getPrimaryBounds().getBoundsInParent()))
         {
             world.getInventory_ui().getPlayer_inventory().addItem(item);
             ui.getFurniture().getItems().remove(index);

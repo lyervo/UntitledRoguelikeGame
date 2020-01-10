@@ -177,6 +177,12 @@ public class Narrator extends UIComponent
     public void renderDesc(Graphics g, Input input) {
         
     }
+
+    @Override
+    public void clearDesc()
+    {
+        
+    }
     
     
     

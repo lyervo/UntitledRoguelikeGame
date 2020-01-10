@@ -41,6 +41,8 @@ public abstract class UIComponent
     
     public abstract void renderDesc(Graphics g,Input input);
     
+    public abstract void clearDesc();
+    
     public int getX() {
         return x;
     }

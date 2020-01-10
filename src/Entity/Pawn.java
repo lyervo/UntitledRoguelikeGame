@@ -759,10 +759,11 @@ public class Pawn extends Entity
         addTask(task);
     }
     
-    public void grabItemAt(int x,int y,int id,int index,String itemName)
+    public void grabItemAt(int x,int y,int id,int index,String itemName,int amount)
     {
         Task task = new Task(x,y,id,index,"grab_item");
         task.setInfo(itemName);
+        task.setAmount(amount);
         addTask(task);
         
     }
@@ -959,7 +960,7 @@ public class Pawn extends Entity
 
                 world.getAncestor().addText(((ItemPile) tasks.get(0).getTarget()).getItems().get(tasks.get(0).getIndex()).getName() + " added to inventory.");
 
-                ((ItemPile) tasks.get(0).getTarget()).takeFrom(world.getWm().getPlayerInventory(), tasks.get(0).getInfo(), world.getWm().getCurrentLocalMap(), -1);
+                ((ItemPile) tasks.get(0).getTarget()).takeFrom(world.getWm().getPlayerInventory(), tasks.get(0).getInfo(), world.getWm().getCurrentLocalMap(), tasks.get(0).getAmount());
                 world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
                 tasks.get(0).clearTask();
                 path = null;
@@ -1072,6 +1073,7 @@ public class Pawn extends Entity
                 
                 world.getAncestor().addText("You used "+world.getWm().getPlayerInventory().getEquipment().getMainHandSlot().getItem().getName()
                                             +" on "+ tile.getPlant().getCurrentName());
+
                 String plantSubFactionName;
                 int state = 0;
                 GameEvent removeEvent = null;

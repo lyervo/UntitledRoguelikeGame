@@ -9,8 +9,8 @@ import InventoryUI.ItemUI;
 import Item.Item;
 import Res.Res;
 import World.World;
-import java.awt.Point;
-import java.awt.Rectangle;
+import javafx.geometry.Point2D;
+import javafx.scene.shape.Rectangle;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -87,7 +87,7 @@ public class EquipmentItemUI extends ItemUI
         
         if(!world.isDrag())
         {
-            if (bounds.contains(new Point(input.getMouseX()-x, input.getMouseY()-y)))
+            if (bounds.contains(new Point2D(input.getMouseX()-x, input.getMouseY()-y)))
             {
                 hover = true;
 
@@ -100,10 +100,10 @@ public class EquipmentItemUI extends ItemUI
 
             if (m[1] && hover)
             {
-                world.spawnItemOptionTab(input.getMouseX(), input.getMouseY(), index, 6, item);
+                world.createPopUpMenu(this, input);
             } else if (input.isMouseButtonDown(0) && hover && !ui.isDrag() && !world.isDrag()) {
-                xofs = input.getMouseX() - x - bounds.x;
-                yofs = input.getMouseY() - y - bounds.y;
+                xofs = input.getMouseX() - x - (int)bounds.getX();
+                yofs = input.getMouseY() - y - (int)bounds.getY();
                 drag = true;
                 world.setDrag(true);
                 ui.setDrag(true);
@@ -133,13 +133,13 @@ public class EquipmentItemUI extends ItemUI
         
         Rectangle dropRect2 = new Rectangle(input.getMouseX()-xofs,input.getMouseY()-yofs,64,64);
         
-        if(dropRect2.intersects(world.getInventoryWindow().getBounds())&&world.getZ()==world.getInventoryWindow().getZ())
+        if(dropRect2.intersects(world.getInventoryWindow().getBounds().getBoundsInParent())&&world.getZ()==world.getInventoryWindow().getZ())
         {
             ui.getEquipment().unequip(item.getEquipmentType());
             ui.refreshUI();
             world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
             return;
-        }else if(dropRect.intersects(ui.getMainBounds()))
+        }else if(dropRect.intersects(ui.getMainBounds().getBoundsInParent()))
         {
             
         }

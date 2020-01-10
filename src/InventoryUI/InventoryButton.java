@@ -38,6 +38,7 @@ public class InventoryButton extends Button
             world.deactivateXItemTextField();
             world.setDrag(false);
         }
+        world.getInventory_ui().clearDesc();
     }
     
     

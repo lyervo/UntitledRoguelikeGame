@@ -8,6 +8,7 @@ package Game;
 import GameStates.InGame;
 import Res.Res;
 import World.World;
+import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
+import javax.swing.UIManager;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.CanvasGameContainer;
 import org.newdawn.slick.GameContainer;
@@ -27,7 +29,7 @@ import org.newdawn.slick.SlickException;
  *
  * @author Timot
  */
-public class CanvasGame extends BasicGame
+public class CanvasGame extends BasicGame 
 {
     public static void main(String[] args)
     {
@@ -49,27 +51,30 @@ public class CanvasGame extends BasicGame
     private long lastAnim,currentAnim;
     private boolean animate;
 
-    private CanvasGameContainer canvasGameContainer1;
+    private CanvasGameContainer canvasGameContainer;
+    
+    private JFrame frame;
+
     
     public CanvasGame(String title)
     {
         super(title);
         try
         {
-            canvasGameContainer1 = new CanvasGameContainer(this);
-            canvasGameContainer1.setBounds(20, 20, 400, 400);
-            JFrame newFrame = new JFrame("With JFrame");
-            newFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            newFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-            newFrame.add(canvasGameContainer1);
+            canvasGameContainer = new CanvasGameContainer(this);
+            canvasGameContainer.setBounds(0, 0, 1920, 1080);
+            frame = new JFrame("Game");
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            frame.add(canvasGameContainer);
             
-            newFrame.addWindowListener(new WindowAdapter() {
+            frame.addWindowListener(new WindowAdapter() {
             
             
             @Override
             public void windowClosing(WindowEvent e)
             {
-                canvasGameContainer1.dispose();
+                canvasGameContainer.dispose();
             }
             
             @Override
@@ -86,15 +91,22 @@ public class CanvasGame extends BasicGame
             
             
             
-            newFrame.setVisible(true);
+            frame.setVisible(true);
             
-            canvasGameContainer1.start();
+            canvasGameContainer.start();
             
             
         } catch (SlickException ex)
         {
             Logger.getLogger(CanvasGame.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        UIManager.put("MenuItem.selectionBackground", Color.decode("#60a3bc"));
+        UIManager.put("MenuItem.background", Color.decode("#82ccdd"));
+        UIManager.put("MenuBar.selectionBackground", Color.decode("#60a3bc"));
+        UIManager.put("MenuBar.background", Color.decode("#82ccdd"));
+        
+        
     }
     
 
@@ -116,7 +128,7 @@ public class CanvasGame extends BasicGame
         m = new boolean[20];
         keys = new boolean[256];
         
-        world = new World(res,container,input);
+        world = new World(res,container,this,input);
         
         animate = false;
         
@@ -196,7 +208,6 @@ public class CanvasGame extends BasicGame
     
     
     
-    
 
     
     @Override
@@ -209,7 +220,6 @@ public class CanvasGame extends BasicGame
     @Override
     public void keyPressed(int key,char c)
     {
-
         keys[key] = true;
         if(key!=Input.KEY_F1)
         {
@@ -328,15 +338,27 @@ public class CanvasGame extends BasicGame
         this.animate = animate;
     }
 
-    public CanvasGameContainer getCanvasGameContainer1()
+    public CanvasGameContainer getCanvasGameContainer()
     {
-        return canvasGameContainer1;
+        return canvasGameContainer;
     }
 
-    public void setCanvasGameContainer1(CanvasGameContainer canvasGameContainer1)
+    public void setCanvasGameContainer(CanvasGameContainer canvasGameContainer1)
     {
-        this.canvasGameContainer1 = canvasGameContainer1;
+        this.canvasGameContainer = canvasGameContainer1;
     }
+
+    public JFrame getFrame()
+    {
+        return frame;
+    }
+
+    public void setFrame(JFrame frame)
+    {
+        this.frame = frame;
+    }
+
+    
     
     
     

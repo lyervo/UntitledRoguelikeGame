@@ -65,7 +65,7 @@ public class InGame extends BasicGameState
         m = new boolean[20];
         keys = new boolean[256];
         
-        world = new World(res,container,input);
+//        world = new World(res,container,input);
         
         animate = false;
         

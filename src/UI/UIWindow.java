@@ -8,9 +8,9 @@ package UI;
 
 import Res.Res;
 import World.World;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.util.ArrayList;
+import javafx.geometry.Point2D;
+import javafx.scene.shape.Rectangle;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -80,7 +80,7 @@ public abstract class UIWindow
         if(display&&!drag)
         {
             g.setColor(Color.blue);
-            g.drawRect(x, y-32, dragBounds.width, dragBounds.height);
+            g.drawRect(x, y-32, (int)dragBounds.getWidth(), (int)dragBounds.getHeight());
             g.setColor(Color.yellow);
             g.drawRect(x, y, width, height);
             uiComponent.render(g, input, x, y);
@@ -105,7 +105,7 @@ public abstract class UIWindow
         if(display)
         {
             g.setColor(Color.blue);
-            g.drawRect(input.getMouseX()-xofs, input.getMouseY()-yofs, dragBounds.width, dragBounds.height);
+            g.drawRect(input.getMouseX()-xofs, input.getMouseY()-yofs, (int)dragBounds.getWidth(), (int)dragBounds.getHeight());
             g.setColor(Color.yellow);
             g.drawRect(input.getMouseX()-xofs, input.getMouseY()-yofs+32, width, height);
             uiComponent.render(g, input, input.getMouseX()-xofs, input.getMouseY()-yofs+32);
@@ -125,7 +125,7 @@ public abstract class UIWindow
  
         if(display)
         {
-            if(bounds.contains(new Point(input.getMouseX(),input.getMouseY())))
+            if(bounds.contains(new Point2D(input.getMouseX(),input.getMouseY())))
             {
 
                 hover = true;
@@ -138,7 +138,7 @@ public abstract class UIWindow
             
 
 
-            if(dragBounds.contains(new Point(input.getMouseX(),input.getMouseY())))
+            if(dragBounds.contains(new Point2D(input.getMouseX(),input.getMouseY())))
             {
                 dragHover = true;
 
@@ -174,8 +174,8 @@ public abstract class UIWindow
 
             if(dragHover&&input.isMouseButtonDown(0)&&!drag&&!world.isDrag()&&world.getZ()==z&&!pin)
             {
-                xofs = input.getMouseX()-dragBounds.x;
-                yofs = input.getMouseY()-dragBounds.y;
+                xofs = input.getMouseX()-(int)dragBounds.getX();
+                yofs = input.getMouseY()-(int)dragBounds.getY();
                 drag = true;
                 world.setDrag(true);
             }
@@ -203,35 +203,35 @@ public abstract class UIWindow
         if(input.getMouseX()-xofs<0)
         {
             this.x = 0;
-            this.bounds.x = 0;
-            this.dragBounds.x = 0;
+            this.bounds.setX(0);
+            this.dragBounds.setX(0);
         }else if(input.getMouseX()-xofs>container.getWidth()-width)
         {
             this.x = container.getWidth()-width;
-            this.bounds.x = container.getWidth()-width;
-            this.dragBounds.x = container.getWidth()-width;
+            this.bounds.setX(container.getWidth()-width);
+            this.dragBounds.setX(container.getWidth()-width);
         }else
         {
             this.x = input.getMouseX()-xofs;
-            this.bounds.x = input.getMouseX()-xofs;
-            this.dragBounds.x = input.getMouseX()-xofs;
+            this.bounds.setX(input.getMouseX()-xofs);
+            this.dragBounds.setX(input.getMouseX()-xofs);
         }
         
         if(input.getMouseY()-yofs<0)
         {
             this.y = 32;
-            this.bounds.y = 32;
-            this.dragBounds.y = 0;
+            this.bounds.setY(32);
+            this.dragBounds.setY(0);
         }else if(input.getMouseY()-yofs>container.getHeight()-64-height)
         {
             this.y = container.getHeight()-height-64;
-            this.bounds.y = container.getHeight()-height-64;
-            this.dragBounds.y = container.getHeight()-height-32-64;
+            this.bounds.setY(container.getHeight()-height-64);
+            this.dragBounds.setY(container.getHeight()-height-32-64);
         }else
         {
             this.y = input.getMouseY()-yofs+32;
-            this.bounds.y = input.getMouseY()-yofs+32;
-            this.dragBounds.y = input.getMouseY()-yofs;
+            this.bounds.setY(input.getMouseY()-yofs+32);
+            this.dragBounds.setY(input.getMouseY()-yofs);
         }
         
         uiComponent.setX(x);

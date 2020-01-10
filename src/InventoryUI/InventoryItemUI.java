@@ -5,14 +5,17 @@
  */
 package InventoryUI;
 
+import Entity.Task;
 import FurnitureUI.FurnitureUI;
 import FurnitureUI.FurnitureUIWindow;
 import Item.Item;
 import Res.Res;
 import World.World;
 import java.awt.Point;
-import java.awt.Rectangle;
+import javafx.scene.shape.Rectangle;
 import java.util.Collections;
+import javafx.geometry.Point2D;
+import javafx.scene.control.Tooltip;
 import javafx.util.Pair;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -28,6 +31,7 @@ public class InventoryItemUI extends ItemUI
     private InventoryUI ui;
     private int state;
     
+     private Tooltip tip;
     
     public InventoryItemUI(Item item, int index,Res res,InventoryUI ui,int state)
     {
@@ -66,6 +70,9 @@ public class InventoryItemUI extends ItemUI
             }
         }
         
+        
+        
+        
     }
     
     @Override
@@ -77,7 +84,7 @@ public class InventoryItemUI extends ItemUI
    
             if(state<=2)
             {
-                if(bounds.contains(new Point(input.getMouseX()-x,input.getMouseY()+(ui.getScroll1()*71)-y))&&ui.getPrimaryBounds().contains(new Point(input.getMouseX()-x,input.getMouseY()-y)))
+                if(bounds.contains(new Point2D(input.getMouseX()-x,input.getMouseY()+(ui.getScroll1()*71)-y))&&ui.getPrimaryBounds().contains(new Point2D(input.getMouseX()-x,input.getMouseY()-y)))
                 {
                     hover = true;
                 }else
@@ -86,7 +93,7 @@ public class InventoryItemUI extends ItemUI
                 }
             }else if(state == 4)
             {
-                if(bounds.contains(new Point(input.getMouseX()-x,input.getMouseY()+(ui.getScroll2()*71)-y)))
+                if(bounds.contains(new Point2D(input.getMouseX()-x,input.getMouseY()+(ui.getScroll2()*71)-y)))
                 {
                     
                     hover = true;
@@ -107,13 +114,14 @@ public class InventoryItemUI extends ItemUI
         }
         if (m[1] && hover)
         {
-            world.spawnItemOptionTab(input.getMouseX(), input.getMouseY(), index, state,item);
+//            world.spawnItemOptionTab(input.getMouseX(), input.getMouseY(), index, state,item);
+            world.createPopUpMenu(this, input);
         } else if (input.isMouseButtonDown(0) && hover && !ui.isDrag() && !world.isDrag()) {
-            xofs = input.getMouseX() - x - bounds.x;
+            xofs = input.getMouseX() - x - (int)bounds.getX();
             if (state <= 2) {
-                yofs = input.getMouseY() - y - bounds.y + (ui.getScroll1() * 64 + ui.getScroll1() * 7);
+                yofs = input.getMouseY() - y - (int)bounds.getY() + (ui.getScroll1() * 64 + ui.getScroll1() * 7);
             } else if (state == 4) {
-                yofs = input.getMouseY() - y - bounds.y + (ui.getScroll2() * 64 + ui.getScroll2() * 7);
+                yofs = input.getMouseY() - y - (int)bounds.getY() + (ui.getScroll2() * 64 + ui.getScroll2() * 7);
             }
             drag = true;
             ui.setDrag(true);
@@ -326,7 +334,7 @@ public class InventoryItemUI extends ItemUI
                 {
                     Rectangle rect = new Rectangle(input.getMouseX()-xofs-world.getUis().get(i).getX(),input.getMouseY()-yofs-world.getUis().get(i).getY(),64,64);
                     
-                    if(rect.intersects(((FurnitureUI)world.getUis().get(i).getUiComponent()).getBounds()))
+                    if(rect.intersects(((FurnitureUI)world.getUis().get(i).getUiComponent()).getBounds().getBoundsInParent()))
                     {
                         ((FurnitureUI)world.getUis().get(i).getUiComponent()).getFurniture().addItem(index, ui.getPlayer_inventory());
                         ((FurnitureUI)world.getUis().get(i).getUiComponent()).refreshUI();
@@ -340,9 +348,9 @@ public class InventoryItemUI extends ItemUI
             
             if(state<=2)
             {
-                if(dropRect2.intersects(world.getEquipment_ui().getMainBounds())&&world.getZ()==world.getEquipmentWindow().getZ())
+                if(dropRect2.intersects(world.getEquipment_ui().getMainBounds().getBoundsInParent())&&world.getZ()==world.getEquipmentWindow().getZ())
                 {
-                    if(item.getEquipmentType()==33&&dropRect2.intersects(world.getEquipment_ui().getBounds().get(3).getValue()))
+                    if(item.getEquipmentType()==33&&dropRect2.intersects(world.getEquipment_ui().getBounds().get(3).getValue().getBoundsInParent()))
                     {
                         world.getEquipment_ui().getEquipment().equip(item);
                         world.moved();
@@ -354,7 +362,7 @@ public class InventoryItemUI extends ItemUI
                     for(Pair<Integer,Rectangle> p:world.getEquipment_ui().getBounds())
                     {
                        
-                        if(p.getKey()==item.getEquipmentType()&&p.getValue().intersects(dropRect2))
+                        if(p.getKey()==item.getEquipmentType()&&p.getValue().intersects(dropRect2.getBoundsInParent()))
                         {
                             world.getEquipment_ui().getEquipment().equip(item);
                             ui.refreshInventoryUI(world.getWm().getCurrentLocalMap());
@@ -367,7 +375,7 @@ public class InventoryItemUI extends ItemUI
                 
                 
                 
-                if(!dropRect.intersects(world.getInventory_ui().getPrimaryBounds())&&world.getZ()==0)
+                if(!dropRect.intersects(world.getInventory_ui().getPrimaryBounds().getBoundsInParent())&&world.getZ()==0)
                 {
                     ui.getPlayer_inventory().dropItem(world.getWm().getPlayer().getX(), world.getWm().getPlayer().getY(), item.getTrueName(), world.getWm().getCurrentLocalMap(), -1);
                     ui.refreshInventoryUI(world.getWm().getCurrentLocalMap());
@@ -376,7 +384,7 @@ public class InventoryItemUI extends ItemUI
 
                 if(ui.getSecondaryBounds()!=null)
                 {
-                    if(dropRect.intersects(ui.getSecondaryBounds()))
+                    if(dropRect.intersects(ui.getSecondaryBounds().getBoundsInParent()))
                     {
                        
                         ui.getPlayer_inventory().dropItem(world.getWm().getPlayer().getX(), world.getWm().getPlayer().getY(), item.getTrueName(), world.getWm().getCurrentLocalMap(), -1);
@@ -385,11 +393,11 @@ public class InventoryItemUI extends ItemUI
                     }
                 }
                 
-                if(dropRect.intersects(ui.getPrimaryBounds()))
+                if(dropRect.intersects(ui.getPrimaryBounds().getBoundsInParent()))
                 {
                     for(int i=0;i<ui.getPrimaryItemUI().size();i++)
                     {
-                        if(ui.getPrimaryItemUI().get(i).getBounds().intersects(dropRect))
+                        if(ui.getPrimaryItemUI().get(i).getBounds().intersects(dropRect.getBoundsInParent()))
                         {
                             
                             Collections.swap(ui.getPlayer_inventory().getItems(), i, index);
@@ -405,9 +413,10 @@ public class InventoryItemUI extends ItemUI
                 
             }else if(state==4)
             {
-                if(dropRect.intersects(ui.getPrimaryBounds()))
+                if(dropRect.intersects(ui.getPrimaryBounds().getBoundsInParent()))
                 {
-                    world.getWm().getCurrentLocalMap().getItemPileAt(world.getWm().getCurrentLocalMap().getPlayer().getX(), world.getWm().getCurrentLocalMap().getPlayer().getY()).takeFrom(world.getWm().getPlayerInventory(), item.getTrueName(), world.getWm().getCurrentLocalMap(),-1);
+                    int id = world.getWm().getCurrentLocalMap().getItemPileAt(world.getWm().getCurrentLocalMap().getPlayer().getX(), world.getWm().getCurrentLocalMap().getPlayer().getY()).getId();
+                    world.getWm().getPlayer().grabItemAt(world.getWm().getPlayer().getX(), world.getWm().getPlayer().getY(), id, index, name, -1);
                     world.getAncestor().addText(item.getName()+" added to inventory.");
                     ui.refreshInventoryUI(world.getWm().getCurrentLocalMap());
                     return;
@@ -417,5 +426,37 @@ public class InventoryItemUI extends ItemUI
             
         
     }
+
+    public InventoryUI getUi()
+    {
+        return ui;
+    }
+
+    public void setUi(InventoryUI ui)
+    {
+        this.ui = ui;
+    }
+
+    public int getState()
+    {
+        return state;
+    }
+
+    public void setState(int state)
+    {
+        this.state = state;
+    }
+
+    public Tooltip getTip()
+    {
+        return tip;
+    }
+
+    public void setTip(Tooltip tip)
+    {
+        this.tip = tip;
+    }
+    
+    
     
 }

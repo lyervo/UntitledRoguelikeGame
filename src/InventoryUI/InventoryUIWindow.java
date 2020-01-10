@@ -8,7 +8,7 @@ package InventoryUI;
 import Res.Res;
 import UI.UIWindow;
 import World.World;
-import java.awt.Rectangle;
+import javafx.scene.shape.Rectangle;
 import org.newdawn.slick.TrueTypeFont;
 
 /**

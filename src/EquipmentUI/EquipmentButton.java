@@ -32,6 +32,7 @@ public class EquipmentButton extends Button
                 world.getEquipment_ui().refreshUI();
             }
         }
+        world.getEquipment_ui().clearDesc();
     }
     
 }
