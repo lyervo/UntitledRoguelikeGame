@@ -48,7 +48,7 @@ public class Pawn extends Entity
     
     private Inventory inventory;
     
-    private Meter hp;
+    private Meter hp,stamina;
     
     private ArrayList<Status> status;
     
@@ -77,6 +77,7 @@ public class Pawn extends Entity
         subFactions = new ArrayList<SubFaction>();
         jobTitle = "Civilian";
         events = new ArrayList<GameEvent>();
+        stamina = new Meter("Stamina",100,50,0);
     }
     
     public Pawn(int id, int x, int y,Image texture,IFovAlgorithm fov,String name,ItemLibrary itemLibrary,String jobTitle)
@@ -958,7 +959,7 @@ public class Pawn extends Entity
             if (((ItemPile) tasks.get(0).getTarget()).hasItem(tasks.get(0).getInfo()))
             {
 
-                world.getAncestor().addText(((ItemPile) tasks.get(0).getTarget()).getItems().get(tasks.get(0).getIndex()).getName() + " added to inventory.");
+                world.getAncestor().addText(((ItemPile) tasks.get(0).getTarget()).getItems().get(tasks.get(0).getIndex()).getInGameName() + " added to inventory.");
 
                 ((ItemPile) tasks.get(0).getTarget()).takeFrom(world.getWm().getPlayerInventory(), tasks.get(0).getInfo(), world.getWm().getCurrentLocalMap(), tasks.get(0).getAmount());
                 world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
@@ -1071,7 +1072,7 @@ public class Pawn extends Entity
             {
                 current = System.currentTimeMillis();
                 
-                world.getAncestor().addText("You used "+world.getWm().getPlayerInventory().getEquipment().getMainHandSlot().getItem().getName()
+                world.getAncestor().addText("You used "+world.getWm().getPlayerInventory().getEquipment().getMainHandSlot().getItem().getInGameName()
                                             +" on "+ tile.getPlant().getCurrentName());
 
                 String plantSubFactionName;

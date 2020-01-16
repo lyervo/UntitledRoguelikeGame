@@ -2,9 +2,16 @@
     {
         "stage":[{"growth":5,"name":"Tree sprout","solid":0,"harvest":[{"tool":[100,104],"postHarvest":-1,"harvestMeter":1,"products":[]}]},
                 {"growth":5,"name":"Tree seedling","solid":0,"harvest":[{"tool":[100,104],"postHarvest":-1,"harvestMeter":1,"products":[]}]},
-                {"growth":5,"name":"Tree sapling","solid":1,"harvest":[{"tool":[101],"postHarvest":-1,"harvestMeter":1,"products":[]}]},
+                {"growth":100,"name":"Tree sapling","solid":1,"harvest":[{"tool":[101],"postHarvest":-1,"harvestMeter":1,"products":[]}]},
                 {"growth":5,"name":"Tree","solid":1,"harvest":[{"tool":[101],"postHarvest":-1,"harvestMeter":10,"products":[{"itemName":"Wood","minAmount":10},{"itemName":"Tree Seed","minAmount":0,"maxAmount":2}]}]}],
         "texture":"tree_1",
+        "ground":[501],
+        "sunlight":1,
+        "water":1
+    },{
+        "stage":[{"growth":5,"name":"Carrot sprouts","solid":0,"harvest":[{"tool":[100,104],"postHarvest":-1,"harvestMeter":1,"products":[]}]},
+                {"growth":100,"name":"Carrots","solid":1,"harvest":[{"tool":[100],"postHarvest":-1,"harvestMeter":3,"products":[{"itemName":"Carrot","minAmount":10},{"itemName":"Carrot Seed","minAmount":0,"maxAmount":2}]}]}],
+        "texture":"carrot",
         "ground":[501],
         "sunlight":1,
         "water":1

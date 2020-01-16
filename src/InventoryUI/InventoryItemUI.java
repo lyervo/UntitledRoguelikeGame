@@ -417,7 +417,7 @@ public class InventoryItemUI extends ItemUI
                 {
                     int id = world.getWm().getCurrentLocalMap().getItemPileAt(world.getWm().getCurrentLocalMap().getPlayer().getX(), world.getWm().getCurrentLocalMap().getPlayer().getY()).getId();
                     world.getWm().getPlayer().grabItemAt(world.getWm().getPlayer().getX(), world.getWm().getPlayer().getY(), id, index, name, -1);
-                    world.getAncestor().addText(item.getName()+" added to inventory.");
+                    world.getAncestor().addText(item.getInGameName()+" added to inventory.");
                     ui.refreshInventoryUI(world.getWm().getCurrentLocalMap());
                     return;
                 }

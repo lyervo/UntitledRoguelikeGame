@@ -96,7 +96,7 @@ public class SubFaction
             if(zone.notEnoughPlants())
             {
                 String seedName = zone.getPlantName()+" Seed";
-                for(int i=0;i<(zone.getWidth()/2);i++)
+                for(int i=1;i<(zone.getWidth()/2);i++)
                 {
                     for(int j=0;j<(zone.getHeight()/2);j++)
                     {

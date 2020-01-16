@@ -157,6 +157,15 @@ public class GameConsole
             case "countAccessibleTiles":
                 countAccessibleTiles(token);
                 break;
+            case "setAutoMove":
+                if(token[1].equals("false"))
+                {
+                    world.setAutoMove(false);
+                }else if(token[1].equals("true"))
+                {
+                    world.setAutoMove(true);
+                }
+                break;
             default:
                 addLine("Unknown command line");
                 break;

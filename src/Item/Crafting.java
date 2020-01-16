@@ -147,10 +147,10 @@ public class Crafting
                         for(int i=items.size()-1;i>=0;i--)
                         {
 
-                            if(items.get(i).getProperties().contains(52)&&items.get(i).getName().equals(targetRecipe.getIngredientByGenericType(52).getItem()))//is a metal material
+                            if(items.get(i).getProperties().contains(52)&&items.get(i).getInGameName().equals(targetRecipe.getIngredientByGenericType(52).getItem()))//is a metal material
                             {
 
-                                String[] splitter = items.get(i).getName().split(" ");
+                                String[] splitter = items.get(i).getInGameName().split(" ");
                                 String template_name = "";
                                 for(int z=1;z<splitter.length;z++)
                                 {

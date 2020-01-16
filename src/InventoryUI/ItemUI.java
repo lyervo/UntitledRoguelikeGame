@@ -50,7 +50,7 @@ public class ItemUI extends DescBox
     
     public ItemUI(Item item,int index,Res res)
     {
-        super(item.getName(),item.getDesc(),res.disposableDroidBB);
+        super(item.getInGameName(),item.getDesc(),res.disposableDroidBB);
         this.drag = false;
         this.item = item;
         this.index = index;
@@ -186,6 +186,7 @@ public class ItemUI extends DescBox
         
         if(item.isStackable())
         {
+            g.setFont(fontSmall);
             g.setColor(Color.white);
             g.drawString(""+item.getStack(),input.getMouseX()-xofs,input.getMouseY()-yofs);
         }

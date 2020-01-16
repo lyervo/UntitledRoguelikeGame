@@ -10,7 +10,6 @@ import InventoryUI.ItemUI;
 import Item.Item;
 import Res.Res;
 import World.World;
-import java.awt.Point;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Rectangle;
 import org.newdawn.slick.Graphics;

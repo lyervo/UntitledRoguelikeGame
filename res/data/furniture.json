@@ -23,5 +23,37 @@
 		"texture":"camp_fire",
 		"auto_animate":"1",
 		"properties":["1","23"]
+	},
+	{
+		"name":"Bed",
+		"use_spritesheet":"0",
+		"description":"A place to sleep and recover.",
+		"texture":"bed",
+		"auto_animate":"0",
+		"properties":["0"]
+	},
+	{
+		"name":"Chair",
+		"use_spritesheet":"0",
+		"description":"You sit on it.",
+		"texture":"chair",
+		"auto_animate":"0",
+		"properties":["21"]
+	},
+	{
+		"name":"Table",
+		"use_spritesheet":"0",
+		"description":"Where things from eating to discussing important business are done.",
+		"texture":"table_round",
+		"auto_animate":"0",
+		"properties":["22"]
+	},
+        {
+		"name":"Door",
+		"use_spritesheet":"1",
+		"description":"For entrance and exisiting.",
+		"texture":"door",
+		"auto_animate":"0",
+		"properties":["0"]
 	}
 ]

@@ -371,9 +371,11 @@ public class InventoryUI extends UIComponent
     public void refreshInventoryUI(LocalMap lm)
     {
         
+        lm.getWorld().getGameConsole().addLine("refreshInventoryUI(lm) called");
         refreshSecondaryInventoryUI(lm);
-        
+        lm.getWorld().getGameConsole().addLine("refreshInventoryUI(lm) called");
         refreshPrimaryInventoryUI();
+        
         
         
         if(state == 1&&!mode)
@@ -465,7 +467,7 @@ public class InventoryUI extends UIComponent
         {
             if(lm.getItemPileAt(lm.getPlayer().getX(), lm.getPlayer().getY())!=null)
             {
-
+                lm.getWorld().getGameConsole().addLine("refreshSecondaryInventoryUI(lm) state 2 called");
                 state = 2;
                 interacting_inventory =
                         new Inventory(lm.getItemPileAt(lm.getPlayer().getX(), lm.getPlayer().getY()),
@@ -551,7 +553,7 @@ public class InventoryUI extends UIComponent
             }
         }else
         {
-            if(primaryItemUI.size()<=30||4==(primaryItemUI.size()/6)-scroll1)
+            if(primaryItemUI.size()<=20||5==(primaryItemUI.size()/4)-scroll1)
             {
 
                 return;
@@ -577,7 +579,7 @@ public class InventoryUI extends UIComponent
     
     public void secondaryScrollDown()
     {
-        if(secondaryItemUI.size()<=30||4==(secondaryItemUI.size()/6)-scroll2)
+        if(secondaryItemUI.size()<=20||5==(secondaryItemUI.size()/4)-scroll2)
         {
             return;
         }else
@@ -844,7 +846,7 @@ public class InventoryUI extends UIComponent
         }
     }
 
-
+    
 
 
     

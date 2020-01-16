@@ -5,9 +5,12 @@
  */
 package World;
 
+import Camera.Camera;
 import Entity.Entity;
 import Entity.Plant.Plant;
 import java.util.ArrayList;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.Graphics;
 
 
 /**
@@ -29,6 +32,8 @@ public class Zone
     
     private String subFaction;
     
+    private Color color;
+    
     private int type;
     //1 - House
     //2 - Shop
@@ -46,6 +51,17 @@ public class Zone
         zoneId = ID;
         ID++;
         plants = new ArrayList<Plant>();
+        this.type = type;
+        color = Color.black;
+        if(type == 4)
+        {
+            color = Color.decode("#a0d6b4");
+            color.a = 0.3f;
+        }else if(type == 1)
+        {
+            color = Color.decode("#90c1d7");
+            color.a = 0.3f;
+        }
        
     }
     
@@ -61,7 +77,27 @@ public class Zone
         zoneId = ID;
         ID++;
         plants = new ArrayList<Plant>();
+        color = Color.black;
+        if(type == 4)
+        {
+            color = Color.decode("#a0d6b4");
+            color.a = 0.3f;
+        }else if(type == 1)
+        {
+            color = Color.decode("#90c1d7");
+            color.a = 0.3f;
+        }
     }
+    
+    public void render(Graphics g,Camera cam)
+    {
+        
+        g.setColor(color);
+        g.fillRect(cam.getTile_size()*x+cam.getXofs(), cam.getTile_size()*y+cam.getYofs(), cam.getTile_size()*width, cam.getTile_size()*height);
+        
+    }
+    
+    
     
     public void setSubFaction(String subFaction)
     {

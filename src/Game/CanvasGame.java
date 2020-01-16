@@ -54,6 +54,7 @@ public class CanvasGame extends BasicGame
     private CanvasGameContainer canvasGameContainer;
     
     private JFrame frame;
+    
 
     
     public CanvasGame(String title)
@@ -101,10 +102,19 @@ public class CanvasGame extends BasicGame
             Logger.getLogger(CanvasGame.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        
         UIManager.put("MenuItem.selectionBackground", Color.decode("#60a3bc"));
         UIManager.put("MenuItem.background", Color.decode("#82ccdd"));
-        UIManager.put("MenuBar.selectionBackground", Color.decode("#60a3bc"));
-        UIManager.put("MenuBar.background", Color.decode("#82ccdd"));
+        UIManager.put("MenuItem.border", Color.decode("#82ccdd"));
+//        UIManager.put("Menu.selectionBackground", Color.decode("#60a3bc"));
+//        UIManager.put("Menu.background", Color.decode("#82ccdd"));
+        UIManager.put("PopupMenu.border",Color.decode("#82ccdd"));
+        UIManager.put("Menu.border",Color.decode("#82ccdd"));
+        UIManager.put("Menu.selectionBackground", Color.decode("#60a3bc"));
+        
+        
+        
+        UIManager.put("Menu.backgroundColor", Color.red);
         
         
     }
@@ -148,6 +158,7 @@ public class CanvasGame extends BasicGame
     public void mousePressed(int button,int x,int y)
     {
        m[button+10] = true;
+       m[19] = true;
     }
     
     

@@ -96,7 +96,7 @@ public class EquipmentItemUI extends ItemUI
             }
             
             
-            tickDesc((hover&&world.getZ()==world.getEquipmentWindow().getZ()));
+//            tickDesc((hover&&world.getZ()==world.getEquipmentWindow().getZ()));
 
             if (m[1] && hover)
             {

@@ -18,6 +18,8 @@ import UI.OptionTab;
 import Res.Res;
 import MapUI.TileOptionTab;
 import java.util.ArrayList;
+import java.util.HashMap;
+import javafx.util.Pair;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -72,7 +74,7 @@ public class LocalMap implements TileBasedMap, ILosBoard
     private ArrayList<Zone> zones;
     
     private ArrayList<SubFaction> subFactions;
-    
+
 
     public LocalMap(int id,int width,int height,Res res,World world,GameContainer container,ItemLibrary itemLibrary)
     {
@@ -90,16 +92,19 @@ public class LocalMap implements TileBasedMap, ILosBoard
         
         plants = new ArrayList<Plant>();
         
-        Zone z1 = new Zone(0,0,10,5,this.id,"Tree");
+        Zone z1 = new Zone(13,5,5,5,this.id,"Tree");
+        Zone z2 = new Zone(4,3,7,8,this.id,1);
+        z2.setSubFaction("Hora");
         z1.setSubFaction("Honest man farm");
         zones = new ArrayList<Zone>();
         zones.add(z1);
+        zones.add(z2);
         
         
         furnitures = new ArrayList<Furniture>();
         
-        furnitures.add(new Furniture(0,2,2,world.getEntityLibrary().getFurnitureTemplateByName("Workbench")));
-        furnitures.add(new Furniture(1,2,4,world.getEntityLibrary().getFurnitureTemplateByName("Camp Fire"),true));
+        
+//        furnitures.add(new Furniture(1,2,4,world.getEntityLibrary().getFurnitureTemplateByName("Camp Fire"),true));
         
         
         generateTiles();
@@ -150,18 +155,27 @@ public class LocalMap implements TileBasedMap, ILosBoard
             p.getInventory().getCrafting().getNearbyStations(this);
         }
         
-        getPawnById(9).getSubFactions().add(world.getCm().getSubFactionByName("House Hora"));
-        getPawnById(9).getSubFactions().add(world.getCm().getSubFactionByName("Honest man farm"));
-        getPawnById(10).getSubFactions().add(world.getCm().getSubFactionByName("House Hora"));
-        getPawnById(10).getSubFactions().add(world.getCm().getSubFactionByName("Honest man farm"));
-        
-        getPawnById(11).getSubFactions().add(world.getCm().getSubFactionByName("Augonnian Army"));
-        
-        spawnPlant(12,12,"Tree");
-        getPlantAt(12,12).setSubFaction("Honest man farm");
+//        getPawnById(9).getSubFactions().add(world.getCm().getSubFactionByName("House Hora"));
+//        getPawnById(9).getSubFactions().add(world.getCm().getSubFactionByName("Honest man farm"));
+//        getPawnById(10).getSubFactions().add(world.getCm().getSubFactionByName("House Hora"));
+//        getPawnById(10).getSubFactions().add(world.getCm().getSubFactionByName("Honest man farm"));
+//        
+//        getPawnById(11).getSubFactions().add(world.getCm().getSubFactionByName("Augonnian Army"));
+//        
+//        spawnPlant(12,12,"Tree");
+//        getPlantAt(12,12).setSubFaction("Honest man farm");
 
         
         world.getCm().getSubFactionByName("Honest man farm").getZones().add(zones.get(0));
+        
+        furnitures.add(new Furniture(0,2,2,world.getEntityLibrary().getFurnitureTemplateByName("Workbench")));
+        furnitures.add(new Furniture(0,5,4,world.getEntityLibrary().getFurnitureTemplateByName("Bed")));
+        furnitures.add(new Furniture(0,5,6,world.getEntityLibrary().getFurnitureTemplateByName("Bed")));
+        furnitures.add(new Furniture(0,7,7,world.getEntityLibrary().getFurnitureTemplateByName("Table")));
+        furnitures.add(new Furniture(0,6,7,world.getEntityLibrary().getFurnitureTemplateByName("Chair")));
+        furnitures.add(new Furniture(0,8,7,world.getEntityLibrary().getFurnitureTemplateByName("Chair")));
+        
+        
         
         subFactions = new ArrayList<SubFaction>();
         for(Pawn p:pawns)
@@ -203,6 +217,18 @@ public class LocalMap implements TileBasedMap, ILosBoard
                 
                 
                 if(ix==4&&iy>=3&&iy<=10)
+                {
+                    tiles[iy][ix].setType(502);
+                    tiles[iy][ix].setWall(new Wall(ix,iy,502,res.basicWall));
+                }else if(ix==10&&iy>=3&&iy<=10&&iy!=7)
+                {
+                    tiles[iy][ix].setType(502);
+                    tiles[iy][ix].setWall(new Wall(ix,iy,502,res.basicWall));
+                }else if(ix>=5&&iy==3&&ix<=10)
+                {
+                    tiles[iy][ix].setType(502);
+                    tiles[iy][ix].setWall(new Wall(ix,iy,502,res.basicWall));
+                }else if(ix>=5&&iy==10&&ix<=10)
                 {
                     tiles[iy][ix].setType(502);
                     tiles[iy][ix].setWall(new Wall(ix,iy,502,res.basicWall));
@@ -291,7 +317,13 @@ public class LocalMap implements TileBasedMap, ILosBoard
             }
         }
         
-        
+        for(int i=0;i<zones.size();i++)
+        {
+            if(world.isZoneDisplay())
+            {
+                zones.get(i).render(g, cam);
+            }
+        }
         
         for(int i = furnitures.size()-1;i>=0;i--)
         {
@@ -308,7 +340,10 @@ public class LocalMap implements TileBasedMap, ILosBoard
             pawns.get(i).render(cam,this, animate);
         }
         
-
+        if(world.isNameDisplay())
+        {
+            
+        }
         
         if(optionTab!=null)
         {

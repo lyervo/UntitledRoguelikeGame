@@ -94,6 +94,9 @@ public class Item
     //determines the ownership of an item,use to check if an item is stolen
     private String ownership;
     
+    
+    private String prefabName;
+    
    
     
     //constructor for seed items
@@ -126,7 +129,7 @@ public class Item
             properties.add(i);
         }
         
-        
+        this.prefabName = pt.getName()+"_seed";
     }
     
     public Item(Item item)
@@ -147,6 +150,7 @@ public class Item
         this.maxDurability = item.getMaxDurability();
         this.expire = item.getExpire();
         this.ownership = item.getOwnership();
+        this.prefabName = item.getPrefabName();
         
     }
     
@@ -213,6 +217,7 @@ public class Item
                 }
             
         }
+        this.prefabName = (String)json.get("prefabName");
         
     }
     
@@ -234,7 +239,14 @@ public class Item
         stack--;
     }
     
-    public String getName()
+    
+    
+    /**
+    * return the item name base on whether it is identified or not
+    *
+    * @return the item name base on whether it is identified or not
+    */
+    public String getInGameName()
     {
         if(name==null)
         {
@@ -613,6 +625,16 @@ public class Item
             this.desc += " Belongs to "+ownership;
         }
         
+    }
+
+    public String getPrefabName()
+    {
+        return prefabName;
+    }
+
+    public void setPrefabName(String prefabName)
+    {
+        this.prefabName = prefabName;
     }
     
     

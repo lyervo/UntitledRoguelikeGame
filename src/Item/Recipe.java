@@ -112,14 +112,14 @@ public class Recipe
             {
                 if(itemLibrary.getItemTypeByType(item.getGenericType()).getName().equals(ingredients.get(i).getItem()))
                 {
-                    ingredients.get(i).setItem(item.getName());
+                    ingredients.get(i).setItem(item.getInGameName());
                     ingredients.get(i).setGenericType(item.getGenericType());
                 }
             }else
             {
                 if(itemLibrary.getItemByTrueName(ingredients.get(i).getItem()).getGenericType()==item.getGenericType())
                 {
-                    ingredients.get(i).setItem(item.getName());
+                    ingredients.get(i).setItem(item.getInGameName());
                     ingredients.get(i).setGenericType(item.getGenericType());
                 }
             }

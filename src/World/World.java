@@ -36,7 +36,6 @@ import InventoryUI.InventoryItemUI;
 import InventoryUI.InventoryUI;
 import InventoryUI.InventoryUIWindow;
 import InventoryUI.ItemOptionTab;
-import InventoryUI.ItemUI;
 import InventoryUI.XItemTextField;
 import Item.Item;
 import Item.ItemPile;
@@ -146,6 +145,12 @@ public class World implements ActionListener
     
     private boolean popupDisplay;
     
+    private boolean zoneDisplay,nameDisplay;
+    
+    private boolean autoMove;
+    private long lastMove,currentMove;
+    private long moveSpeed;
+    
     public World(Res res,GameContainer container,CanvasGame game,Input input) 
     {
         this.game = game;
@@ -233,16 +238,20 @@ public class World implements ActionListener
         consoleActive = false;
         
         popupDisplay = false;
-        popupMenu = new JPopupMenu("Options");
+        popupMenu = new JPopupMenu("menu_option");
         
         
+        zoneDisplay = false;
+        nameDisplay = false;
         
-        
+        autoMove = false;
+        currentMove = 0;
+        lastMove = System.currentTimeMillis();
+        moveSpeed = 250;
     }
     
     public void tick(boolean[] k,boolean[] m,Input input)
     {
-        
         
         if(k[Input.KEY_F1])
         {
@@ -257,14 +266,35 @@ public class World implements ActionListener
             gameConsole.tick(k, m, input, this);
             return;
         }
+
+        if(autoMove)
+        {
+            currentMove += System.currentTimeMillis()-lastMove;
+            lastMove = System.currentTimeMillis();
+            if(currentMove >= moveSpeed)
+            {
+                currentMove = 0;
+                moved();
+            }
+        }
+        
+        if(k[Input.KEY_1])
+        {
+            zoneDisplay = !zoneDisplay;
+        }
+        if(k[Input.KEY_2])
+        {
+            nameDisplay = !nameDisplay;
+        }
+        
         
         if(popupDisplay)
         {
-            if(k[255]||m[19])
+            if(k[255]||m[19]||m[16]||m[17])
             {
                 popupDisplay = false;
                 popupMenu.setVisible(false);
-                
+                return;
             }
             
         }
@@ -557,7 +587,10 @@ public class World implements ActionListener
         {
             case "walk_to":
                 Tile t = ((Tile)option.getTarget());
-                wm.getCurrentLocalMap().getPlayer().walkTo(t.getX(), t.getY());
+                if(t.getX()!=wm.getPlayer().getX()||t.getY()!=wm.getPlayer().getY())
+                {
+                    wm.getCurrentLocalMap().getPlayer().walkTo(t.getX(), t.getY());
+                }
                 break;
             case "look":
                 
@@ -668,17 +701,17 @@ public class World implements ActionListener
     
     public JPopupMenu createEquipmentItemPopupMenu(EquipmentItemUI itemUI)
     {
-        JPopupMenu menu = new JPopupMenu("Item options");
+        JPopupMenu menu = new JPopupMenu("menu_option");
         menu.add(createItem("Unequip",itemUI.getItem().getTrueName(),"unequip_item",0,0,itemUI));
         if(itemUI.getItem().isStackable())
         {
-            JLabel label = new JLabel(itemUI.getItem().getStack()+" x "+itemUI.getItem().getName());
+            JLabel label = new JLabel(itemUI.getItem().getStack()+" x "+itemUI.getItem().getInGameName());
             label.setFont(new Font("TimesRoman",Font.BOLD,16));
             label.setAlignmentX(0.2f);
             menu.add(label,0);
         }else
         {
-            JLabel label = new JLabel(itemUI.getItem().getName());
+            JLabel label = new JLabel(itemUI.getItem().getInGameName());
             label.setFont(new Font("TimesRoman",Font.BOLD,16));
             label.setAlignmentX(0.2f);
             menu.add(label,0);
@@ -689,7 +722,7 @@ public class World implements ActionListener
     
     public JPopupMenu createInventoryItemPopupMenu(InventoryItemUI itemUI)
     {
-        JPopupMenu menu = new JPopupMenu("Item options");
+        JPopupMenu menu = new JPopupMenu("menu_option");
         if(itemUI.getState()!=4&&itemUI.getState()!=6)
         {
             boolean otherOption = false;
@@ -736,7 +769,7 @@ public class World implements ActionListener
                 }
             }else
             {
-                menu.add(createItem("Drop "+itemUI.getItem().getName(),"1","drop_item",0,itemUI.getIndex(),itemUI.getItem()));
+                menu.add(createItem("Drop "+itemUI.getItem().getInGameName(),"1","drop_item",0,itemUI.getIndex(),itemUI.getItem()));
             }
         }else if(itemUI.getState() == 4)
         {
@@ -746,10 +779,10 @@ public class World implements ActionListener
                 menu.add(createItemSubMenu(itemUI.getItem(),id,itemUI.getIndex()));
             }else if(itemUI.getItem().getStack()==1)
             {
-                menu.add(createItem("Take "+itemUI.getItem().getName(),"1","grab_item",id,itemUI.getIndex(),itemUI.getItem()));
+                menu.add(createItem("Take "+itemUI.getItem().getInGameName(),"1","grab_item",id,itemUI.getIndex(),itemUI.getItem()));
             }else
             {
-                menu.add(createItem("Take "+itemUI.getItem().getName(),"1","grab_item",id,itemUI.getIndex(),itemUI.getItem()));
+                menu.add(createItem("Take "+itemUI.getItem().getInGameName(),"1","grab_item",id,itemUI.getIndex(),itemUI.getItem()));
             }
             
         }else if(itemUI.getState() == 6)
@@ -759,13 +792,13 @@ public class World implements ActionListener
         
         if(itemUI.getItem().isStackable())
         {
-            JLabel label = new JLabel(itemUI.getItem().getStack()+" x "+itemUI.getItem().getName());
+            JLabel label = new JLabel(itemUI.getItem().getStack()+" x "+itemUI.getItem().getInGameName());
             label.setFont(new Font("TimesRoman",Font.BOLD,16));
             label.setAlignmentX(0.2f);
             menu.add(label,0);
         }else
         {
-            JLabel label = new JLabel(itemUI.getItem().getName());
+            JLabel label = new JLabel(itemUI.getItem().getInGameName());
             label.setFont(new Font("TimesRoman",Font.BOLD,16));
             label.setAlignmentX(0.2f);
             menu.add(label,0);
@@ -790,6 +823,8 @@ public class World implements ActionListener
     {
         JMenu subMenu = new JMenu(pawn.getName()+","+pawn.getJobTitle());
         subMenu.setFont(new Font("TimesRoman",Font.PLAIN,16));
+        subMenu.setOpaque(true);
+        subMenu.setBackground(java.awt.Color.decode("#82ccdd"));
         subMenu.add(createItem("Talk to","none","talk_to",pawn.getId(),0,pawn));
         subMenu.add(createItem("Trade","none","trade",pawn.getId(),0,pawn));
         subMenu.add(createItem("Pickpocket","none","steal",pawn.getId(),0,pawn));
@@ -802,7 +837,9 @@ public class World implements ActionListener
     public JMenu createItemSubMenu(Item item,int id,int index)
     {
         
-        JMenu subMenu = new JMenu(item.getStack()+" x "+item.getName());
+        JMenu subMenu = new JMenu(item.getStack()+" x "+item.getInGameName());
+        subMenu.setOpaque(true);
+        subMenu.setBackground(java.awt.Color.decode("#82ccdd"));
         subMenu.setFont(new Font("TimesRoman",Font.PLAIN,16));
         if(item.isStackable())
         {
@@ -815,14 +852,16 @@ public class World implements ActionListener
             }
         }else
         {
-            subMenu.add(createItem("Take "+item.getName(),item.getTrueName(),"grab_item",id,index,item));
+            subMenu.add(createItem("Take "+item.getInGameName(),item.getTrueName(),"grab_item",id,index,item));
         }
         return subMenu;
     }
     
     public JMenu createGrabItemSubMenu(Item item,int id,int index)
     {
-        JMenu subMenu = new JMenu("Take "+item.getStack()+" x "+item.getName());
+        JMenu subMenu = new JMenu("Take "+item.getStack()+" x "+item.getInGameName());
+        subMenu.setOpaque(true);
+        subMenu.setBackground(java.awt.Color.decode("#82ccdd"));
         subMenu.setFont(new Font("TimesRoman",Font.PLAIN,16));
         if(item.isStackable())
         {
@@ -835,7 +874,7 @@ public class World implements ActionListener
             }
         }else
         {
-            subMenu.add(createItem("Take "+item.getName(),item.getTrueName(),"grab_item",id,index,item));
+            subMenu.add(createItem("Take "+item.getInGameName(),item.getTrueName(),"grab_item",id,index,item));
         }
         return subMenu;
     }
@@ -843,7 +882,9 @@ public class World implements ActionListener
     public JMenu createDropItemSubMenu(Item item,int id,int index)
     {
         
-        JMenu subMenu = new JMenu("Drop "+item.getStack()+" x "+item.getName());
+        JMenu subMenu = new JMenu("Drop "+item.getStack()+" x "+item.getInGameName());
+        subMenu.setOpaque(true);
+        subMenu.setBackground(java.awt.Color.decode("#82ccdd"));
         subMenu.setFont(new Font("TimesRoman",Font.PLAIN,16));
         if(item.isStackable())
         {
@@ -856,7 +897,7 @@ public class World implements ActionListener
             }
         }else
         {
-            subMenu.add(createItem("Drop "+item.getName(),item.getTrueName(),"drop_item",id,index,item));
+            subMenu.add(createItem("Drop "+item.getInGameName(),item.getTrueName(),"drop_item",id,index,item));
         }
         return subMenu;
     }
@@ -864,6 +905,8 @@ public class World implements ActionListener
     public JMenu createPlantSubMenu(Tile tile,Plant plant)
     {
         JMenu subMenu = new JMenu(plant.getCurrentName());
+        subMenu.setOpaque(true);
+        subMenu.setBackground(java.awt.Color.decode("#82ccdd"));
         subMenu.setFont(new Font("TimesRoman",Font.PLAIN,16));
         for(int i=0;i<plant.getCurrentHarvest().getTool().length;i++)
         {
@@ -892,7 +935,7 @@ public class World implements ActionListener
     
     public JPopupMenu createTilePopupMenu(Tile t)
     {
-        JPopupMenu menu = new JPopupMenu("Tile Popup Menu");
+        JPopupMenu menu = new JPopupMenu("menu_option");
         ArrayList<Pawn> pawns = wm.getCurrentLocalMap().getPawnsAt(t.getX(),t.getY());
         ItemPile ip = wm.getCurrentLocalMap().getItemPileAt(t.getX(), t.getY());
         Furniture f = wm.getCurrentLocalMap().furnitureAt(t.getX(), t.getY());
@@ -905,36 +948,37 @@ public class World implements ActionListener
         if(t.isVisit())
         {
             menu.add(createItem("Look","none","look",0,0,t));
-        }
-        
-        if(t.getPlant()!=null)
-        {
-            menu.add(createPlantSubMenu(t,t.getPlant()));
-        }
-        
-        if(!pawns.isEmpty())
-        {
-            for(int i=0;i<pawns.size();i++)
+            if(t.getPlant()!=null)
             {
-                if(!pawns.get(i).isControl())
+                menu.add(createPlantSubMenu(t,t.getPlant()));
+            }
+
+            if(!pawns.isEmpty())
+            {
+                for(int i=0;i<pawns.size();i++)
                 {
-                    menu.add(createPawnSubMenu(pawns.get(i)));
+                    if(!pawns.get(i).isControl())
+                    {
+                        menu.add(createPawnSubMenu(pawns.get(i)));
+                    }
+                }
+            }
+            if(ip!=null)
+            {
+                for(int i=0;i<ip.getItems().size();i++)
+                {
+                    if(ip.getItems().get(i).isStackable()&&ip.getItems().get(i).getStack()>1)
+                    {
+                        menu.add(createItemSubMenu(ip.getItems().get(i),ip.getId(),i));
+                    }else
+                    {
+                        menu.add(createItem("Take " + ip.getItems().get(i).getInGameName(), "1", "grab_item", ip.getId(), i, ip.getItems().get(i)));
+                    }
                 }
             }
         }
-        if(ip!=null)
-        {
-            for(int i=0;i<ip.getItems().size();i++)
-            {
-                if(ip.getItems().get(i).isStackable()&&ip.getItems().get(i).getStack()>1)
-                {
-                    menu.add(createItemSubMenu(ip.getItems().get(i),ip.getId(),i));
-                }else
-                {
-                    menu.add(createItem("Take " + ip.getItems().get(i).getName(), "1", "grab_item", ip.getId(), i, ip.getItems().get(i)));
-                }
-            }
-        }
+        
+        
         
         if(f!=null)
         {
@@ -1300,6 +1344,76 @@ public class World implements ActionListener
     public void setGame(CanvasGame game)
     {
         this.game = game;
+    }
+
+    public JPopupMenu getPopupMenu()
+    {
+        return popupMenu;
+    }
+
+    public void setPopupMenu(JPopupMenu popupMenu)
+    {
+        this.popupMenu = popupMenu;
+    }
+
+    public boolean isPopupDisplay()
+    {
+        return popupDisplay;
+    }
+
+    public void setPopupDisplay(boolean popupDisplay)
+    {
+        this.popupDisplay = popupDisplay;
+    }
+
+    public boolean isZoneDisplay()
+    {
+        return zoneDisplay;
+    }
+
+    public void setZoneDisplay(boolean zoneDisplay)
+    {
+        this.zoneDisplay = zoneDisplay;
+    }
+
+    public boolean isNameDisplay()
+    {
+        return nameDisplay;
+    }
+
+    public void setNameDisplay(boolean nameDisplay)
+    {
+        this.nameDisplay = nameDisplay;
+    }
+
+    public boolean isAutoMove()
+    {
+        return autoMove;
+    }
+
+    public void setAutoMove(boolean autoMove)
+    {
+        this.autoMove = autoMove;
+    }
+
+    public long getLastMove()
+    {
+        return lastMove;
+    }
+
+    public void setLastMove(long lastMove)
+    {
+        this.lastMove = lastMove;
+    }
+
+    public long getCurrentMove()
+    {
+        return currentMove;
+    }
+
+    public void setCurrentMove(long currentMove)
+    {
+        this.currentMove = currentMove;
     }
     
     

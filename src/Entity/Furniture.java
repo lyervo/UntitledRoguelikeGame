@@ -115,20 +115,20 @@ public class Furniture extends Entity
             {
                 if(autoAnimate)
                 {
-                    if(animate)
-                    {
-                        animatingIndex++;
-                        if(animatingIndex>=3)
-                        {
-                            animatingIndex = 0;
-                        }
-
-
-                        
-                    }
-                    
-                    sprites.getSprite(animatingIndex, fuelAnim).draw(x*cam.getTile_size()+cam.getXofs(),y*cam.getTile_size()+cam.getYofs(),cam.getTile_size(),cam.getTile_size());
-
+//                    if(animate)
+//                    {
+//                        animatingIndex++;
+//                        if(animatingIndex>=sprites.getHorizontalCount()-1)
+//                        {
+//                            animatingIndex = 0;
+//                        }
+//
+//
+//                        
+//                    }
+//                    
+//                    sprites.getSprite(animatingIndex, fuelAnim).draw(x*cam.getTile_size()+cam.getXofs(),y*cam.getTile_size()+cam.getYofs(),cam.getTile_size(),cam.getTile_size());
+//
 
                 }
             }

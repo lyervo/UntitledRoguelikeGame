@@ -70,11 +70,11 @@ public class TileOptionTab extends OptionTab
                 {
                     if(ip.getItems().size()==1)
                     {
-                        lm.getWm().getWorld().getAncestor().addText("There is a "+ip.getItems().get(0).getName()+" on the ground.");
+                        lm.getWm().getWorld().getAncestor().addText("There is a "+ip.getItems().get(0).getInGameName()+" on the ground.");
                 
                     }else
                     {
-                        lm.getWm().getWorld().getAncestor().addText("There is a "+ip.getItems().get(0).getName()+" and other "+(ip.getItems().size()-1)+" items on the ground.");
+                        lm.getWm().getWorld().getAncestor().addText("There is a "+ip.getItems().get(0).getInGameName()+" and other "+(ip.getItems().size()-1)+" items on the ground.");
                 
                     }
                 }
@@ -132,7 +132,7 @@ public class TileOptionTab extends OptionTab
             {
                 for(Item i:items)
                 {
-                    options.add(new Option("Take "+i.getName(),2));
+                    options.add(new Option("Take "+i.getInGameName(),2));
                 }
             }
         }

@@ -24,23 +24,23 @@ import org.newdawn.slick.TrueTypeFont;
  */
 public abstract class Button
 {
-    private int x,y;
-    private int width,height;
+    protected int x,y;
+    protected int width,height;
     
-    private Color border,fill,hoverFill;
+    protected Color border,fill,hoverFill;
     
     
-    private Rectangle bounds;
+    protected Rectangle bounds;
     
-    private String text;
+    protected String text;
     
-    private boolean hover;
+    protected boolean hover;
     
-    private TrueTypeFont font;
+    protected TrueTypeFont font;
     
-    private Image texture;
+    protected Image texture;
     
-    private boolean display;
+    protected boolean display;
     
     
     //constructor for dialog option

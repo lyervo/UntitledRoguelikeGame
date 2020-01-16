@@ -10,8 +10,14 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javafx.util.Pair;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -85,7 +91,7 @@ public class Res
 //    public Image progressBar;
     
     private HashMap<String,Image> images;
-    private ArrayList<Pair<String,SpriteSheet>> sprites;
+    private HashMap<String,SpriteSheet> sprites;
     
     
     public Sound potion_pop;
@@ -96,7 +102,10 @@ public class Res
     
     public Res(GameContainer container) throws IOException, SlickException
     {
-        sprites = new ArrayList<Pair<String,SpriteSheet>>();
+        
+        
+        
+        sprites = new HashMap<String,SpriteSheet>();
         
 //        potion_pop = new Sound("res/audio/potion_pop.ogg");
         
@@ -106,7 +115,7 @@ public class Res
         
         SpriteSheet tree_s = new SpriteSheet("res/texture/entities/trees_1.png",32,32);
         
-        
+        sprites.put("carrot", new SpriteSheet("res/texture/entities/carrot.png",32,32));
 
         human1 = ss.getSubImage(0, 0, 32, 32);
         human2 = ss.getSubImage(32, 32, 32, 32);
@@ -188,6 +197,9 @@ public class Res
         book_1 = new Image("res/texture/items/book_1.png");
         images.put("guard", ss.getSubImage(32, 96, 32, 32));
         images.put("seed", new Image("res/texture/items/seed.png"));
+        images.put("bed",new Image("res/texture/furniture/bed.png"));
+        images.put("chair",new Image("res/texture/furniture/chair.png"));
+        images.put("table_round",new Image("res/texture/furniture/table_round.png"));
         images.put("raw_meat_1",meat_raw_1);
         images.put("dagger",dagger);
         images.put("dagger_template",dagger_template);
@@ -209,8 +221,9 @@ public class Res
         images.put("metal_bar_2",metal_bar_2);
         images.put("axe_template",sword_template);
         
-        sprites.add(new Pair("camp_fire",camp_fire));
-        sprites.add((new Pair("tree_1",tree_s)));
+        sprites.put("camp_fire",camp_fire);
+        sprites.put("tree_1",tree_s);
+        
         
         Graphics g = basicItem.getGraphics();
         g.setColor(Color.green);
@@ -231,15 +244,8 @@ public class Res
     
     public SpriteSheet getSpriteByName(String name)
     {
-        for(Pair<String,SpriteSheet> p:sprites)
-        {
-            if(p.getKey().equals(name))
-            {
-                return p.getValue();
-            }
-        }
         
-        return null;
+        return sprites.get(name);
     }
     
     public Image getTextureByName(String name)
@@ -266,14 +272,31 @@ public class Res
         this.images = images;
     }
 
-    public ArrayList<Pair<String, SpriteSheet>> getSprites() {
-        return sprites;
-    }
+    public void loadImageFromFolder(String folderName) throws SlickException
+    {
+        System.out.println(folderName);
+        try (Stream<Path> walk = Files.walk(Paths.get(folderName))) {
 
-    public void setSprites(ArrayList<Pair<String, SpriteSheet>> sprites) {
-        this.sprites = sprites;
-    }
+		List<String> result = walk.map(x -> x.toString())
+				.filter(f -> f.endsWith(".png")).collect(Collectors.toList());
+
+		for(String s:result)
+                {
+                    Image newImage = new Image(s);
+                    if(newImage.getHeight()>32)
+                    {
+                        SpriteSheet newSpriteSheet = new SpriteSheet(newImage,32,32);
+                        String imageName = s.replaceAll(folderName, "");
+                        imageName = s.replaceAll(".png", "");
+                        sprites.put(s, newSpriteSheet);
+                    }
+                }
+
+	} catch (IOException e) {
+		e.printStackTrace();
+	}
     
+    }
     
     
 }
