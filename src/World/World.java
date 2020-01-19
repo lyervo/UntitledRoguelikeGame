@@ -41,6 +41,7 @@ import Item.Item;
 import Item.ItemPile;
 import Narrator.NarratorButton;
 import Narrator.NarratorUIWindow;
+import Trading.TradingWindow;
 import UI.OptionTab;
 
 import UI.UIWindow;
@@ -48,6 +49,8 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import javafx.geometry.Pos;
+import javafx.scene.control.TextField;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
@@ -85,8 +88,6 @@ public class World implements ActionListener
     private Input input;
     
     public Camera cam;
-    
-    private boolean mapTick;
     
     private int uiDisplay;
     
@@ -151,6 +152,8 @@ public class World implements ActionListener
     private long lastMove,currentMove;
     private long moveSpeed;
     
+    private TradingWindow tradingWindow;
+    
     public World(Res res,GameContainer container,CanvasGame game,Input input) 
     {
         this.game = game;
@@ -200,9 +203,7 @@ public class World implements ActionListener
                 + "many poor boy, and god I know I'm one, My mother was a taylor, sew my new blue jeans,"
                 + " my father was a gambling man, down in new orleans");
         ancestor.addText("ewdifjvkglti jkrhnlfgrweijdgnb mwinjr ewfrgdijmkleoiwdgf jbokm werfgtioj mkleko 3ed 3edrfdfrgb");
-        
-        mapTick = false;
-        
+
         
         inventory_ui = new InventoryUI(100,100,wm.getPlayerInventory(),res,this);
         inventoryWindow = new InventoryUIWindow(100,100,"Inventoy",inventory_ui,res.disposableDroidBB40f,res);
@@ -248,6 +249,11 @@ public class World implements ActionListener
         currentMove = 0;
         lastMove = System.currentTimeMillis();
         moveSpeed = 250;
+        
+
+        tradingWindow = new TradingWindow(container,res.disposableDroidBB);
+        
+        
     }
     
     public void tick(boolean[] k,boolean[] m,Input input)
@@ -306,13 +312,16 @@ public class World implements ActionListener
         hoveringWindow = false;
         
         
-        if(!dialogue.isDisplay())
+        if(!dialogue.isDisplay()&&!tradingWindow.isDisplay())
         {
             for(int i=uis.size()-1;i>=0;i--)
             {
                 uis.get(i).tick(k, m, input, this);
             }
         }
+        
+        
+        
         if(optionTab!=null)
         {
             optionTab.tick(k, m, input, wm.getCurrentLocalMap());
@@ -357,7 +366,7 @@ public class World implements ActionListener
         craftingButton.tick(m, input, this);
         narratorButton.tick(m, input, this);
         
-        if(!dialogue.isDisplay())
+        if(!dialogue.isDisplay()&&!tradingWindow.isDisplay())
         {
         
             if(k[Input.KEY_I])
@@ -375,11 +384,12 @@ public class World implements ActionListener
         
         
         
-        if(!dialogue.isDisplay())
+        if(!dialogue.isDisplay()&&!tradingWindow.isDisplay())
         {
             wm.tick(k,m,input,this);
         }
         dialogue.tick(k, m, input, this);
+        tradingWindow.tick(k, m, input, this);
         if(moved)
         {
             equipment_ui.refreshUI();
@@ -472,6 +482,7 @@ public class World implements ActionListener
             optionTab.render(g);
         }
         dialogue.render(g);
+        tradingWindow.render(g, input);
         if(consoleActive)
         {
             gameConsole.render(g);
@@ -572,7 +583,7 @@ public class World implements ActionListener
         {
             JMenuItemOption option = (JMenuItemOption)e.getSource();
             
-            processTileAction((JMenuItemOption)e.getSource());
+            processAction((JMenuItemOption)e.getSource());
               
             
         }
@@ -580,7 +591,7 @@ public class World implements ActionListener
     }
     
     
-    public void processTileAction(JMenuItemOption option)
+    public void processAction(JMenuItemOption option)
     {
         int amount;
         switch (option.getCommand())
@@ -672,6 +683,12 @@ public class World implements ActionListener
                 break;
             case "empty_item":
                 
+                break;
+            case "trade":
+                Pawn tradeTarget = (Pawn)option.getTarget();
+                Task tradeTask = new Task(tradeTarget.getX(),tradeTarget.getY(),tradeTarget.getId(),0,"trade_with_target");
+                tradeTask.setTarget(tradeTarget);
+                wm.getCurrentLocalMap().getPlayer().addTask(tradeTask);
                 break;
             
                 
@@ -992,12 +1009,7 @@ public class World implements ActionListener
         
     }
     
-    
-    public void callMapTick()
-    {
-        //ask the world to tick the map once
-        mapTick = true;
-    }
+
     
     public void moved()
     {
@@ -1102,13 +1114,6 @@ public class World implements ActionListener
         this.uiDisplay = uiDisplay;
     }
 
-    public boolean isMapTick() {
-        return mapTick;
-    }
-
-    public void setMapTick(boolean mapTick) {
-        this.mapTick = mapTick;
-    }
 
     public ItemLibrary getItemLibrary() {
         return itemLibrary;
@@ -1414,6 +1419,26 @@ public class World implements ActionListener
     public void setCurrentMove(long currentMove)
     {
         this.currentMove = currentMove;
+    }
+
+    public long getMoveSpeed()
+    {
+        return moveSpeed;
+    }
+
+    public void setMoveSpeed(long moveSpeed)
+    {
+        this.moveSpeed = moveSpeed;
+    }
+
+    public TradingWindow getTradingWindow()
+    {
+        return tradingWindow;
+    }
+
+    public void setTradingWindow(TradingWindow tradingWindow)
+    {
+        this.tradingWindow = tradingWindow;
     }
     
     

@@ -164,6 +164,7 @@ public abstract class Button
                 if(bounds.contains(new Point(input.getMouseX()-x,input.getMouseY()-y))&&world.getZ()==z)
                 {
                     hover = true;
+                    
                 }else
                 {
                     hover = false;

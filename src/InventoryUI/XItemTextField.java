@@ -59,6 +59,20 @@ public class XItemTextField extends TextField
         if(key == Input.KEY_ENTER)
         {
             world.getxItemTextField().processInput(world, world.getInventory_ui());
+            world.moved();
+            setText("");
+        }
+    }
+    
+    @Override
+    public void keyPressed(int key,char c)
+    {
+        if(getText().length()<=5)
+        {
+            if(Character.isDigit(c))
+            {
+                setText(getText()+c);
+            }
         }
     }
     
@@ -66,12 +80,8 @@ public class XItemTextField extends TextField
     {
         
         
-        setText(getText().replaceAll("[^0-9]", ""));
         
-        if(getText().length()>=10)
-        {
-            setText(getText().substring(0, 9));
-        }
+        
         
         if(bounds.contains(new Point(input.getMouseX(),input.getMouseY())))
         {
@@ -95,10 +105,6 @@ public class XItemTextField extends TextField
         {
             world.deactivateXItemTextField();
             setText("");
-        }else if(k[Input.KEY_ENTER])
-        {
-            processInput(world,inventoryUI);
-            world.moved();
         }
         
     }

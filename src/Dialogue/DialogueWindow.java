@@ -53,13 +53,14 @@ public class DialogueWindow
                 g.setColor(Color.decode("#4d4949"));
                 g.fillRect(0, 0, bounds.width, bounds.height);
                 dialogue.render(g);
+                for(int i=choices.size()-1;i>=0;i--)
+                {
+                    choices.get(i).render(g);
+                }
                 
             }
 
-            for(int i=choices.size()-1;i>=0;i--)
-            {
-                choices.get(i).render(g);
-            }
+            
         }
     }
     

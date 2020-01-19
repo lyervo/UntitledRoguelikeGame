@@ -643,6 +643,9 @@ public class Pawn extends Entity
         }else if(tasks.get(0).getType().equals("plant_seed"))
         {
             playerPlantSeedLogic(k,m,input,world);
+        }else if(tasks.get(0).getType().equals("trade_with_target"))
+        {
+            playerTradeWithTargetLogic(k,m,input,world);
         }
 
         if (world.isMoved())
@@ -1872,6 +1875,43 @@ public class Pawn extends Entity
         {
             world.getDialogue().switchDialog(6, world);
             world.getDialogue().display();
+            tasks.get(0).clearTask();
+            path = null;
+        }else
+        {
+            if (path == null)
+            {
+                calcPath(tasks.get(0).getTarget().getX(), tasks.get(0).getTarget().getY());
+            }
+            
+            if(System.currentTimeMillis() - current >= 250)
+            {
+                current = System.currentTimeMillis();
+                doPath(world.getWm().getCurrentLocalMap());
+                world.moved();
+
+                if(step == path.getLength())
+                {
+                    path = null;
+                    step = 1;
+                }
+                path = null;
+
+            }
+
+        }
+    }
+    
+    public void playerTradeWithTargetLogic(boolean[] k,boolean[] m,Input input,World world)
+    {
+        if(tasks.get(0).getTarget() == null)
+        {
+            tasks.get(0).setTarget(world.getWm().getCurrentLocalMap().getPawnById(tasks.get(0).getId()));
+        }
+        if(distanceBetween(tasks.get(0).getTarget()) <= 1)
+        {
+            world.getTradingWindow().initTrade(this, (Pawn)tasks.get(0).getTarget(),world);
+            world.getTradingWindow().display();
             tasks.get(0).clearTask();
             path = null;
         }else

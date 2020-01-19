@@ -67,6 +67,7 @@ public class CanvasGame extends BasicGame
             frame = new JFrame("Game");
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            frame.setUndecorated(true);
             frame.add(canvasGameContainer);
             
             frame.addWindowListener(new WindowAdapter() {

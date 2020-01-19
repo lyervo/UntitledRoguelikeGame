@@ -11,6 +11,7 @@ import World.World;
 import java.util.ArrayList;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.Tooltip;
@@ -38,6 +39,7 @@ public class Item
     private int maxDurability;
     private int stack;
     
+    private double value;
     
     //a subItem is an item being contained by another Item
     //such as liquid within a waterskin
@@ -130,6 +132,7 @@ public class Item
         }
         
         this.prefabName = pt.getName()+"_seed";
+        this.value = 10;
     }
     
     public Item(Item item)
@@ -151,7 +154,7 @@ public class Item
         this.expire = item.getExpire();
         this.ownership = item.getOwnership();
         this.prefabName = item.getPrefabName();
-        
+        this.value = item.getValue();
     }
     
     
@@ -219,6 +222,8 @@ public class Item
         }
         this.prefabName = (String)json.get("prefabName");
         
+        this.value = (double)json.get("baseValue");
+        
     }
     
     public void tick(boolean[] k,boolean[] m,Input input,World world)
@@ -231,6 +236,8 @@ public class Item
             }
         }
     }
+
+
     
     
     
@@ -635,6 +642,122 @@ public class Item
     public void setPrefabName(String prefabName)
     {
         this.prefabName = prefabName;
+    }
+
+    public double getValue()
+    {
+        return value;
+    }
+
+    public void setValue(double value)
+    {
+        this.value = value;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int hash = 7;
+        hash = 71 * hash + Objects.hashCode(this.trueName);
+        hash = 71 * hash + Objects.hashCode(this.name);
+        hash = 71 * hash + Objects.hashCode(this.texture);
+        hash = 71 * hash + (this.perishable ? 1 : 0);
+        hash = 71 * hash + this.durability;
+        hash = 71 * hash + this.maxDurability;
+        hash = 71 * hash + (int) (Double.doubleToLongBits(this.value) ^ (Double.doubleToLongBits(this.value) >>> 32));
+        hash = 71 * hash + Objects.hashCode(this.subItem);
+        hash = 71 * hash + Objects.hashCode(this.postConsume);
+        hash = 71 * hash + Objects.hashCode(this.properties);
+        hash = 71 * hash + Objects.hashCode(this.effects);
+        hash = 71 * hash + Objects.hashCode(this.desc);
+        hash = 71 * hash + Objects.hashCode(this.unidentified_desc);
+        hash = 71 * hash + Objects.hashCode(this.metal);
+        hash = 71 * hash + Objects.hashCode(this.expire);
+        hash = 71 * hash + Objects.hashCode(this.prefabName);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (obj == null)
+        {
+            return false;
+        }
+        if (getClass() != obj.getClass())
+        {
+            return false;
+        }
+        final Item other = (Item) obj;
+        if (this.perishable != other.perishable)
+        {
+            return false;
+        }
+        if (this.durability != other.durability)
+        {
+            return false;
+        }
+        if (this.maxDurability != other.maxDurability)
+        {
+            return false;
+        }
+        if (Double.doubleToLongBits(this.value) != Double.doubleToLongBits(other.value))
+        {
+            return false;
+        }
+        if (!Objects.equals(this.trueName, other.trueName))
+        {
+            return false;
+        }
+        if (!Objects.equals(this.name, other.name))
+        {
+            return false;
+        }
+        if (!Objects.equals(this.desc, other.desc))
+        {
+            return false;
+        }
+        if (!Objects.equals(this.unidentified_desc, other.unidentified_desc))
+        {
+            return false;
+        }
+        if (!Objects.equals(this.metal, other.metal))
+        {
+            return false;
+        }
+        if (!Objects.equals(this.prefabName, other.prefabName))
+        {
+            return false;
+        }
+        if (!Objects.equals(this.texture, other.texture))
+        {
+            return false;
+        }
+        if (!Objects.equals(this.subItem, other.subItem))
+        {
+            return false;
+        }
+        if (!Objects.equals(this.postConsume, other.postConsume))
+        {
+            return false;
+        }
+        if (!Objects.equals(this.properties, other.properties))
+        {
+            return false;
+        }
+        if (!Objects.equals(this.effects, other.effects))
+        {
+            return false;
+        }
+        if (!Objects.equals(this.expire, other.expire))
+        {
+            return false;
+        }
+        return true;
     }
     
     
