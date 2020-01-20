@@ -38,6 +38,7 @@ public class BuyItemButton extends Button
             ti.increaseTradeAmount();
             ti.getTradeXButton().setText(""+ti.getTradeAmount());
             ti.setButtonDisplay();
+            world.getTradingWindow().refreshTotalTradeValue();
         }
     }
     

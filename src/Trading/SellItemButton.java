@@ -33,6 +33,7 @@ public class SellItemButton extends Button
             ti.decreaseTradeAmount();
             ti.getTradeXButton().setText(""+ti.getTradeAmount());
             ti.setButtonDisplay();
+            world.getTradingWindow().refreshTotalTradeValue();
             
         }
         

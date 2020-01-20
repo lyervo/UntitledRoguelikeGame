@@ -760,7 +760,10 @@ public class Item
         return true;
     }
     
-    
+    public boolean isCurrency()
+    {
+        return properties.contains(19);
+    }
     
     
 }

@@ -35,6 +35,7 @@ public class BuyAllButton extends Button
         ti.setTradeAmount(ti.getTargetAmount());
         ti.getTradeXButton().setText(""+ti.getTradeAmount());
         ti.setButtonDisplay();
+        world.getTradingWindow().refreshTotalTradeValue();
     }
     
 }

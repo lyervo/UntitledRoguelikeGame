@@ -1,6 +1,44 @@
 [	
 	
-	
+	{
+		"category":"item",
+                "prefabName":"copper_coin",
+		"trueName":"Copper coin",
+		"texture":"copper_coin",
+		"desc":"A copper coin, 10 copper coin is equal to 1 silver coin.",
+		
+		"stack":"1",
+		"properties":[19,4],
+		"consumed":[],
+		"baseValue":1.0,
+                "effects":[],
+                "durability":1
+	},{
+		"category":"item",
+                "prefabName":"silver_coin",
+		"trueName":"Silver coin",
+		"texture":"silver_coin",
+		"desc":"A silver coin, worth 10 copper coin of itself, 10 silver coin is equal to 1 gold coin.",
+		
+		"stack":"1",
+		"properties":[19,4],
+		"consumed":[],
+		"baseValue":10.0,
+                "effects":[],
+                "durability":1
+	},{
+		"category":"item",
+                "prefabName":"gold_coin",
+		"trueName":"Gold coin",
+		"texture":"gold_coin",
+		"desc":"A gold coin, worth 10 silver coin of itself.",
+		"stack":"1",
+		"properties":[19,4],
+		"consumed":[],
+		"baseValue":100.0,
+                "effects":[],
+                "durability":1
+	},
 	{
 		"category":"item",
                 "prefabName":"empty_potion_bottle",

@@ -220,6 +220,10 @@ public class Res
         images.put("metal_bar",metal_bar);
         images.put("metal_bar_2",metal_bar_2);
         images.put("axe_template",sword_template);
+        images.put("copper_coin",new Image("res/texture/items/copper_coin.png"));
+        images.put("silver_coin",new Image("res/texture/items/silver_coin.png"));
+        images.put("gold_coin",new Image("res/texture/items/gold_coin.png"));
+        
         
         sprites.put("camp_fire",camp_fire);
         sprites.put("tree_1",tree_s);

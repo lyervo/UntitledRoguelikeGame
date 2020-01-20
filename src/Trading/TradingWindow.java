@@ -47,7 +47,11 @@ public class TradingWindow
     
     private TrueTypeFont font;
     
-
+    
+    //the total values of all the traded items
+    //negative means the player is losing profit
+    //the trader will not agree to trade if the number is not zero or less
+    private double totalTradeValue;
     
     public TradingWindow(GameContainer container,TrueTypeFont font)
     {
@@ -65,7 +69,7 @@ public class TradingWindow
         confirmTradeButton = new ConfirmTradeButton(centerX+5,height-80,100,30,"Confirm",Color.black,Color.gray,Color.darkGray,font);
         cancelTradeButton = new CancelTradeButton(centerX-105,height-80,100,30,"Cancel",Color.black,Color.gray,Color.darkGray,font);
         
-        
+        totalTradeValue = 0;
     }
     
     
@@ -93,9 +97,15 @@ public class TradingWindow
     {
         this.player = player;
         this.target = target;
+        
+        totalTradeValue = 0;
+        
         ArrayList<Item> playerItem = new ArrayList<Item>(world.getWm().getPlayerInventory().getItems());
         ArrayList<Item> pawnItem = new ArrayList<Item>(target.getInventory().getItems());
         tradeItems.clear();
+        
+        ArrayList<TradeItem> coins = new ArrayList<TradeItem>();
+        
         boolean found = false;
         for(int i=0;i<playerItem.size();i++)
         {
@@ -106,15 +116,29 @@ public class TradingWindow
                 {
                     if(pawnItem.get(j).equals(playerItem.get(i)))
                     {
-                        tradeItems.add(new TradeItem(playerItem.get(i),pawnItem.get(j),world.getContainer(),world.getRes().disposableDroidBB,i));
-                        pawnItem.remove(j);
-                        found = true;
-                        
+                        if(pawnItem.get(j).isCurrency())
+                        {
+                            coins.add(new TradeItem(playerItem.get(i),pawnItem.get(j),world.getContainer(),world.getRes().disposableDroidBB,i));
+                            pawnItem.remove(j);
+                            found = true;
+                        }
+                        else
+                        {
+                            tradeItems.add(new TradeItem(playerItem.get(i),pawnItem.get(j),world.getContainer(),world.getRes().disposableDroidBB,i));
+                            pawnItem.remove(j);
+                            found = true;
+                        }
                     }
                 }
                 if(!found)
                 {
-                    tradeItems.add(new TradeItem(playerItem.get(i),null,world.getContainer(),world.getRes().disposableDroidBB,i));
+                    if(playerItem.get(i).isCurrency())
+                    {
+                        coins.add(new TradeItem(playerItem.get(i),null,world.getContainer(),world.getRes().disposableDroidBB,i));
+                    }else
+                    {
+                        tradeItems.add(new TradeItem(playerItem.get(i),null,world.getContainer(),world.getRes().disposableDroidBB,i));
+                    }
                 }
                 
                 
@@ -125,17 +149,129 @@ public class TradingWindow
         }
         for(int i=0;i<pawnItem.size();i++)
         {
-            tradeItems.add(new TradeItem(null,pawnItem.get(i),world.getContainer(),world.getRes().disposableDroidBB,i+playerItem.size()));
+            if(pawnItem.get(i).isCurrency())
+            {
+                coins.add(new TradeItem(null,pawnItem.get(i),world.getContainer(),world.getRes().disposableDroidBB,i));
+            }else
+            {
+                tradeItems.add(new TradeItem(null,pawnItem.get(i),world.getContainer(),world.getRes().disposableDroidBB,i+playerItem.size()));
+            }
         }
         scrollIndex = 0;
         
+        coins.sort(new TradeItemBuyValueComparator());
         
+        for(int i=coins.size()-1;i>=0;i--)
+        {
+            tradeItems.add(0,coins.get(i));
+        }
+        
+        for(int i=0;i<tradeItems.size();i++)
+        {
+            tradeItems.get(i).setIndex(i);
+        }
+        
+        
+        
+    }
+    
+    
+    public void refreshTradeItems(World world)
+    {
+        totalTradeValue = 0;
+        
+        ArrayList<Item> playerItem = new ArrayList<Item>(world.getWm().getPlayerInventory().getItems());
+        ArrayList<Item> pawnItem = new ArrayList<Item>(target.getInventory().getItems());
+        tradeItems.clear();
+        
+        ArrayList<TradeItem> coins = new ArrayList<TradeItem>();
+        
+        boolean found = false;
+        for(int i=0;i<playerItem.size();i++)
+        {
+            found = false;
+            if(playerItem.get(i).isStackable())
+            {
+                for(int j=0;j<pawnItem.size();j++)
+                {
+                    if(pawnItem.get(j).equals(playerItem.get(i)))
+                    {
+                        if(pawnItem.get(j).isCurrency())
+                        {
+                            coins.add(new TradeItem(playerItem.get(i),pawnItem.get(j),world.getContainer(),world.getRes().disposableDroidBB,i));
+                            pawnItem.remove(j);
+                            found = true;
+                        }
+                        else
+                        {
+                            tradeItems.add(new TradeItem(playerItem.get(i),pawnItem.get(j),world.getContainer(),world.getRes().disposableDroidBB,i));
+                            pawnItem.remove(j);
+                            found = true;
+                        }
+                    }
+                }
+                if(!found)
+                {
+                    if(playerItem.get(i).isCurrency())
+                    {
+                        coins.add(new TradeItem(playerItem.get(i),null,world.getContainer(),world.getRes().disposableDroidBB,i));
+                    }else
+                    {
+                        tradeItems.add(new TradeItem(playerItem.get(i),null,world.getContainer(),world.getRes().disposableDroidBB,i));
+                    }
+                }
+                
+                
+            }else
+            {
+                tradeItems.add(new TradeItem(playerItem.get(i),null,world.getContainer(),world.getRes().disposableDroidBB,i));
+            }
+        }
+        for(int i=0;i<pawnItem.size();i++)
+        {
+            if(pawnItem.get(i).isCurrency())
+            {
+                coins.add(new TradeItem(null,pawnItem.get(i),world.getContainer(),world.getRes().disposableDroidBB,i));
+            }else
+            {
+                tradeItems.add(new TradeItem(null,pawnItem.get(i),world.getContainer(),world.getRes().disposableDroidBB,i+playerItem.size()));
+            }
+        }
+        scrollIndex = 0;
+        
+        coins.sort(new TradeItemBuyValueComparator());
+        
+        for(int i=coins.size()-1;i>=0;i--)
+        {
+            tradeItems.add(0,coins.get(i));
+        }
+        
+        for(int i=0;i<tradeItems.size();i++)
+        {
+            tradeItems.get(i).setIndex(i);
+        }
         
     }
     
     public void display()
     {
         display = true;
+    }
+    
+    public void refreshTotalTradeValue()
+    {
+        totalTradeValue = 0;
+        for(int i=0;i<tradeItems.size();i++)
+        {
+            
+            if(tradeItems.get(i).getTradeAmount()>=0)
+            {
+                totalTradeValue += (tradeItems.get(i).getTradeAmount()*tradeItems.get(i).getBuyValue());
+            }else
+            {
+                totalTradeValue += (tradeItems.get(i).getTradeAmount()*tradeItems.get(i).getSellValue());
+            }
+        }
     }
     
     public void render(Graphics g,Input input)
@@ -149,17 +285,7 @@ public class TradingWindow
             
             g.setFont(font);
             g.setColor(Color.white);
-            g.drawString("Trade", centerX-(font.getWidth("Trade")/2), 70);
-            g.drawString("Amount", centerX-(font.getWidth("Amount")/2), 64+font.getHeight());
-            
-            g.drawString("Buying", centerX+260-(font.getWidth("Buying")/2), 70);
-            g.drawString("Price", centerX+260-(font.getWidth("Price")/2), 64+font.getHeight());
-            
-            g.drawString("Trader", centerX+360-(font.getWidth("Trader")/2), 70);
-            g.drawString("Amount", centerX+360-(font.getWidth("Amount")/2), 64+font.getHeight());
-            
-            g.drawString("Selling",centerX-360-(font.getWidth("Selling")/2), 70);
-            g.drawString("Price",centerX-360-(font.getWidth("Price")/2), 64+font.getHeight());
+            g.drawString("Total Trade Value:"+String.format("%.2f", totalTradeValue), centerX-(font.getWidth("Total Trade Value:"+String.format("%.2f", totalTradeValue))/2), 70);
             
 //            g.drawString(item.getInGameName(),70, index*64+128+17+(scrollIndex*64));
 //        g.drawString(""+buyValue, centerX+260, index*64+128+17+(scrollIndex*64));
@@ -216,6 +342,28 @@ public class TradingWindow
                 }
             }
         }
+    }
+    
+    public void trade(World world)
+    {
+        if(totalTradeValue>0)
+        {
+            return;
+        }
+        for(int i=0;i<tradeItems.size();i++)
+        {
+            if(tradeItems.get(i).getTradeAmount()>=1)
+            {
+                target.getInventory().transferItem(world.getWm().getPlayerInventory(), tradeItems.get(i).getItem(), tradeItems.get(i).getTradeAmount());
+            }else if(tradeItems.get(i).getTradeAmount()<=-1)
+            {
+                world.getWm().getPlayerInventory().transferItem(target.getInventory(), tradeItems.get(i).getItem(), (-tradeItems.get(i).getTradeAmount()));
+            }
+        }
+        totalTradeValue = 0;
+        refreshTradeItems(world);
+        world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
+        
     }
 
     public Pawn getPlayer()

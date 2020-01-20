@@ -31,6 +31,7 @@ public class SellAllButton extends Button
         ti.setTradeAmount(-ti.getPlayerAmount());
         ti.getTradeXButton().setText(""+ti.getTradeAmount());
         ti.setButtonDisplay();
+        world.getTradingWindow().refreshTotalTradeValue();
     }
     
 }

@@ -3,6 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Item/ItemType.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Culture/SubFaction.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/World/LocalMap.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/res/data/entity/plants.json</file>
@@ -26,6 +27,7 @@
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Trading/SellItemButton.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/res/data/names/potions.txt</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Trading/ConfirmTradeButton.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Entity/Entity.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Entity/Furniture.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/World/Tile.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/InventoryUI/InventoryPrimaryScrollDownButton.java</file>
@@ -58,6 +60,7 @@
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/UI/DescBox.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/World/World.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/res/data/item.json</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Trading/TradeItemBuyValueComparator.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/CraftingUI/CraftingItemUI.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/CraftingUI/CraftingButton.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Trading/TradeItemTextField.java</file>
@@ -81,6 +84,7 @@
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/World/Wall.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/UI/UIOptionButton.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Trading/TradingWindow.java</file>
+            <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/Entity/TaskComparator.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/EquipmentUI/EquipmentButton.java</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/res/data/creatures.json</file>
             <file>file:/C:/Users/Timot/Desktop/programs/UntitledRoguelikeGame/src/MapUI/TileOptionTab.java</file>

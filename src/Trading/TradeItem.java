@@ -70,15 +70,16 @@ public class TradeItem
             this.targetAmount = 0;
         }
         this.tradeItemTextfield = new TradeItemTextField(container,font,0,0,100,100);
-        this.sellValue = item.getValue();
+        this.sellValue = item.getValue()*0.8;
+        
         this.buyValue = item.getValue();
         
         this.font = font;
         
-        buyAllButton = new BuyAllButton(width-415,index*64+128+17,100,30,"Buy All",Color.black,Color.gray,Color.darkGray,font,this);
-        buyItemButton = new BuyItemButton(width-310,index*64+128+17,100,30,"Buy",Color.black,Color.gray,Color.darkGray,font,this);
-        sellAllButton = new SellAllButton(width-730,index*64+128+17,100,30,"Sell All",Color.black,Color.gray,Color.darkGray,font,this);
-        sellItemButton = new SellItemButton(width-625,index*64+128+17,100,30,"Sell",Color.black,Color.gray,Color.darkGray,font,this);
+        buyAllButton = new BuyAllButton(width-415,index*64+128+17,100,30,"Get All",Color.black,Color.gray,Color.darkGray,font,this);
+        buyItemButton = new BuyItemButton(width-310,index*64+128+17,100,30,"Get",Color.black,Color.gray,Color.darkGray,font,this);
+        sellAllButton = new SellAllButton(width-730,index*64+128+17,100,30,"Offer All",Color.black,Color.gray,Color.darkGray,font,this);
+        sellItemButton = new SellItemButton(width-625,index*64+128+17,100,30,"Offer",Color.black,Color.gray,Color.darkGray,font,this);
         tradeXButton = new TradeXButton(width-520,index*64+128+17,100,30,"0",Color.black,Color.gray,Color.darkGray,font,this);
         
 //        if(targetAmount == 0)
@@ -123,12 +124,12 @@ public class TradeItem
         item.getTexture().draw(5,index*64+128+(scrollIndex*64),64,64);
         g.drawString(item.getInGameName(),70, index*64+128+17+(scrollIndex*64));
         g.drawString(""+buyValue, width-100, index*64+128+17+(scrollIndex*64));
-        g.drawString(""+targetAmount, width-205, index*64+128+17+(scrollIndex*64));
+        g.drawString(""+(targetAmount-tradeAmount), width-205, index*64+128+17+(scrollIndex*64));
         
         
         g.drawString(""+sellValue, width-835, index*64+128+17+(scrollIndex*64));
         
-        g.drawString(""+playerAmount, width-940, index*64+128+17+(scrollIndex*64));
+        g.drawString(""+(playerAmount+tradeAmount), width-940, index*64+128+17+(scrollIndex*64));
         sellAllButton.render(g, 0, scrollIndex*64);
         sellItemButton.render(g, 0, scrollIndex*64);
         buyAllButton.render(g, 0, scrollIndex*64);
@@ -321,6 +322,12 @@ public class TradeItem
     public void setIndex(int index)
     {
         this.index = index;
+        buyAllButton = new BuyAllButton(width-415,index*64+128+17,100,30,"Get All",Color.black,Color.gray,Color.darkGray,font,this);
+        buyItemButton = new BuyItemButton(width-310,index*64+128+17,100,30,"Get",Color.black,Color.gray,Color.darkGray,font,this);
+        sellAllButton = new SellAllButton(width-730,index*64+128+17,100,30,"Offer All",Color.black,Color.gray,Color.darkGray,font,this);
+        sellItemButton = new SellItemButton(width-625,index*64+128+17,100,30,"Offer",Color.black,Color.gray,Color.darkGray,font,this);
+        tradeXButton = new TradeXButton(width-520,index*64+128+17,100,30,"0",Color.black,Color.gray,Color.darkGray,font,this);
+        setButtonDisplay();
     }
 
     public boolean isBgColor()

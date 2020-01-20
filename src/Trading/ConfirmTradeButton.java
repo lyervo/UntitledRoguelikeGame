@@ -28,7 +28,7 @@ public class ConfirmTradeButton extends Button
     @Override
     public void onClick(boolean[] m, World world)
     {
-        
+        world.getTradingWindow().trade(world);
     }
     
 }
