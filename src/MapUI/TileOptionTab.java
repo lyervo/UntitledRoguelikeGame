@@ -197,7 +197,7 @@ public class TileOptionTab extends OptionTab
         
         if(!t.isSolid()&&t.getPlant()==null)
         {
-            ArrayList<Item> seeds = lm.getWm().getPlayerInventory().getItemsOfType(201);
+            ArrayList<Item> seeds = lm.getWm().getPlayerInventory().getItemsOfType(14);
             if(!seeds.isEmpty())
             {
 

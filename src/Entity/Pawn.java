@@ -828,6 +828,10 @@ public class Pawn extends Entity
     
     public void doPath(LocalMap lm)
     {
+        if(path==null)
+        {
+            return;
+        }
         if(step<path.getLength())
         {
             if(path.getX(step)>x&&path.getY(step)>y)

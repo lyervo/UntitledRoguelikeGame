@@ -7,6 +7,7 @@ package InventoryUI;
 
 import Item.Item;
 import Res.Res;
+import Trading.TradeXButton;
 import World.World;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -40,6 +41,8 @@ public class XItemTextField extends TextField
     private int index;
     
     private int itemPileId;
+    
+
     
     public XItemTextField(GUIContext container, Font font, int x, int y, int width, int height,World world,Res res)
     {
@@ -79,10 +82,6 @@ public class XItemTextField extends TextField
     public void tick(boolean[] k,boolean[] m,Input input,World world,InventoryUI inventoryUI)
     {
         
-        
-        
-        
-        
         if(bounds.contains(new Point(input.getMouseX(),input.getMouseY())))
         {
             hover = true;
@@ -100,6 +99,8 @@ public class XItemTextField extends TextField
         
         exitButton.tick(m, input, world);
         confirmButton.tick(m, input, world);
+        
+        
         
         if(k[Input.KEY_ESCAPE])
         {

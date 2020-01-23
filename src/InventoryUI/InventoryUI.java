@@ -370,10 +370,7 @@ public class InventoryUI extends UIComponent
     
     public void refreshInventoryUI(LocalMap lm)
     {
-        
-        lm.getWorld().getGameConsole().addLine("refreshInventoryUI(lm) called");
         refreshSecondaryInventoryUI(lm);
-        lm.getWorld().getGameConsole().addLine("refreshInventoryUI(lm) called");
         refreshPrimaryInventoryUI();
         
         

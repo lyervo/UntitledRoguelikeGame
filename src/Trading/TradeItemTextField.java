@@ -25,14 +25,6 @@ public class TradeItemTextField extends TextField
         setBorderColor(Color.decode("#757161"));
     }
     
-    @Override
-    public void keyReleased(int key,char c)
-    {
-        if(key == Input.KEY_ENTER)
-        {
-            
-        }
-    }
     
     @Override
     public void keyPressed(int key,char c)

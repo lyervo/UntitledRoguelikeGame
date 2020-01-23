@@ -5,7 +5,18 @@
  */
 package Culture;
 
+import Item.ItemColour;
+import Item.ItemLibrary;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -24,10 +35,13 @@ public class CultureManager
     
     private HashMap<String,SubFaction> subFactions;
     
+    private HashMap<String,TradingBehavior> tradingBehaviors;
+    
     public CultureManager()
     {
         factions = new HashMap<String,Faction>();
         subFactions = new HashMap<String,SubFaction>();
+        tradingBehaviors = new HashMap<String,TradingBehavior>();
         init();
     }
     
@@ -38,8 +52,45 @@ public class CultureManager
         subFactions.put("Honest man farm", new SubFaction("Honest man farm",factions.get("Kingdom of Augonn"),"farm"));
         subFactions.put("House Hora", new SubFaction("Hora",factions.get("Kingdom of Augonn"),"family"));
         subFactions.put("Augonnian Army", new SubFaction("Augonnian Army",factions.get("Kingdom of Augonn"),"army"));
+        initTradingBehavior();
+        
         
     }
+    
+    public void initTradingBehavior()
+    {
+        System.out.println("initialize trading behavior");
+        try {
+            
+            File jsonFile = new File("res/data/entity/trading_behavior.json");
+            Scanner jsonReader;
+            jsonReader = new Scanner(jsonFile);
+            String jsonString = "";
+            while(jsonReader.hasNext())
+            {
+                jsonString += jsonReader.nextLine();
+            }
+            JSONParser jsonParser = new JSONParser();
+          
+            Object obj = jsonParser.parse(jsonString);
+            JSONArray jsonArr = (JSONArray)obj;
+            
+            for(int i=0;i<jsonArr.size();i++)
+            {
+                JSONObject jsonObj = (JSONObject)jsonArr.get(i);
+                String jobName = (String)jsonObj.get("job");
+                tradingBehaviors.put(jobName,new TradingBehavior(jsonObj));
+            }
+            
+            
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ItemLibrary.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException e)
+        {
+            Logger.getLogger(ItemLibrary.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+    
     
     public void createSubFaction(String name,String factionName,String type)
     {
@@ -49,6 +100,11 @@ public class CultureManager
     public void createFaction(String name)
     {
         factions.put(name, new Faction(name));
+    }
+    
+    public TradingBehavior getTradingBehaviorByJob(String job)
+    {
+        return tradingBehaviors.get(job);
     }
     
     public SubFaction getSubFactionByName(String name)

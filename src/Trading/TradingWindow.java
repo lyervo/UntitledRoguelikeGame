@@ -5,11 +5,15 @@
  */
 package Trading;
 
+import Culture.TradingBehavior;
 import Entity.Pawn;
 import Item.Item;
+import UI.Button;
 import World.World;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Rectangle;
 import org.newdawn.slick.Color;
@@ -28,6 +32,7 @@ public class TradingWindow
     private Pawn player,target;
     
     private ArrayList<TradeItem> tradeItems;
+    private ArrayList<TradeItem> coins;
     
     private int scrollIndex;
     
@@ -35,6 +40,14 @@ public class TradingWindow
     
     private ConfirmTradeButton confirmTradeButton;
     private CancelTradeButton cancelTradeButton;
+    private ResetTradeButton resetTradeButton;
+    
+    private Button sortNameButton;
+    private Button sortBuyValueButton;
+    private Button sortSellValueButton;
+    private Button sortPlayerAmountButton;
+    private Button sortPawnAmountButton;
+    
     
     private Rectangle bounds;
     
@@ -47,15 +60,25 @@ public class TradingWindow
     
     private TrueTypeFont font;
     
+    private TradeXTextField tradeXTextField;
     
     //the total values of all the traded items
     //negative means the player is losing profit
     //the trader will not agree to trade if the number is not zero or less
     private double totalTradeValue;
+    private GameContainer container;
+    
+    //remembering sort preference
+    private Comparator lastComparator;
+    private boolean lastReverse;
+    
+    private TradingBehavior tradingBehavior;
+    
     
     public TradingWindow(GameContainer container,TrueTypeFont font)
     {
         tradeItems = new ArrayList<TradeItem>();
+        coins = new ArrayList<TradeItem>();
         scrollIndex = 0;
         display = false;
         bounds = new Rectangle(0,0,container.getWidth(),container.getHeight());
@@ -66,11 +89,69 @@ public class TradingWindow
         
         this.maxDisplay = (height-256)/64;
         
-        confirmTradeButton = new ConfirmTradeButton(centerX+5,height-80,100,30,"Confirm",Color.black,Color.gray,Color.darkGray,font);
-        cancelTradeButton = new CancelTradeButton(centerX-105,height-80,100,30,"Cancel",Color.black,Color.gray,Color.darkGray,font);
         
+        cancelTradeButton = new CancelTradeButton(centerX-155,height-80,100,30,"Leave",Color.black,Color.gray,Color.darkGray,font);
+        confirmTradeButton = new ConfirmTradeButton(centerX-50,height-80,100,30,"Trade",Color.black,Color.gray,Color.darkGray,font);
+        resetTradeButton = new ResetTradeButton(centerX+55,height-80,100,30,"Reset",Color.black,Color.gray,Color.darkGray,font);
+        
+        
+        sortNameButton = new Button(5,98,100,30,"Name",Color.black,Color.gray,Color.darkGray,font) {
+            boolean buttonToggle = false;
+            @Override
+            public void onClick(boolean[] m, World world)
+            {
+                buttonToggle = !buttonToggle;
+                world.getTradingWindow().sortTradeItems(world, new TradeItemNameComparator(), buttonToggle);
+            }
+        };
+        
+        sortBuyValueButton = new Button(width-135,98,130,30,"Buy Price",Color.black,Color.gray,Color.darkGray,font) {
+            boolean buttonToggle = false;
+            @Override
+            public void onClick(boolean[] m, World world)
+            {
+                buttonToggle = !buttonToggle;
+                world.getTradingWindow().sortTradeItems(world, new TradeItemBuyValueComparator(), buttonToggle);
+            }
+        };
+        sortSellValueButton = new Button(width-870,98,130,30,"Sell Price",Color.black,Color.gray,Color.darkGray,font) {
+            boolean buttonToggle = false;
+            @Override
+            public void onClick(boolean[] m, World world)
+            {
+                buttonToggle = !buttonToggle;
+                world.getTradingWindow().sortTradeItems(world, new TradeItemSellValueComparator(), buttonToggle);
+            }
+        };
+        sortPlayerAmountButton = new Button(width-980,98,100,30,"Owned",Color.black,Color.gray,Color.darkGray,font) {
+            boolean buttonToggle = false;
+            @Override
+            public void onClick(boolean[] m, World world)
+            {
+                buttonToggle = !buttonToggle;
+                world.getTradingWindow().sortTradeItems(world, new TradeItemPlayerAmountComparator(), buttonToggle);
+            }
+        };
+        sortPawnAmountButton = new Button(width-245,98,100,30,"Trader",Color.black,Color.gray,Color.darkGray,font) {
+            boolean buttonToggle = false;
+            @Override
+            public void onClick(boolean[] m, World world)
+            {
+                buttonToggle = !buttonToggle;
+                world.getTradingWindow().sortTradeItems(world, new TradeItemPawnAmountComparator(), buttonToggle);
+            }
+        };
+        
+        
+        this.container = container;
         totalTradeValue = 0;
+        lastComparator = new TradeItemNameComparator();
+        lastReverse = false;
+        
     }
+    
+
+    
     
     
     public void scrollUp()
@@ -86,7 +167,7 @@ public class TradingWindow
     
     public void scrollDown()
     {
-        if(scrollIndex >= tradeItems.size()-maxDisplay||tradeItems.size()<=maxDisplay)
+        if(scrollIndex >= (tradeItems.size()+coins.size())-maxDisplay||(tradeItems.size()+coins.size())<=maxDisplay)
         {
             return;
         }
@@ -98,13 +179,18 @@ public class TradingWindow
         this.player = player;
         this.target = target;
         
+        tradingBehavior = null;
+        
+        tradingBehavior = world.getCm().getTradingBehaviorByJob(target.getJobTitle());
+        
+        
         totalTradeValue = 0;
         
         ArrayList<Item> playerItem = new ArrayList<Item>(world.getWm().getPlayerInventory().getItems());
         ArrayList<Item> pawnItem = new ArrayList<Item>(target.getInventory().getItems());
         tradeItems.clear();
         
-        ArrayList<TradeItem> coins = new ArrayList<TradeItem>();
+        coins.clear();
         
         boolean found = false;
         for(int i=0;i<playerItem.size();i++)
@@ -118,13 +204,13 @@ public class TradingWindow
                     {
                         if(pawnItem.get(j).isCurrency())
                         {
-                            coins.add(new TradeItem(playerItem.get(i),pawnItem.get(j),world.getContainer(),world.getRes().disposableDroidBB,i));
+                            coins.add(new TradeItem(playerItem.get(i),pawnItem.get(j),world.getContainer(),world.getRes().disposableDroidBB,i,tradingBehavior,this));
                             pawnItem.remove(j);
                             found = true;
                         }
                         else
                         {
-                            tradeItems.add(new TradeItem(playerItem.get(i),pawnItem.get(j),world.getContainer(),world.getRes().disposableDroidBB,i));
+                            tradeItems.add(new TradeItem(playerItem.get(i),pawnItem.get(j),world.getContainer(),world.getRes().disposableDroidBB,i,tradingBehavior,this));
                             pawnItem.remove(j);
                             found = true;
                         }
@@ -134,41 +220,46 @@ public class TradingWindow
                 {
                     if(playerItem.get(i).isCurrency())
                     {
-                        coins.add(new TradeItem(playerItem.get(i),null,world.getContainer(),world.getRes().disposableDroidBB,i));
+                        coins.add(new TradeItem(playerItem.get(i),null,world.getContainer(),world.getRes().disposableDroidBB,i,tradingBehavior,this));
                     }else
                     {
-                        tradeItems.add(new TradeItem(playerItem.get(i),null,world.getContainer(),world.getRes().disposableDroidBB,i));
+                        tradeItems.add(new TradeItem(playerItem.get(i),null,world.getContainer(),world.getRes().disposableDroidBB,i,tradingBehavior,this));
                     }
                 }
                 
                 
             }else
             {
-                tradeItems.add(new TradeItem(playerItem.get(i),null,world.getContainer(),world.getRes().disposableDroidBB,i));
+                tradeItems.add(new TradeItem(playerItem.get(i),null,world.getContainer(),world.getRes().disposableDroidBB,i,tradingBehavior,this));
             }
         }
         for(int i=0;i<pawnItem.size();i++)
         {
             if(pawnItem.get(i).isCurrency())
             {
-                coins.add(new TradeItem(null,pawnItem.get(i),world.getContainer(),world.getRes().disposableDroidBB,i));
+                coins.add(new TradeItem(null,pawnItem.get(i),world.getContainer(),world.getRes().disposableDroidBB,i,tradingBehavior,this));
             }else
             {
-                tradeItems.add(new TradeItem(null,pawnItem.get(i),world.getContainer(),world.getRes().disposableDroidBB,i+playerItem.size()));
+                tradeItems.add(new TradeItem(null,pawnItem.get(i),world.getContainer(),world.getRes().disposableDroidBB,i+playerItem.size(),tradingBehavior,this));
             }
         }
         scrollIndex = 0;
+        
+        
+        tradeItems.sort(new TradeItemNameComparator());
+            
+      
         
         coins.sort(new TradeItemBuyValueComparator());
         
         for(int i=coins.size()-1;i>=0;i--)
         {
-            tradeItems.add(0,coins.get(i));
+            coins.get(i).setIndex(i);
         }
         
         for(int i=0;i<tradeItems.size();i++)
         {
-            tradeItems.get(i).setIndex(i);
+            tradeItems.get(i).setIndex(i+coins.size());
         }
         
         
@@ -184,7 +275,7 @@ public class TradingWindow
         ArrayList<Item> pawnItem = new ArrayList<Item>(target.getInventory().getItems());
         tradeItems.clear();
         
-        ArrayList<TradeItem> coins = new ArrayList<TradeItem>();
+        coins = new ArrayList<TradeItem>();
         
         boolean found = false;
         for(int i=0;i<playerItem.size();i++)
@@ -198,13 +289,13 @@ public class TradingWindow
                     {
                         if(pawnItem.get(j).isCurrency())
                         {
-                            coins.add(new TradeItem(playerItem.get(i),pawnItem.get(j),world.getContainer(),world.getRes().disposableDroidBB,i));
+                            coins.add(new TradeItem(playerItem.get(i),pawnItem.get(j),world.getContainer(),world.getRes().disposableDroidBB,i,tradingBehavior,this));
                             pawnItem.remove(j);
                             found = true;
                         }
                         else
                         {
-                            tradeItems.add(new TradeItem(playerItem.get(i),pawnItem.get(j),world.getContainer(),world.getRes().disposableDroidBB,i));
+                            tradeItems.add(new TradeItem(playerItem.get(i),pawnItem.get(j),world.getContainer(),world.getRes().disposableDroidBB,i,tradingBehavior,this));
                             pawnItem.remove(j);
                             found = true;
                         }
@@ -214,42 +305,81 @@ public class TradingWindow
                 {
                     if(playerItem.get(i).isCurrency())
                     {
-                        coins.add(new TradeItem(playerItem.get(i),null,world.getContainer(),world.getRes().disposableDroidBB,i));
+                        coins.add(new TradeItem(playerItem.get(i),null,world.getContainer(),world.getRes().disposableDroidBB,i,tradingBehavior,this));
                     }else
                     {
-                        tradeItems.add(new TradeItem(playerItem.get(i),null,world.getContainer(),world.getRes().disposableDroidBB,i));
+                        tradeItems.add(new TradeItem(playerItem.get(i),null,world.getContainer(),world.getRes().disposableDroidBB,i,tradingBehavior,this));
                     }
                 }
                 
                 
             }else
             {
-                tradeItems.add(new TradeItem(playerItem.get(i),null,world.getContainer(),world.getRes().disposableDroidBB,i));
+                tradeItems.add(new TradeItem(playerItem.get(i),null,world.getContainer(),world.getRes().disposableDroidBB,i,tradingBehavior,this));
             }
         }
         for(int i=0;i<pawnItem.size();i++)
         {
             if(pawnItem.get(i).isCurrency())
             {
-                coins.add(new TradeItem(null,pawnItem.get(i),world.getContainer(),world.getRes().disposableDroidBB,i));
+                coins.add(new TradeItem(null,pawnItem.get(i),world.getContainer(),world.getRes().disposableDroidBB,i,tradingBehavior,this));
             }else
             {
-                tradeItems.add(new TradeItem(null,pawnItem.get(i),world.getContainer(),world.getRes().disposableDroidBB,i+playerItem.size()));
+                tradeItems.add(new TradeItem(null,pawnItem.get(i),world.getContainer(),world.getRes().disposableDroidBB,i+playerItem.size(),tradingBehavior,this));
             }
         }
         scrollIndex = 0;
+        
+        if(lastComparator!=null)
+        {
+            tradeItems.sort(lastComparator);
+            if(lastReverse)
+            {
+                Collections.reverse(tradeItems);
+            }
+        }
         
         coins.sort(new TradeItemBuyValueComparator());
         
         for(int i=coins.size()-1;i>=0;i--)
         {
-            tradeItems.add(0,coins.get(i));
+            coins.get(i).setIndex(i);
         }
         
         for(int i=0;i<tradeItems.size();i++)
         {
-            tradeItems.get(i).setIndex(i);
+            tradeItems.get(i).setIndex(i+coins.size());
         }
+        
+        
+    }
+    
+    public void sortTradeItems(World world,Comparator comparator,boolean reverse)
+    {
+        totalTradeValue = 0;
+        if(comparator!=null)
+        {
+            tradeItems.sort(comparator);
+            if(reverse)
+            {
+                Collections.reverse(tradeItems);
+            }
+            lastComparator = comparator;
+            lastReverse = reverse;
+        }
+        
+        coins.sort(new TradeItemBuyValueComparator());
+        
+        for(int i=coins.size()-1;i>=0;i--)
+        {
+            coins.get(i).setIndex(i);
+        }
+        
+        for(int i=0;i<tradeItems.size();i++)
+        {
+            tradeItems.get(i).setIndex(i+coins.size());
+        }
+        
         
     }
     
@@ -261,6 +391,10 @@ public class TradingWindow
     public void refreshTotalTradeValue()
     {
         totalTradeValue = 0;
+        for(int i=0;i<coins.size();i++)
+        {
+            totalTradeValue += (coins.get(i).getTradeAmount()*coins.get(i).getBuyValue());
+        }
         for(int i=0;i<tradeItems.size();i++)
         {
             
@@ -298,15 +432,38 @@ public class TradingWindow
 
     //        confirmTradeButton.render(g);
             
-            for(int i=0;i<tradeItems.size();i++)
+            
+    
+            for(int i=0;i<tradeItems.size()+coins.size();i++)
             {
-                if(i*64+128+(-scrollIndex*64)+64<=height-128&&i*64+128+(-scrollIndex*64)>=128)
+                if(i+1<=coins.size())
                 {
-                    tradeItems.get(i).render(g, input, -scrollIndex);
+                    if(i*64+128+(-scrollIndex*64)+64<=height-128&&i*64+128+(-scrollIndex*64)>=128)
+                    {
+                        coins.get(i).render(g, input,container, -scrollIndex);
+                    }
+                }else
+                {
+                    if(i*64+128+(-scrollIndex*64)+64<=height-128&&i*64+128+(-scrollIndex*64)>=128)
+                    {
+                        tradeItems.get(i-coins.size()).render(g, input,container, -scrollIndex);
+                    }
                 }
+                
             }
+            if(tradeXTextField!=null)
+            {
+                g.setColor(Color.white);
+                tradeXTextField.render(container, g);
+            }
+            sortNameButton.render(g);
+            sortBuyValueButton.render(g);
             cancelTradeButton.render(g);
             confirmTradeButton.render(g);
+            resetTradeButton.render(g);
+            sortSellValueButton.render(g);
+            sortPlayerAmountButton.render(g);
+            sortPawnAmountButton.render(g);
             g.setColor(Color.black);
             g.drawRect(0, 64, width, 64);
         }
@@ -328,18 +485,43 @@ public class TradingWindow
             if(m[16])
             {
                 scrollUp();
+                tradeXTextField = null;
             }else if(m[17])
             {
                 scrollDown();
+                tradeXTextField = null;
             }
+            
+            if(tradeXTextField!=null)
+            {
+                tradeXTextField.tick(k, m, input, world);
+            }
+            
+            
             cancelTradeButton.tick(m, input, world);
             confirmTradeButton.tick(m, input, world);
-            for(int i=0;i<tradeItems.size();i++)
+            resetTradeButton.tick(m, input, world);
+            sortNameButton.tick(m, input, world);
+            sortBuyValueButton.tick(m, input, world);
+            sortSellValueButton.tick(m, input, world);
+            sortPlayerAmountButton.tick(m, input, world);
+            sortPawnAmountButton.tick(m, input, world);
+            for(int i=0;i<tradeItems.size()+coins.size()-1;i++)
             {
-                if(i*64+128+(-scrollIndex*64)+64<=height-128&&i*64+128+(-scrollIndex*64)>=128)
+                if(i+1<=coins.size())
                 {
-                    tradeItems.get(i).tick(k, m, input, world, -scrollIndex);
+                    if(i*64+128+(-scrollIndex*64)+64<=height-128&&i*64+128+(-scrollIndex*64)>=128)
+                    {
+                        coins.get(i).tick(k, m, input, world, -scrollIndex);
+                    }
+                }else
+                {
+                    if(i*64+128+(-scrollIndex*64)+64<=height-128&&i*64+128+(-scrollIndex*64)>=128)
+                    {
+                        tradeItems.get(i).tick(k, m, input, world, -scrollIndex);
+                    }
                 }
+                
             }
         }
     }
@@ -350,6 +532,17 @@ public class TradingWindow
         {
             return;
         }
+        for(int i=0;i<coins.size();i++)
+        {
+            if(coins.get(i).getTradeAmount()>=1)
+            {
+                target.getInventory().transferItem(world.getWm().getPlayerInventory(), coins.get(i).getItem(), coins.get(i).getTradeAmount());
+            }else if(coins.get(i).getTradeAmount()<=-1)
+            {
+                world.getWm().getPlayerInventory().transferItem(target.getInventory(), coins.get(i).getItem(), (-coins.get(i).getTradeAmount()));
+            }
+        }
+        
         for(int i=0;i<tradeItems.size();i++)
         {
             if(tradeItems.get(i).getTradeAmount()>=1)
@@ -364,6 +557,24 @@ public class TradingWindow
         refreshTradeItems(world);
         world.getInventory_ui().refreshInventoryUI(world.getWm().getCurrentLocalMap());
         
+    }
+    
+    
+    
+    
+    public void resetTrade()
+    {
+        for(int i=0;i<coins.size();i++)
+        {
+            coins.get(i).setTradeAmount(0);
+            coins.get(i).setButtonDisplay();
+        }
+        for(int i=0;i<tradeItems.size();i++)
+        {
+            tradeItems.get(i).setTradeAmount(0);
+            tradeItems.get(i).setButtonDisplay();
+        }
+        totalTradeValue = 0;
     }
 
     public Pawn getPlayer()
@@ -434,6 +645,106 @@ public class TradingWindow
     public void setBounds(Rectangle bounds)
     {
         this.bounds = bounds;
+    }
+    
+    public CancelTradeButton getCancelTradeButton()
+    {
+        return cancelTradeButton;
+    }
+
+    public void setCancelTradeButton(CancelTradeButton cancelTradeButton)
+    {
+        this.cancelTradeButton = cancelTradeButton;
+    }
+
+    public ResetTradeButton getResetTradeButton()
+    {
+        return resetTradeButton;
+    }
+
+    public void setResetTradeButton(ResetTradeButton resetTradeButton)
+    {
+        this.resetTradeButton = resetTradeButton;
+    }
+
+    public int getWidth()
+    {
+        return width;
+    }
+
+    public void setWidth(int width)
+    {
+        this.width = width;
+    }
+
+    public int getHeight()
+    {
+        return height;
+    }
+
+    public void setHeight(int height)
+    {
+        this.height = height;
+    }
+
+    public int getCenterX()
+    {
+        return centerX;
+    }
+
+    public void setCenterX(int centerX)
+    {
+        this.centerX = centerX;
+    }
+
+    public int getMaxDisplay()
+    {
+        return maxDisplay;
+    }
+
+    public void setMaxDisplay(int maxDisplay)
+    {
+        this.maxDisplay = maxDisplay;
+    }
+
+    public TrueTypeFont getFont()
+    {
+        return font;
+    }
+
+    public void setFont(TrueTypeFont font)
+    {
+        this.font = font;
+    }
+
+    public TradeXTextField getTradeXTextField()
+    {
+        return tradeXTextField;
+    }
+
+    public void setTradeXTextField(TradeXTextField tradeXTextField)
+    {
+        this.tradeXTextField = tradeXTextField;
+    }
+
+    public double getTotalTradeValue()
+    {
+        return totalTradeValue;
+    }
+
+    public void setTotalTradeValue(double totalTradeValue)
+    {
+        this.totalTradeValue = totalTradeValue;
+    }
+
+    public GameContainer getContainer()
+    {
+        return container;
+    }
+
+    public void setContainer(GameContainer container)
+    {
+        this.container = container;
     }
     
     

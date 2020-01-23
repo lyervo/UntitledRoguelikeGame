@@ -155,11 +155,11 @@ public class LocalMap implements TileBasedMap, ILosBoard
             p.getInventory().getCrafting().getNearbyStations(this);
         }
         
-//        getPawnById(9).getSubFactions().add(world.getCm().getSubFactionByName("House Hora"));
-//        getPawnById(9).getSubFactions().add(world.getCm().getSubFactionByName("Honest man farm"));
-//        getPawnById(10).getSubFactions().add(world.getCm().getSubFactionByName("House Hora"));
-//        getPawnById(10).getSubFactions().add(world.getCm().getSubFactionByName("Honest man farm"));
-//        
+        getPawnById(7).getSubFactions().add(world.getCm().getSubFactionByName("House Hora"));
+        getPawnById(7).getSubFactions().add(world.getCm().getSubFactionByName("Honest man farm"));
+        getPawnById(8).getSubFactions().add(world.getCm().getSubFactionByName("House Hora"));
+        getPawnById(8).getSubFactions().add(world.getCm().getSubFactionByName("Honest man farm"));
+        
 //        getPawnById(11).getSubFactions().add(world.getCm().getSubFactionByName("Augonnian Army"));
 //        
 //        spawnPlant(12,12,"Tree");

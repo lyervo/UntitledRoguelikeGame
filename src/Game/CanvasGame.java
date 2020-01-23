@@ -73,18 +73,18 @@ public class CanvasGame extends BasicGame
             frame.addWindowListener(new WindowAdapter() {
             
             
-            @Override
-            public void windowClosing(WindowEvent e)
-            {
-                canvasGameContainer.dispose();
-            }
-            
-            @Override
-            public void windowClosed(WindowEvent e)
-            {
-                System.exit(0);
-            }
-            
+                @Override
+                public void windowClosing(WindowEvent e)
+                {
+                    canvasGameContainer.dispose();
+                }
+
+                @Override
+                public void windowClosed(WindowEvent e)
+                {
+                    System.exit(0);
+                }
+
             
             
             });

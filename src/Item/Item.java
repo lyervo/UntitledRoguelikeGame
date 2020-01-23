@@ -109,7 +109,7 @@ public class Item
         this.properties = new HashSet<Integer>();
         
         //is a seed
-        this.properties.add(201);
+        this.properties.add(14);
         //is stackable
         this.properties.add(4);
         

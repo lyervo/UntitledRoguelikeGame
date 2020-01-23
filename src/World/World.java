@@ -42,6 +42,7 @@ import Item.ItemPile;
 import Narrator.NarratorButton;
 import Narrator.NarratorUIWindow;
 import Trading.TradingWindow;
+import UI.Option;
 import UI.OptionTab;
 
 import UI.UIWindow;
@@ -284,13 +285,16 @@ public class World implements ActionListener
             }
         }
         
-        if(k[Input.KEY_1])
+        if(!tradingWindow.isDisplay()&&!dialogue.isDisplay())
         {
-            zoneDisplay = !zoneDisplay;
-        }
-        if(k[Input.KEY_2])
-        {
-            nameDisplay = !nameDisplay;
+            if(k[Input.KEY_1])
+            {
+                zoneDisplay = !zoneDisplay;
+            }
+            if(k[Input.KEY_2])
+            {
+                nameDisplay = !nameDisplay;
+            }
         }
         
         
@@ -690,6 +694,11 @@ public class World implements ActionListener
                 tradeTask.setTarget(tradeTarget);
                 wm.getCurrentLocalMap().getPlayer().addTask(tradeTask);
                 break;
+            case "plant_seed":
+                task = new Task(option.getId(),option.getIndex(),0,0,"plant_seed");
+                task.setInfo(option.getInfo());
+                wm.getCurrentLocalMap().getPlayer().addTask(task);
+                break;
             
                 
         }
@@ -1002,7 +1011,21 @@ public class World implements ActionListener
             
         }
         
-        
+        if(!t.isSolid()&&t.getPlant()==null)
+        {
+            ArrayList<Item> seeds = wm.getPlayerInventory().getItemsOfType(14);
+            if(!seeds.isEmpty())
+            {
+
+                for(Item s:seeds)
+                {
+                    if(s.getProperties().contains(t.getType()))
+                    {
+                        menu.add(createItem("Plant "+s.getInGameName(),s.getTrueName(),"plant_seed",t.getX(),t.getY(),s));
+                    }
+                }
+            }
+        }
         
         return menu;
         
