@@ -3,7 +3,7 @@
     {
         "job":"Farmer",
         "rule":[{"type":14,"price_multiplier":1.2,"minimum_stock":50,"maximum_stock":100,"buying":"yes","selling":"yes"},
-                {"type":15,"price_multiplier":0.7,"minimum_stock":50,"maximum_stock":100,"buying":"no","selling":"yes"},
+                {"type":15,"price_multiplier":1.7,"minimum_stock":50,"maximum_stock":100,"buying":"yes","selling":"yes"},
                 {"type":34,"price_multiplier":0.0,"minimum_stock":0,"maximum_stock":0,"buying":"no","selling":"no"}]
     }
 

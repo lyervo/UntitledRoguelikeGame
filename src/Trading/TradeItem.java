@@ -10,7 +10,6 @@ import Item.Item;
 import UI.Button;
 import World.World;
 import org.newdawn.slick.Color;
-import org.newdawn.slick.Font;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -55,6 +54,8 @@ public class TradeItem
     
     private double multiplier;
     
+    private int masterType;
+    
     public TradeItem(Item playerItem,Item pawnItem,GameContainer container,TrueTypeFont font,int index,TradingBehavior tradingBehavior,TradingWindow tradingWindow)
     {
         this.item = playerItem;
@@ -96,10 +97,11 @@ public class TradeItem
         //the price multiplier will never be applied to currency items (coins and cash)
         multiplier = 1.0;
         
+        boolean setType = false;
         
         if(tradingBehavior!=null)
         {
-            System.out.println("trading behavior provided");
+            
             for(int i=0;i<tradingBehavior.getConditions().size();i++)
             {
                 if(item.getProperties().contains(tradingBehavior.getConditions().get(i).getType()))
@@ -118,6 +120,11 @@ public class TradeItem
 
                     if(sellLimit == -1||sellLimit > tradingBehavior.getConditions().get(i).getMax())
                     {
+                        if(!setType)
+                        {
+                            masterType = tradingBehavior.getConditions().get(i).getType();
+                            setType = true;
+                        }
                         sellLimit = tradingBehavior.getConditions().get(i).getMax();
                     }
 
@@ -130,75 +137,36 @@ public class TradeItem
             }
         }
         
+        if(!setType)
+        {
+            masterType = -1;
+        }
         
         
         
         
+     
         
         
         
         this.tradeItemTextfield = new TradeItemTextField(container,font,0,0,100,100);
         if(!item.isCurrency())
         {
-            this.sellValue = item.getValue()*0.8;
+            this.sellValue = item.getValue()*0.8*multiplier;
         }else
         {
             this.sellValue = item.getValue();
         }
-        this.buyValue = item.getValue();
-        
+        if(!item.isCurrency())
+        {
+            this.buyValue = item.getValue()*multiplier;
+        }else
+        {
+            this.buyValue = item.getValue();
+        }
         this.font = font;
         
-        buyAllButton = new Button(width-415,index*64+128+17,100,30,"Get All",Color.black,Color.gray,Color.darkGray,font) {
-            
-            @Override
-            public void onClick(boolean[] m, World world)
-            {
-                setTradeAmount(getTargetAmount());
-                getTradeXButton().setText(""+getTradeAmount());
-                setButtonDisplay();
-                tradingWindow.refreshTotalTradeValue();
-            }
-        };
-        buyItemButton = new Button(width-310,index*64+128+17,100,30,"Get",Color.black,Color.gray,Color.darkGray,font) {
-            @Override
-            public void onClick(boolean[] m, World world)
-            {
-                if(getTradeAmount()<getTargetAmount())
-                {
-                    increaseTradeAmount();
-                    getTradeXButton().setText(""+getTradeAmount());
-                    setButtonDisplay();
-                    tradingWindow.refreshTotalTradeValue();
-                }
-            }
-        };
-        sellAllButton = new Button(width-730,index*64+128+17,100,30,"Offer All",Color.black,Color.gray,Color.darkGray,font) {
-            @Override
-            public void onClick(boolean[] m, World world)
-            {
-                setTradeAmount(-getPlayerAmount());
-                getTradeXButton().setText(""+getTradeAmount());
-                setButtonDisplay();
-                tradingWindow.refreshTotalTradeValue();
-            }
-        };
-        sellItemButton = new Button(width-625,index*64+128+17,100,30,"Offer",Color.black,Color.gray,Color.darkGray,font) {
-            @Override
-            public void onClick(boolean[] m, World world)
-            {
-                if(-getTradeAmount()<getPlayerAmount())
-                {
-                    decreaseTradeAmount();
-                    getTradeXButton().setText(""+getTradeAmount());
-                    setButtonDisplay();
-                    tradingWindow.refreshTotalTradeValue();
-
-                }
-            }
-        };
-        tradeXButton = new TradeXButton(width-520,index*64+128+17,100,30,"0",Color.black,Color.gray,Color.darkGray,font,this,tradingWindow);
-        
+        setButtons();
 //        if(targetAmount == 0)
 //        {
 //            buyAllButton.setDisplay(false);
@@ -224,9 +192,63 @@ public class TradeItem
 
     }
     
+    public void setButtons()
+    {
+        buyAllButton = new Button(width-555,index*64+128+17,30,30,"<<",Color.black,Color.gray,Color.darkGray,font) {
+            
+            @Override
+            public void onClick(boolean[] m, World world)
+            {
+                setTradeAmount(getTargetAmount());
+                getTradeXButton().setText(""+getTradeAmount());
+                setButtonDisplay();
+                tradingWindow.refreshTotalTradeValue();
+            }
+        };
+        buyItemButton = new Button(width-520,index*64+128+17,30,30,"<",Color.black,Color.gray,Color.darkGray,font) {
+            @Override
+            public void onClick(boolean[] m, World world)
+            {
+                if(getTradeAmount()<getTargetAmount())
+                {
+                    increaseTradeAmount();
+                    getTradeXButton().setText(""+getTradeAmount());
+                    setButtonDisplay();
+                    tradingWindow.refreshTotalTradeValue();
+                }
+            }
+        };
+        sellAllButton = new Button(width-730,index*64+128+17,30,30,">>",Color.black,Color.gray,Color.darkGray,font) {
+            @Override
+            public void onClick(boolean[] m, World world)
+            {
+                setTradeAmount(-getPlayerAmount());
+                getTradeXButton().setText(""+getTradeAmount());
+                setButtonDisplay();
+                tradingWindow.refreshTotalTradeValue();
+            }
+        };
+        sellItemButton = new Button(width-695,index*64+128+17,30,30,">",Color.black,Color.gray,Color.darkGray,font) {
+            @Override
+            public void onClick(boolean[] m, World world)
+            {
+                if(-getTradeAmount()<getPlayerAmount())
+                {
+                    decreaseTradeAmount();
+                    getTradeXButton().setText(""+getTradeAmount());
+                    setButtonDisplay();
+                    tradingWindow.refreshTotalTradeValue();
+
+                }
+            }
+        };
+        tradeXButton = new TradeXButton(width-660,index*64+128+17,100,30,"0",Color.black,Color.gray,Color.darkGray,font,this,tradingWindow);
+        
+    }
+    
     public void initTradeXTextField(World world)
     {
-        tradeXTextField = new TradeXTextField(world.getContainer(),font,width-520,index*64+128+17-(world.getTradingWindow().getScrollIndex()*64),100,30,this);
+        tradeXTextField = new TradeXTextField(world.getContainer(),font,width-660,index*64+128+17-(world.getTradingWindow().getScrollIndex()*64),100,30,this);
     }
     
     public void render(Graphics g,Input input,GameContainer container,int scrollIndex)
@@ -243,11 +265,72 @@ public class TradeItem
         g.setColor(Color.white);
         item.getTexture().draw(5,index*64+128+(scrollIndex*64),64,64);
         g.drawString(item.getInGameName(),70, index*64+128+17+(scrollIndex*64));
+        if(multiplier==1)
+        {
+            g.setColor(Color.white);
+        }
+        else if(multiplier<1)
+        {
+            g.setColor(Color.green);
+        }else if(multiplier>1)
+        {
+            g.setColor(Color.red);
+        }
+        
         g.drawString(""+buyValue, width-100, index*64+128+17+(scrollIndex*64));
-        g.drawString(""+(targetAmount-tradeAmount), width-205, index*64+128+17+(scrollIndex*64));
         
+        if(selling)
+        {
+            g.setColor(Color.white);
+        }else
+        {
+            g.setColor(Color.red);
+        }
+        if(buyLimit==-1&&sellLimit==-1)
+        {
+            g.drawString(""+(targetAmount-tradeAmount), width-305-font.getWidth(""+(targetAmount-tradeAmount))/2, index*64+128+17+(scrollIndex*64));
+        }else
+        {
+            if(targetAmount-tradeAmount<=buyLimit)
+            {
+                g.setColor(Color.red);
+            }else if(targetAmount+(-tradeAmount)>=sellLimit)
+            {
+                g.setColor(Color.red);
+            }else
+            {
+                g.setColor(Color.white);
+            }
+            if(tradingWindow.getTradeLimits().get(masterType)!=null)
+            {
+                g.drawString(tradingWindow.getTradeLimits().get(masterType).getCount()+"/"+sellLimit+"|"+(targetAmount-tradeAmount)+"|"+buyLimit, width-305-(font.getWidth(""+sellLimit+">="+(targetAmount-tradeAmount)+">="+buyLimit))/2, index*64+128+17+(scrollIndex*64));
+            
+            }else
+            {
+                g.drawString("/"+sellLimit+"|"+(targetAmount-tradeAmount)+"|"+buyLimit, width-305-(font.getWidth(""+sellLimit+">="+(targetAmount-tradeAmount)+">="+buyLimit))/2, index*64+128+17+(scrollIndex*64));
+            }
+        }
         
+        if(multiplier==1)
+        {
+            g.setColor(Color.white);
+        }else if(multiplier<1)
+        {
+            g.setColor(Color.red);
+        }else if(multiplier>1)
+        {
+            g.setColor(Color.green);
+        }
         g.drawString(""+sellValue, width-835, index*64+128+17+(scrollIndex*64));
+        
+        if(buying)
+        {
+            g.setColor(Color.white);
+        }else
+        {
+            g.setColor(Color.red);
+        }
+        
         
         g.drawString(""+(playerAmount+tradeAmount), width-940, index*64+128+17+(scrollIndex*64));
         sellAllButton.render(g, 0, scrollIndex*64);
@@ -300,8 +383,12 @@ public class TradeItem
     public void setButtonDisplay()
     {
         
-        
-        if(!selling&&-tradeAmount>0)
+        if(buyLimit!=-1&&targetAmount-tradeAmount<=buyLimit&&tradeAmount>=0)
+        {
+            buyAllButton.setDisplay(false);
+            buyItemButton.setDisplay(false);
+        }
+        else if(!selling&&-tradeAmount>0)
         {
             buyAllButton.setDisplay(true);
             buyItemButton.setDisplay(true);
@@ -320,7 +407,11 @@ public class TradeItem
             buyItemButton.setDisplay(true);
         }
         
-        if(!buying&&tradeAmount>0)
+        if(sellLimit!=-1&&targetAmount+(-tradeAmount)>=sellLimit&&tradeAmount<0)
+        {
+            sellAllButton.setDisplay(false);
+            sellItemButton.setDisplay(false);
+        }else if(!buying&&tradeAmount>0)
         {
             sellAllButton.setDisplay(true);
             sellItemButton.setDisplay(true);
@@ -346,11 +437,28 @@ public class TradeItem
     
     public void increaseTradeAmount()
     {
+        if(buyLimit!=-1)
+        {
+            
+            if(targetAmount-(tradeAmount)<=buyLimit&&tradeAmount>0)
+            {
+                return;
+            }
+        }
+        
         tradeAmount++;
     }
     
     public void decreaseTradeAmount()
     {
+        if(sellLimit!=-1)
+        {
+            
+            if(targetAmount+(-tradeAmount)>=sellLimit&&tradeAmount<0)
+            {
+                return;
+            }
+        }
         tradeAmount--;
         
     }
@@ -375,7 +483,6 @@ public class TradeItem
         
         if(!buying&&-tradeAmount>0)
         {
-            System.out.println("call buy");
             this.tradeAmount = 0;
             tradingWindow.refreshTotalTradeValue();
             tradeXButton.setText(""+this.tradeAmount);
@@ -384,14 +491,36 @@ public class TradeItem
         
         if(!selling&&tradeAmount>0)
         {
-            System.out.println("call sell");
             this.tradeAmount = 0;
             tradingWindow.refreshTotalTradeValue();
             tradeXButton.setText(""+this.tradeAmount);
             return;
         }
         
+        if(sellLimit!=-1&&tradeAmount!=0&&targetAmount+(-tradeAmount)>sellLimit)
+        {
+            this.tradeAmount = (targetAmount-sellLimit);
+            tradeXButton.setText(""+(-this.tradeAmount));
+            tradingWindow.refreshTotalTradeValue();
+            return;
+        }
         
+        if(buyLimit!=-1&&tradeAmount!=0&&targetAmount-tradeAmount<buyLimit&&tradeAmount>0)
+        {
+            if(targetAmount>buyLimit)
+            {
+                this.tradeAmount = targetAmount-buyLimit;
+                tradeXButton.setText(""+this.tradeAmount);
+                tradingWindow.refreshTotalTradeValue();
+                return;
+            }else
+            {
+                this.tradeAmount = 0;
+                tradeXButton.setText(""+this.tradeAmount);
+                tradingWindow.refreshTotalTradeValue();
+                return;
+            }
+        }
         
         if(-tradeAmount>playerAmount)
         {
@@ -471,11 +600,9 @@ public class TradeItem
     public void setIndex(int index)
     {
         this.index = index;
-        buyAllButton = new BuyAllButton(width-415,index*64+128+17,100,30,"Get All",Color.black,Color.gray,Color.darkGray,font,this);
-        buyItemButton = new BuyItemButton(width-310,index*64+128+17,100,30,"Get",Color.black,Color.gray,Color.darkGray,font,this);
-        sellAllButton = new SellAllButton(width-730,index*64+128+17,100,30,"Offer All",Color.black,Color.gray,Color.darkGray,font,this);
-        sellItemButton = new SellItemButton(width-625,index*64+128+17,100,30,"Offer",Color.black,Color.gray,Color.darkGray,font,this);
-        tradeXButton = new TradeXButton(width-520,index*64+128+17,100,30,"0",Color.black,Color.gray,Color.darkGray,font,this,tradingWindow);
+        
+        setButtons();
+        
         if(index%2==0)
         {
             bgColor = true;
@@ -609,6 +736,36 @@ public class TradeItem
     public void setTradeXTextField(TradeXTextField tradeXTextField)
     {
         this.tradeXTextField = tradeXTextField;
+    }
+
+    public TradingBehavior getTradingBehavior()
+    {
+        return tradingBehavior;
+    }
+
+    public void setTradingBehavior(TradingBehavior tradingBehavior)
+    {
+        this.tradingBehavior = tradingBehavior;
+    }
+
+    public double getMultiplier()
+    {
+        return multiplier;
+    }
+
+    public void setMultiplier(double multiplier)
+    {
+        this.multiplier = multiplier;
+    }
+
+    public int getMasterType()
+    {
+        return masterType;
+    }
+
+    public void setMasterType(int masterType)
+    {
+        this.masterType = masterType;
     }
     
     

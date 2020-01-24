@@ -10,10 +10,10 @@ import Entity.Pawn;
 import Item.Item;
 import UI.Button;
 import World.World;
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Rectangle;
 import org.newdawn.slick.Color;
@@ -38,9 +38,9 @@ public class TradingWindow
     
     private boolean display;
     
-    private ConfirmTradeButton confirmTradeButton;
-    private CancelTradeButton cancelTradeButton;
-    private ResetTradeButton resetTradeButton;
+    private Button confirmTradeButton;
+    private Button cancelTradeButton;
+    private Button resetTradeButton;
     
     private Button sortNameButton;
     private Button sortBuyValueButton;
@@ -74,6 +74,8 @@ public class TradingWindow
     
     private TradingBehavior tradingBehavior;
     
+    private HashMap<Integer,TradeLimit> tradeLimits;
+    
     
     public TradingWindow(GameContainer container,TrueTypeFont font)
     {
@@ -87,12 +89,33 @@ public class TradingWindow
         this.centerX = width/2;
         this.font = font;
         
+        tradeLimits = new HashMap<Integer,TradeLimit>();
+        
         this.maxDisplay = (height-256)/64;
         
         
-        cancelTradeButton = new CancelTradeButton(centerX-155,height-80,100,30,"Leave",Color.black,Color.gray,Color.darkGray,font);
-        confirmTradeButton = new ConfirmTradeButton(centerX-50,height-80,100,30,"Trade",Color.black,Color.gray,Color.darkGray,font);
-        resetTradeButton = new ResetTradeButton(centerX+55,height-80,100,30,"Reset",Color.black,Color.gray,Color.darkGray,font);
+        cancelTradeButton = new Button(centerX-155,height-80,100,30,"Leave",Color.black,Color.gray,Color.darkGray,font) {
+            @Override
+            public void onClick(boolean[] m, World world)
+            {
+                world.getTradingWindow().setDisplay(false);
+                world.setHoveringWindow(false);
+            }
+        };
+        confirmTradeButton = new Button(centerX-50,height-80,100,30,"Trade",Color.black,Color.gray,Color.darkGray,font) {
+            @Override
+            public void onClick(boolean[] m, World world)
+            {
+                world.getTradingWindow().trade(world);
+            }
+        };
+        resetTradeButton = new Button(centerX+55,height-80,100,30,"Reset",Color.black,Color.gray,Color.darkGray,font) {
+            @Override
+            public void onClick(boolean[] m, World world)
+            {
+                world.getTradingWindow().resetTrade();
+            }
+        };
         
         
         sortNameButton = new Button(5,98,100,30,"Name",Color.black,Color.gray,Color.darkGray,font) {
@@ -132,7 +155,7 @@ public class TradingWindow
                 world.getTradingWindow().sortTradeItems(world, new TradeItemPlayerAmountComparator(), buttonToggle);
             }
         };
-        sortPawnAmountButton = new Button(width-245,98,100,30,"Trader",Color.black,Color.gray,Color.darkGray,font) {
+        sortPawnAmountButton = new Button(width-345,98,100,30,"Trader",Color.black,Color.gray,Color.darkGray,font) {
             boolean buttonToggle = false;
             @Override
             public void onClick(boolean[] m, World world)
@@ -243,12 +266,22 @@ public class TradingWindow
                 tradeItems.add(new TradeItem(null,pawnItem.get(i),world.getContainer(),world.getRes().disposableDroidBB,i+playerItem.size(),tradingBehavior,this));
             }
         }
+        
+        
+        
+        for(int i=0;i<tradingBehavior.getConditions().size();i++)
+        {
+            tradeLimits.put(tradingBehavior.getConditions().get(i).getType(),new TradeLimit(tradingBehavior.getConditions().get(i)));
+        }
+        
+        
+        
         scrollIndex = 0;
         
         
         tradeItems.sort(new TradeItemNameComparator());
             
-      
+       
         
         coins.sort(new TradeItemBuyValueComparator());
         
@@ -266,6 +299,16 @@ public class TradingWindow
         
     }
     
+    public void updateTradeLimits()
+    {
+        for(int i=0;i<tradeItems.size();i++)
+        {
+            if(tradeLimits.get(tradeItems.get(i).getMasterType())!=null)
+            {
+                tradeLimits.get(tradeItems.get(i).getMasterType()).addCount(tradeItems.get(i).getTradeAmount());
+            }
+        }
+    }
     
     public void refreshTradeItems(World world)
     {
@@ -406,6 +449,7 @@ public class TradingWindow
                 totalTradeValue += (tradeItems.get(i).getTradeAmount()*tradeItems.get(i).getSellValue());
             }
         }
+        updateTradeLimits();
     }
     
     public void render(Graphics g,Input input)
@@ -627,15 +671,6 @@ public class TradingWindow
         this.display = display;
     }
 
-    public ConfirmTradeButton getConfirmTradeButton()
-    {
-        return confirmTradeButton;
-    }
-
-    public void setConfirmTradeButton(ConfirmTradeButton confirmTradeButton)
-    {
-        this.confirmTradeButton = confirmTradeButton;
-    }
 
     public Rectangle getBounds()
     {
@@ -645,26 +680,6 @@ public class TradingWindow
     public void setBounds(Rectangle bounds)
     {
         this.bounds = bounds;
-    }
-    
-    public CancelTradeButton getCancelTradeButton()
-    {
-        return cancelTradeButton;
-    }
-
-    public void setCancelTradeButton(CancelTradeButton cancelTradeButton)
-    {
-        this.cancelTradeButton = cancelTradeButton;
-    }
-
-    public ResetTradeButton getResetTradeButton()
-    {
-        return resetTradeButton;
-    }
-
-    public void setResetTradeButton(ResetTradeButton resetTradeButton)
-    {
-        this.resetTradeButton = resetTradeButton;
     }
 
     public int getWidth()
@@ -746,6 +761,138 @@ public class TradingWindow
     {
         this.container = container;
     }
+
+    public ArrayList<TradeItem> getCoins()
+    {
+        return coins;
+    }
+
+    public void setCoins(ArrayList<TradeItem> coins)
+    {
+        this.coins = coins;
+    }
+
+    public Button getConfirmTradeButton()
+    {
+        return confirmTradeButton;
+    }
+
+    public void setConfirmTradeButton(Button confirmTradeButton)
+    {
+        this.confirmTradeButton = confirmTradeButton;
+    }
+
+    public Button getCancelTradeButton()
+    {
+        return cancelTradeButton;
+    }
+
+    public void setCancelTradeButton(Button cancelTradeButton)
+    {
+        this.cancelTradeButton = cancelTradeButton;
+    }
+
+    public Button getResetTradeButton()
+    {
+        return resetTradeButton;
+    }
+
+    public void setResetTradeButton(Button resetTradeButton)
+    {
+        this.resetTradeButton = resetTradeButton;
+    }
+
+    public Button getSortNameButton()
+    {
+        return sortNameButton;
+    }
+
+    public void setSortNameButton(Button sortNameButton)
+    {
+        this.sortNameButton = sortNameButton;
+    }
+
+    public Button getSortBuyValueButton()
+    {
+        return sortBuyValueButton;
+    }
+
+    public void setSortBuyValueButton(Button sortBuyValueButton)
+    {
+        this.sortBuyValueButton = sortBuyValueButton;
+    }
+
+    public Button getSortSellValueButton()
+    {
+        return sortSellValueButton;
+    }
+
+    public void setSortSellValueButton(Button sortSellValueButton)
+    {
+        this.sortSellValueButton = sortSellValueButton;
+    }
+
+    public Button getSortPlayerAmountButton()
+    {
+        return sortPlayerAmountButton;
+    }
+
+    public void setSortPlayerAmountButton(Button sortPlayerAmountButton)
+    {
+        this.sortPlayerAmountButton = sortPlayerAmountButton;
+    }
+
+    public Button getSortPawnAmountButton()
+    {
+        return sortPawnAmountButton;
+    }
+
+    public void setSortPawnAmountButton(Button sortPawnAmountButton)
+    {
+        this.sortPawnAmountButton = sortPawnAmountButton;
+    }
+
+    public Comparator getLastComparator()
+    {
+        return lastComparator;
+    }
+
+    public void setLastComparator(Comparator lastComparator)
+    {
+        this.lastComparator = lastComparator;
+    }
+
+    public boolean isLastReverse()
+    {
+        return lastReverse;
+    }
+
+    public void setLastReverse(boolean lastReverse)
+    {
+        this.lastReverse = lastReverse;
+    }
+
+    public TradingBehavior getTradingBehavior()
+    {
+        return tradingBehavior;
+    }
+
+    public void setTradingBehavior(TradingBehavior tradingBehavior)
+    {
+        this.tradingBehavior = tradingBehavior;
+    }
+
+    public HashMap<Integer, TradeLimit> getTradeLimits()
+    {
+        return tradeLimits;
+    }
+
+    public void setTradeLimits(HashMap<Integer, TradeLimit> tradeLimits)
+    {
+        this.tradeLimits = tradeLimits;
+    }
+    
+    
     
     
 }
