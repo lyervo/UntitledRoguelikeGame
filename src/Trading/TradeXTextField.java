@@ -86,6 +86,11 @@ public class TradeXTextField extends TextField
             return;
         }
         
+        if(getText().equals("-"))
+        {
+            return;
+        }
+        
         try
         {
             

@@ -294,19 +294,30 @@ public class TradingWindow
         {
             tradeItems.get(i).setIndex(i+coins.size());
         }
-        
+       
+        updateTradeLimits();
         
         
     }
     
     public void updateTradeLimits()
     {
+        for(TradeLimit tl:tradeLimits.values())
+        {
+            tl.setCount(0);
+        }
+        
         for(int i=0;i<tradeItems.size();i++)
         {
             if(tradeLimits.get(tradeItems.get(i).getMasterType())!=null)
             {
-                tradeLimits.get(tradeItems.get(i).getMasterType()).addCount(tradeItems.get(i).getTradeAmount());
+                tradeLimits.get(tradeItems.get(i).getMasterType()).addCount(tradeItems.get(i).getTargetAmount()-tradeItems.get(i).getTradeAmount());
             }
+        }
+        
+        for(int i=0;i<tradeItems.size();i++)
+        {
+            tradeItems.get(i).setButtonDisplay();
         }
     }
     

@@ -382,54 +382,38 @@ public class TradeItem
     
     public void setButtonDisplay()
     {
+        TradeLimit tl = tradingWindow.getTradeLimits().get(masterType);
         
-        if(buyLimit!=-1&&targetAmount-tradeAmount<=buyLimit&&tradeAmount>=0)
+        boolean showBuy = true;
+        boolean showSell = true;
+
+        if(tl!=null)
         {
-            buyAllButton.setDisplay(false);
-            buyItemButton.setDisplay(false);
-        }
-        else if(!selling&&-tradeAmount>0)
-        {
-            buyAllButton.setDisplay(true);
-            buyItemButton.setDisplay(true);
-        }else if(!selling)
-        {
-            buyAllButton.setDisplay(false);
-            buyItemButton.setDisplay(false);
-        }
-        else if(tradeAmount>=targetAmount)
-        {
-            buyAllButton.setDisplay(false);
-            buyItemButton.setDisplay(false);
-        }else
-        {
-            buyAllButton.setDisplay(true);
-            buyItemButton.setDisplay(true);
+            if(tl.getCount()>=tl.getMax()&&tradeAmount<=0)
+            {
+                showSell = false;
+            }
+            
+            if(tl.getCount()<=tl.getMin()&&tradeAmount>=0)
+            {
+                showBuy = false;
+            }
         }
         
-        if(sellLimit!=-1&&targetAmount+(-tradeAmount)>=sellLimit&&tradeAmount<0)
+        if(tradeAmount>=targetAmount||(!buying&&tradeAmount>=0))
         {
-            sellAllButton.setDisplay(false);
-            sellItemButton.setDisplay(false);
-        }else if(!buying&&tradeAmount>0)
-        {
-            sellAllButton.setDisplay(true);
-            sellItemButton.setDisplay(true);
-        }else if(!buying)
-        {
-            sellAllButton.setDisplay(false);
-            sellItemButton.setDisplay(false);
-        }else if(-tradeAmount>=playerAmount)
-        {
-            sellAllButton.setDisplay(false);
-            sellItemButton.setDisplay(false);
-        }else
-        {
-            sellAllButton.setDisplay(true);
-            sellItemButton.setDisplay(true);
+            showBuy = false;
         }
         
+        if(tradeAmount<=-playerAmount||(!selling&&tradeAmount<=0))
+        {
+            showSell = false;
+        }
         
+        buyAllButton.setDisplay(showBuy);
+        buyItemButton.setDisplay(showBuy);
+        sellAllButton.setDisplay(showSell);
+        sellItemButton.setDisplay(showSell);
         
         
     }
@@ -481,57 +465,61 @@ public class TradeItem
     public void setTradeAmount(int tradeAmount)
     {
         
-        if(!buying&&-tradeAmount>0)
-        {
-            this.tradeAmount = 0;
-            tradingWindow.refreshTotalTradeValue();
-            tradeXButton.setText(""+this.tradeAmount);
-            return;
-        }
-        
-        if(!selling&&tradeAmount>0)
-        {
-            this.tradeAmount = 0;
-            tradingWindow.refreshTotalTradeValue();
-            tradeXButton.setText(""+this.tradeAmount);
-            return;
-        }
-        
-        if(sellLimit!=-1&&tradeAmount!=0&&targetAmount+(-tradeAmount)>sellLimit)
-        {
-            this.tradeAmount = (targetAmount-sellLimit);
-            tradeXButton.setText(""+(-this.tradeAmount));
-            tradingWindow.refreshTotalTradeValue();
-            return;
-        }
-        
-        if(buyLimit!=-1&&tradeAmount!=0&&targetAmount-tradeAmount<buyLimit&&tradeAmount>0)
-        {
-            if(targetAmount>buyLimit)
-            {
-                this.tradeAmount = targetAmount-buyLimit;
-                tradeXButton.setText(""+this.tradeAmount);
-                tradingWindow.refreshTotalTradeValue();
-                return;
-            }else
-            {
-                this.tradeAmount = 0;
-                tradeXButton.setText(""+this.tradeAmount);
-                tradingWindow.refreshTotalTradeValue();
-                return;
-            }
-        }
+        TradeLimit tl = tradingWindow.getTradeLimits().get(masterType);
         
         if(-tradeAmount>playerAmount)
         {
-            this.tradeAmount = -playerAmount;
-        }else if(tradeAmount>targetAmount)
-        {
-            this.tradeAmount  = targetAmount;
-        }else
-        {
-            this.tradeAmount = tradeAmount;
+            tradeAmount = -playerAmount;
         }
+        if(tradeAmount>targetAmount)
+        {
+            tradeAmount = targetAmount;
+        }
+        
+        if(tl!=null)
+        {
+            System.out.println("tradeAmount:"+tradeAmount);
+            System.out.println("count:"+tl.getCount());
+            
+            if(tl.getCount()>=tl.getMax()&&tradeAmount<0)
+            {
+                System.out.println("1");
+                tradeAmount = 0;
+            }else if(tl.getCount()<=tl.getMin()&&tradeAmount>0)
+            {
+                System.out.println("2");
+                tradeAmount = 0;
+            }else if(-tradeAmount+tl.getCount()>tl.getMax()&&tradeAmount<0)
+            {
+                System.out.println("3");
+                tradeAmount = -(tl.getMax()-tl.getCount());
+            }else if(tl.getCount()>=tl.getMin()&&tradeAmount>0)
+            {
+                if(tl.getCount()+this.tradeAmount<tl.getMin())
+                {
+                    tradeAmount = 0;
+                }else if(tl.getCount()-tradeAmount<tl.getMin())
+                {
+                    tradeAmount = tradeAmount-tl.getMin();
+                }
+                   
+                
+            }else if(tl.getCount()-tradeAmount>=tl.getMin()&&tl.getCount()+tradeAmount<=tl.getMax())
+            {
+                System.out.println("5");
+            
+            }else
+            {
+                System.out.println("6");
+            }
+            
+            
+            
+        }
+        
+        this.tradeAmount = tradeAmount;
+        tradeXButton.setText(""+this.tradeAmount);
+        
         tradingWindow.refreshTotalTradeValue();
             
     }
